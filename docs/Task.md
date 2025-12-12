@@ -192,17 +192,19 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 
 ---
 
-#### Task 1.3.2: Next.js 설정 파일 구성 ⬜
-- [ ] `next.config.js` 설정
-  - 이미지 도메인 허용
+#### Task 1.3.2: Next.js 설정 파일 구성 ✅
+- [x] `next.config.ts` 설정
+  - 이미지 도메인 허용 (Supabase, TikTok, Instagram, YouTube)
   - 환경 변수 검증
-  - Webpack 설정 (필요 시)
-- [ ] `middleware.ts` 기본 구조 작성
+  - Server Actions 설정
+  - TypeScript & ESLint strict mode
+- [x] `middleware.ts` 기본 구조 작성
   - CORS 설정
-  - Rate limiting 준비
+  - Rate limiting (메모리 기반)
+  - 보안 헤더 추가
 
 **예상 시간**: 1시간
-**완료 조건**: 설정 파일 작동 확인
+**완료 조건**: 설정 파일 작동 확인 ✅
 
 ---
 

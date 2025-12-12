@@ -22,10 +22,10 @@ export const signupSchema = z
 export const trendAnalysisSchema = z.object({
   keyword: z.string().min(1, '키워드를 입력해주세요'),
   platform: z.enum(['tiktok', 'reels', 'shorts'], {
-    errorMap: () => ({ message: '플랫폼을 선택해주세요' }),
+    message: '플랫폼을 선택해주세요',
   }),
   country: z.enum(['KR', 'US', 'JP'], {
-    errorMap: () => ({ message: '국가를 선택해주세요' }),
+    message: '국가를 선택해주세요',
   }),
 });
 
@@ -33,10 +33,10 @@ export const trendAnalysisSchema = z.object({
 export const contentGenerationSchema = z.object({
   trendId: z.string().optional(),
   brandCategory: z.enum(['buldak', 'samyang_ramen', 'jelly'], {
-    errorMap: () => ({ message: '브랜드 카테고리를 선택해주세요' }),
+    message: '브랜드 카테고리를 선택해주세요',
   }),
   tone: z.enum(['fun', 'kawaii', 'provocative', 'cool'], {
-    errorMap: () => ({ message: '톤앤매너를 선택해주세요' }),
+    message: '톤앤매너를 선택해주세요',
   }),
   targetCountry: z.enum(['KR', 'US', 'JP']),
 });
