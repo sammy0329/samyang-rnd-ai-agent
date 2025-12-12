@@ -428,17 +428,30 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ### Epic 2.3: 데이터베이스 쿼리 함수
 **담당**: Developer | **우선순위**: P1
 
-#### Task 2.3.1: Trends 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/trends.ts` 생성
-- [ ] `getTrends()` - 트렌드 목록 조회
-- [ ] `getTrendById()` - 단일 트렌드 조회
-- [ ] `createTrend()` - 트렌드 생성
-- [ ] `updateTrend()` - 트렌드 수정
-- [ ] `deleteTrend()` - 트렌드 삭제
-- [ ] TypeScript 타입 정의 (`types/trends.ts`)
+#### Task 2.3.1: Trends 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/trends.ts` 생성
+- [x] `getTrends()` - 트렌드 목록 조회
+  - 필터링 (keyword, platform, country, viral_score, samyang_relevance)
+  - 정렬 (collected_at, viral_score, samyang_relevance, created_at)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getTrendById()` - 단일 트렌드 조회
+- [x] `createTrend()` - 트렌드 생성
+  - 필수 필드 검증 (keyword, platform)
+  - 점수 범위 검증 (0-100)
+- [x] `updateTrend()` - 트렌드 수정
+  - 부분 업데이트 지원
+  - 점수 범위 검증
+- [x] `deleteTrend()` - 트렌드 삭제
+- [x] TypeScript 타입 정의 (`types/trends.ts`)
+  - `Trend` - 트렌드 데이터 타입
+  - `CreateTrendInput` - 생성 입력 타입
+  - `UpdateTrendInput` - 업데이트 입력 타입
+  - `TrendFilters` - 필터 타입
+  - `TrendResponse`, `TrendsListResponse` - 응답 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
