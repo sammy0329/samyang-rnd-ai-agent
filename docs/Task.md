@@ -455,17 +455,30 @@ pnpm add @supabase/supabase-js @supabase/ssr
 
 ---
 
-#### Task 2.3.2: Creators 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/creators.ts` 생성
-- [ ] `getCreators()` - 크리에이터 목록 조회
-- [ ] `getCreatorById()` - 단일 크리에이터 조회
-- [ ] `createCreator()` - 크리에이터 생성
-- [ ] `updateCreator()` - 크리에이터 수정
-- [ ] `deleteCreator()` - 크리에이터 삭제
-- [ ] TypeScript 타입 정의 (`types/creators.ts`)
+#### Task 2.3.2: Creators 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/creators.ts` 생성
+- [x] `getCreators()` - 크리에이터 목록 조회
+  - 필터링 (username, platform, content_category, follower_count, engagement_rate, brand_fit_score)
+  - 정렬 (follower_count, engagement_rate, brand_fit_score, last_analyzed_at, created_at)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getCreatorById()` - 단일 크리에이터 조회
+- [x] `createCreator()` - 크리에이터 생성
+  - 필수 필드 검증 (username, platform, profile_url)
+  - 점수 범위 검증 (0-100)
+- [x] `updateCreator()` - 크리에이터 수정
+  - 부분 업데이트 지원
+  - 점수 범위 검증
+- [x] `deleteCreator()` - 크리에이터 삭제
+- [x] TypeScript 타입 정의 (`types/creators.ts`)
+  - `Creator` - 크리에이터 데이터 타입
+  - `CreateCreatorInput` - 생성 입력 타입
+  - `UpdateCreatorInput` - 업데이트 입력 타입
+  - `CreatorFilters` - 필터 타입
+  - `CreatorResponse`, `CreatorsListResponse` - 응답 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
