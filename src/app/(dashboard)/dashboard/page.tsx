@@ -1,4 +1,4 @@
-import { getServerSession } from '@/lib/auth/supabase';
+import { getServerSession } from '@/lib/auth/server';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

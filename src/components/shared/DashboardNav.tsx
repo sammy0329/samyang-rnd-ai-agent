@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { signOut } from '@/lib/auth/supabase';
+import { signOut, type AuthUser } from '@/lib/auth/client';
 import { Button } from '@/components/ui/button';
-import type { AuthUser } from '@/lib/auth/supabase';
 
 interface DashboardNavProps {
   user: AuthUser;

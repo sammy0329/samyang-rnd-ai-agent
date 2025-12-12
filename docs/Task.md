@@ -363,7 +363,39 @@ pnpm add @supabase/supabase-js @supabase/ssr
 
 ---
 
-#### Task 2.2.5: 사용자 프로필 페이지 ⬜
+#### Task 2.2.5: Supabase OTP 이메일 인증 구현 ✅
+- [x] Supabase 내장 OTP 기능 사용
+- [x] `sendSignUpOtp()` 함수 추가 (`lib/auth/client.ts`)
+  - Supabase가 자동으로 6자리 코드 생성 및 이메일 전송
+  - 별도 이메일 서비스 연동 불필요
+- [x] `verifySignUpOtp()` 함수 추가
+  - OTP 검증 및 자동 로그인
+- [x] `VerificationCodeInput` 컴포넌트 생성
+  - 6자리 코드 입력 UI
+  - 1분 타이머
+  - 자동 포커스 이동
+  - 재전송 기능
+- [x] `SignupForm` OTP 방식으로 업데이트
+  - 2단계 회원가입 플로우 (정보 입력 → 코드 검증)
+  - Supabase OTP API 직접 호출
+- [x] 불필요한 커스텀 API routes 삭제
+  - `/api/auth/send-verification` 제거
+  - `/api/auth/verify-code` 제거
+- [x] 불필요한 마이그레이션 파일 삭제
+  - `verification_codes` 테이블 불필요 (Supabase가 자동 관리)
+
+**예상 시간**: 3시간
+**완료 조건**: OTP 이메일 인증 성공 ✅
+
+**개선 사항**:
+- 별도 이메일 서비스(SendGrid, AWS SES) 연동 불필요
+- 커스텀 데이터베이스 테이블 불필요
+- Supabase의 검증된 보안 시스템 사용
+- 코드 간소화 및 유지보수성 향상
+
+---
+
+#### Task 2.2.6: 사용자 프로필 페이지 ⬜
 - [ ] `app/(dashboard)/profile/page.tsx` 생성
 - [ ] 프로필 조회
 - [ ] 프로필 수정

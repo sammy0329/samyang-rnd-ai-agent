@@ -1,4 +1,4 @@
-import { getServerSession } from '@/lib/auth/supabase';
+import { getServerSession } from '@/lib/auth/server';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {

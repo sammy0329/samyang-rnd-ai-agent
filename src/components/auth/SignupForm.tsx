@@ -6,15 +6,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signupSchema, type SignupInput } from '@/types/schemas';
-import { signUp } from '@/lib/auth/supabase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { VerificationCodeInput } from './VerificationCodeInput';
+import { sendSignUpOtp, verifySignUpOtp } from '@/lib/auth/client';
+
+type SignupStep = 'info' | 'verification';
 
 export function SignupForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [step, setStep] = useState<SignupStep>('info');
+  const [email, setEmail] = useState<string>('');
 
   const {
     register,
@@ -24,43 +29,141 @@ export function SignupForm() {
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = async (data: SignupInput) => {
+  const sendVerificationCode = async (data: SignupInput) => {
     setIsLoading(true);
     setErrorMessage('');
-    setSuccessMessage('');
 
     try {
-      const { data: user, error } = await signUp({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      });
+      // Supabase OTP 전송 (자동으로 이메일 발송)
+      const { error } = await sendSignUpOtp(data.email, { name: data.name });
 
       if (error) {
-        setErrorMessage(error.message);
+        setErrorMessage(error.message || '인증 코드 전송에 실패했습니다.');
         return;
       }
 
-      if (user) {
-        setSuccessMessage(
-          '회원가입이 완료되었습니다! 이메일을 확인하여 인증을 완료해주세요.'
-        );
-
-        // 3초 후 로그인 페이지로 이동
-        setTimeout(() => {
-          router.push('/login');
-        }, 3000);
-      }
+      setEmail(data.email);
+      setStep('verification');
     } catch (error) {
-      setErrorMessage('회원가입 중 오류가 발생했습니다.');
-      console.error('Signup error:', error);
+      setErrorMessage('인증 코드 전송 중 오류가 발생했습니다.');
+      console.error('Send verification error:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const verifyCode = async (code: string) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      // Supabase OTP 검증
+      const { data: user, error } = await verifySignUpOtp(email, code);
+
+      if (error) {
+        setErrorMessage(error.message || '인증 코드가 올바르지 않습니다.');
+        return;
+      }
+
+      if (user) {
+        setSuccessMessage('회원가입이 완료되었습니다! 대시보드로 이동합니다.');
+
+        // 2초 후 대시보드로 이동 (이미 로그인된 상태)
+        setTimeout(() => {
+          router.push('/dashboard');
+          router.refresh();
+        }, 2000);
+      }
+    } catch (error) {
+      setErrorMessage('인증 중 오류가 발생했습니다.');
+      console.error('Verify code error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendCode = () => {
+    sendSignUpOtp(email).then(({ error }) => {
+      if (error) {
+        setErrorMessage('재전송에 실패했습니다.');
+      }
+    });
+  };
+
+  // 인증 코드 입력 단계
+  if (step === 'verification' && email) {
+    return (
+      <div className="space-y-6">
+        {errorMessage && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-800">{errorMessage}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="rounded-md bg-green-50 p-4">
+            <div className="flex">
+              <div className="shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-800">{successMessage}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <VerificationCodeInput
+          email={email}
+          onSubmit={verifyCode}
+          onResend={handleResendCode}
+          isLoading={isLoading}
+        />
+
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={() => setStep('info')}
+            className="text-sm text-gray-600 hover:text-gray-900"
+            disabled={isLoading}
+          >
+            ← 이전으로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 회원가입 정보 입력 단계
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(sendVerificationCode)} className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900">회원가입</h2>
         <p className="mt-2 text-sm text-gray-600">새 계정을 만드세요</p>
@@ -69,7 +172,7 @@ export function SignupForm() {
       {errorMessage && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <svg
                 className="h-5 w-5 text-red-400"
                 viewBox="0 0 20 20"
@@ -84,29 +187,6 @@ export function SignupForm() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-red-800">{errorMessage}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {successMessage && (
-        <div className="rounded-md bg-green-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-green-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-green-800">{successMessage}</p>
             </div>
           </div>
         </div>
@@ -149,7 +229,7 @@ export function SignupForm() {
 
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-            비밀번호
+            비밀번호 (선택)
           </label>
           <Input
             id="password"
@@ -162,7 +242,7 @@ export function SignupForm() {
           {errors.password && (
             <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
           )}
-          <p className="mt-1 text-xs text-gray-500">최소 8자 이상</p>
+          <p className="mt-1 text-xs text-gray-500">OTP 인증만 사용하려면 비워두세요</p>
         </div>
 
         <div>
@@ -187,7 +267,7 @@ export function SignupForm() {
       </div>
 
       <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? '회원가입 중...' : '회원가입'}
+        {isLoading ? '전송 중...' : '인증 코드 받기'}
       </Button>
 
       <div className="text-center text-sm">

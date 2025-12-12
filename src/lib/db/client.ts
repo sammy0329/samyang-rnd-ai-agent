@@ -1,45 +1,23 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 
-// Browser Client (클라이언트 컴포넌트용)
+/**
+ * Browser Client (클라이언트 컴포넌트용)
+ *
+ * Client Components에서 사용하는 Supabase 클라이언트
+ * - 브라우저 환경에서 실행
+ * - 쿠키 기반 세션 자동 관리
+ * - RLS 정책 적용
+ *
+ * @example
+ * 'use client';
+ * import { createClient } from '@/lib/db/client';
+ *
+ * const supabase = createClient();
+ * const { data } = await supabase.from('trends').select('*');
+ */
 export function createClient() {
   return createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
-
-// Server Client (서버 컴포넌트 및 API 라우트용)
-export async function createServerSupabaseClient() {
-  const cookieStore = await cookies();
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // Server Component에서는 쿠키 설정이 불가능할 수 있음
-          }
-        },
-      },
-    }
-  );
-}
-
-// Admin Client (서비스 역할 - 모든 권한)
-export function createAdminClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
