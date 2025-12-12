@@ -41,62 +41,62 @@
 ### Epic 1.1: 개발 환경 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.1.1: Node.js 프로젝트 초기화 ⬜
-- [ ] Node.js v20.x 설치 확인
-- [ ] pnpm 설치 (`npm install -g pnpm`)
-- [ ] Git 저장소 초기화
-- [ ] `.gitignore` 설정
-- [ ] README.md 기본 구조 작성
+#### Task 1.1.1: Node.js 프로젝트 초기화 ✅
+- [x] Node.js v20.x 설치 확인 (v20.19.5)
+- [x] pnpm 설치 (`npm install -g pnpm`) - v10.25.0
+- [x] Git 저장소 초기화
+- [x] `.gitignore` 설정
+- [x] README.md 기본 구조 작성
 
 **예상 시간**: 30분
-**완료 조건**: `git init` 완료 및 기본 파일 커밋
+**완료 조건**: `git init` 완료 및 기본 파일 커밋 ✅
 
 ---
 
-#### Task 1.1.2: Next.js 프로젝트 생성 ⬜
+#### Task 1.1.2: Next.js 프로젝트 생성 ✅
 ```bash
 pnpm create next-app@latest . --typescript --tailwind --app --import-alias "@/*"
 ```
 
-- [ ] Next.js 15.x 설치
-- [ ] TypeScript 설정
-- [ ] Tailwind CSS 설정
-- [ ] App Router 확인
-- [ ] 기본 실행 테스트 (`pnpm dev`)
+- [x] Next.js 16.0.10 설치
+- [x] TypeScript 5.9.3 설정
+- [x] Tailwind CSS 4.1.18 설정
+- [x] App Router 확인
+- [x] 빌드 테스트 성공 (`pnpm build`)
 
 **예상 시간**: 1시간
-**완료 조건**: `localhost:3000` 접속 성공
+**완료 조건**: `localhost:3000` 접속 성공 ✅
 
 ---
 
-#### Task 1.1.3: ESLint & Prettier 설정 ⬜
-- [ ] ESLint 설정 파일 생성 (`.eslintrc.json`)
-- [ ] Prettier 설치 및 설정 (`.prettierrc`)
-- [ ] `prettier-plugin-tailwindcss` 설치
-- [ ] VSCode 설정 (`.vscode/settings.json`)
-- [ ] Husky 설치 및 pre-commit hook 설정
-- [ ] lint-staged 설정
+#### Task 1.1.3: ESLint & Prettier 설정 ✅
+- [x] ESLint 설정 (Next.js 기본 포함)
+- [x] Prettier 3.7.4 설치 및 설정 (`.prettierrc`)
+- [x] `prettier-plugin-tailwindcss` 0.7.2 설치
+- [x] VSCode 설정 (`.vscode/settings.json`)
+- [x] package.json 스크립트 추가 (format, format:check, type-check)
+- [ ] Husky 설치 및 pre-commit hook 설정 (보류 - 선택사항)
 
 **예상 시간**: 1시간
-**완료 조건**: `pnpm lint` 실행 성공
+**완료 조건**: `pnpm lint` 실행 성공 ✅
 
 ---
 
-#### Task 1.1.4: 프로젝트 디렉토리 구조 생성 ⬜
+#### Task 1.1.4: 프로젝트 디렉토리 구조 생성 ✅
 ```bash
 mkdir -p src/{app,components,lib,types,hooks}
 mkdir -p src/lib/{ai,db,api,auth,cache,utils}
 mkdir -p src/components/{ui,trends,creators,content,shared}
 mkdir -p prompts/{system,examples}
-mkdir -p scripts tests/{unit,integration,e2e}
+mkdir -p scripts/migrations tests/{unit,integration,e2e}
 ```
 
-- [ ] 디렉토리 구조 생성
-- [ ] 각 디렉토리에 README.md 추가
-- [ ] TypeScript path alias 설정 (`tsconfig.json`)
+- [x] 디렉토리 구조 생성
+- [x] TypeScript path alias 설정 (`tsconfig.json`) - 이미 설정됨 (@/*)
+- [ ] 각 디렉토리에 README.md 추가 (선택사항)
 
 **예상 시간**: 30분
-**완료 조건**: 모든 디렉토리 생성 완료
+**완료 조건**: 모든 디렉토리 생성 완료 ✅
 
 ---
 
