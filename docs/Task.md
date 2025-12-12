@@ -161,10 +161,10 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ### Epic 1.3: 환경 변수 & 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.3.1: 환경 변수 파일 생성 ⬜
-- [ ] `.env.local` 파일 생성
-- [ ] `.env.example` 파일 생성
-- [ ] 필요한 환경 변수 정의:
+#### Task 1.3.1: 환경 변수 파일 생성 ✅
+- [x] `.env.local` 파일 생성
+- [x] `.env.example` 파일 생성
+- [x] 필요한 환경 변수 정의:
   ```env
   # Supabase
   NEXT_PUBLIC_SUPABASE_URL=
@@ -185,9 +185,10 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
   YOUTUBE_API_KEY=
   SERPAPI_KEY=
   ```
+- [x] `docs/study.md`를 `.gitignore`에 추가
 
 **예상 시간**: 30분
-**완료 조건**: `.env.example` 커밋 완료
+**완료 조건**: `.env.example` 커밋 완료 ✅
 
 ---
 
