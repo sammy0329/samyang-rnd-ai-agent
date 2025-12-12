@@ -103,52 +103,58 @@ mkdir -p scripts/migrations tests/{unit,integration,e2e}
 ### Epic 1.2: 의존성 패키지 설치
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.2.1: UI 라이브러리 설치 ⬜
+#### Task 1.2.1: UI 라이브러리 설치 ✅
 ```bash
-pnpm add @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-select @radix-ui/react-tabs
-pnpm add clsx tailwind-merge
-pnpm add lucide-react
+pnpm dlx shadcn@latest init
+pnpm dlx shadcn@latest add button card input dialog select tabs
 ```
 
-- [ ] Radix UI 컴포넌트 설치
-- [ ] shadcn/ui CLI 설치 (`pnpm dlx shadcn-ui@latest init`)
-- [ ] 기본 UI 컴포넌트 추가 (Button, Card, Input, Dialog)
-- [ ] `lib/utils.ts`에 `cn()` 함수 추가
+- [x] shadcn/ui 초기화 (Neutral theme)
+- [x] Radix UI 컴포넌트 자동 설치
+- [x] 기본 UI 컴포넌트 추가 (Button, Card, Input, Dialog, Select, Tabs)
+- [x] `lib/utils.ts`에 `cn()` 함수 자동 생성
+- [x] components.json 생성
 
 **예상 시간**: 1시간
-**완료 조건**: shadcn/ui 컴포넌트 사용 가능
+**완료 조건**: shadcn/ui 컴포넌트 사용 가능 ✅
 
 ---
 
-#### Task 1.2.2: 상태 관리 & 데이터 Fetching 설치 ⬜
+#### Task 1.2.2: 상태 관리 & 데이터 Fetching 설치 ✅
 ```bash
-pnpm add zustand
-pnpm add @tanstack/react-query
-pnpm add axios
+pnpm add zustand @tanstack/react-query axios
 ```
 
-- [ ] Zustand 설치 및 기본 store 생성
-- [ ] React Query 설정
-- [ ] QueryClientProvider 설정 (`app/providers.tsx`)
-- [ ] Axios 인스턴스 생성 (`lib/api/client.ts`)
+- [x] Zustand 5.0.9 설치 및 기본 store 생성 (useAuthStore)
+- [x] React Query 5.90.12 설치
+- [x] QueryClientProvider 설정 (`app/providers.tsx`)
+- [x] Axios 1.13.2 인스턴스 생성 (`lib/api/client.ts`)
+  - Request/Response interceptors 구현
+  - 인증 토큰 자동 첨부
+  - 401 에러 핸들링
 
 **예상 시간**: 1.5시간
-**완료 조건**: React Query DevTools 작동 확인
+**완료 조건**: React Query 설정 완료 ✅
 
 ---
 
-#### Task 1.2.3: 폼 & 검증 라이브러리 설치 ⬜
+#### Task 1.2.3: 폼 & 검증 라이브러리 설치 ✅
 ```bash
-pnpm add react-hook-form zod @hookform/resolvers
-pnpm add date-fns
+pnpm add react-hook-form zod @hookform/resolvers date-fns
 ```
 
-- [ ] React Hook Form 설치
-- [ ] Zod 스키마 예시 작성 (`types/schemas.ts`)
-- [ ] 테스트 폼 컴포넌트 작성
+- [x] React Hook Form 7.68.0 설치
+- [x] Zod 4.1.13 설치
+- [x] @hookform/resolvers 5.2.2 설치
+- [x] date-fns 4.1.0 설치
+- [x] Zod 스키마 작성 (`types/schemas.ts`)
+  - loginSchema, signupSchema
+  - trendAnalysisSchema
+  - contentGenerationSchema
+  - creatorMatchingSchema
 
 **예상 시간**: 1시간
-**완료 조건**: 폼 검증 테스트 성공
+**완료 조건**: 스키마 정의 완료 ✅
 
 ---
 
