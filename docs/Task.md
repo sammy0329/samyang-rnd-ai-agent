@@ -299,51 +299,75 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ### Epic 2.2: 사용자 인증 구현
 **담당**: Developer | **우선순위**: P0
 
-#### Task 2.2.1: Auth 헬퍼 함수 작성 ⬜
-- [ ] `lib/auth/supabase.ts` 생성
-- [ ] 회원가입 함수
-- [ ] 로그인 함수
-- [ ] 로그아웃 함수
-- [ ] 세션 확인 함수
-- [ ] 사용자 정보 조회 함수
+#### Task 2.2.1: Auth 헬퍼 함수 작성 ✅
+- [x] `lib/auth/supabase.ts` 생성
+- [x] 회원가입 함수 (signUp)
+- [x] 로그인 함수 (signIn)
+- [x] 로그아웃 함수 (signOut)
+- [x] 세션 확인 함수 (getSession, getServerSession)
+- [x] 사용자 정보 조회 함수 (getCurrentUser, getServerUser)
+- [x] 권한 확인 함수 (requireAuth, requireAdmin, checkIsAdmin)
 
 **예상 시간**: 2시간
-**완료 조건**: Auth 함수 작동 확인
+**완료 조건**: Auth 함수 작동 확인 ✅
 
 ---
 
-#### Task 2.2.2: 로그인/회원가입 UI 구현 ⬜
-- [ ] `app/(auth)/login/page.tsx` 생성
-- [ ] `app/(auth)/signup/page.tsx` 생성
-- [ ] 로그인 폼 컴포넌트 (`components/auth/LoginForm.tsx`)
-- [ ] 회원가입 폼 컴포넌트 (`components/auth/SignupForm.tsx`)
-- [ ] Zod 스키마 검증
-- [ ] 에러 핸들링
-- [ ] 로딩 상태 표시
+#### Task 2.2.2: 로그인/회원가입 UI 구현 ✅
+- [x] `app/(auth)/layout.tsx` 생성 (Auth 레이아웃)
+- [x] `app/(auth)/login/page.tsx` 생성
+- [x] `app/(auth)/signup/page.tsx` 생성
+- [x] 로그인 폼 컴포넌트 (`components/auth/LoginForm.tsx`)
+  - React Hook Form + Zod 검증
+  - 에러 메시지 표시
+  - 로딩 상태
+- [x] 회원가입 폼 컴포넌트 (`components/auth/SignupForm.tsx`)
+  - 비밀번호 확인 필드
+  - 성공 메시지 및 자동 리다이렉트
+- [x] Zod 스키마 검증 (loginSchema, signupSchema)
+- [x] 에러 핸들링
+- [x] 로딩 상태 표시
 
 **예상 시간**: 3시간
-**완료 조건**: 로그인/회원가입 성공
+**완료 조건**: 로그인/회원가입 성공 ✅
 
 ---
 
-#### Task 2.2.3: 인증 미들웨어 구현 ⬜
-- [ ] `middleware.ts` 업데이트
-- [ ] 보호된 라우트 설정
-- [ ] 비인증 사용자 리다이렉트
-- [ ] 세션 갱신 로직
-- [ ] 권한 확인 (role 기반)
+#### Task 2.2.3: 인증 미들웨어 구현 ✅
+- [x] `middleware.ts` 생성
+- [x] Supabase 세션 관리 및 쿠키 처리
+- [x] 보호된 라우트 설정 (/dashboard, /trends, /creators, /content)
+- [x] 비인증 사용자 리다이렉트 (→ /login)
+- [x] 로그인된 사용자 Auth 페이지 리다이렉트 (→ /dashboard)
+- [x] 세션 갱신 로직
+- [x] CORS 헤더 (API 라우트용)
+- [x] 보안 헤더 추가
 
 **예상 시간**: 2시간
-**완료 조건**: 보호된 페이지 접근 제어 확인
+**완료 조건**: 보호된 페이지 접근 제어 확인 ✅
 
 ---
 
-#### Task 2.2.4: 사용자 프로필 페이지 ⬜
+#### Task 2.2.4: 대시보드 구현 ✅
+- [x] `app/(dashboard)/layout.tsx` 생성 (인증 확인)
+- [x] `app/(dashboard)/dashboard/page.tsx` 생성
+- [x] DashboardNav 컴포넌트 (네비게이션 바)
+  - 사용자 정보 표시
+  - Admin 배지
+  - 로그아웃 버튼
+- [x] 대시보드 페이지 (기능 카드)
+- [x] 홈 페이지 (/) 리다이렉트 로직
+
+**예상 시간**: 2시간
+**완료 조건**: 대시보드 접근 및 로그아웃 기능 확인 ✅
+
+---
+
+#### Task 2.2.5: 사용자 프로필 페이지 ⬜
 - [ ] `app/(dashboard)/profile/page.tsx` 생성
 - [ ] 프로필 조회
 - [ ] 프로필 수정
 - [ ] 비밀번호 변경
-- [ ] 로그아웃 버튼
 
 **예상 시간**: 2시간
 **완료 조건**: 프로필 CRUD 작동
