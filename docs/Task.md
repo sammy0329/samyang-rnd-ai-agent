@@ -482,17 +482,29 @@ pnpm add @supabase/supabase-js @supabase/ssr
 
 ---
 
-#### Task 2.3.3: Content Ideas 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/content-ideas.ts` 생성
-- [ ] `getContentIdeas()` - 아이디어 목록 조회
-- [ ] `getContentIdeaById()` - 단일 아이디어 조회
-- [ ] `createContentIdea()` - 아이디어 생성
-- [ ] `updateContentIdea()` - 아이디어 수정
-- [ ] `deleteContentIdea()` - 아이디어 삭제
-- [ ] TypeScript 타입 정의 (`types/content.ts`)
+#### Task 2.3.3: Content Ideas 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/content-ideas.ts` 생성
+- [x] `getContentIdeas()` - 아이디어 목록 조회
+  - 필터링 (trend_id, brand_category, tone, target_country, created_by)
+  - 정렬 (generated_at, created_at, title)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getContentIdeaById()` - 단일 아이디어 조회
+- [x] `createContentIdea()` - 아이디어 생성
+  - 필수 필드 검증 (title)
+- [x] `updateContentIdea()` - 아이디어 수정
+  - 부분 업데이트 지원
+- [x] `deleteContentIdea()` - 아이디어 삭제
+- [x] TypeScript 타입 정의 (`types/content.ts`)
+  - `ContentIdea` - 콘텐츠 아이디어 데이터 타입
+  - `CreateContentIdeaInput` - 생성 입력 타입
+  - `UpdateContentIdeaInput` - 업데이트 입력 타입
+  - `ContentIdeaFilters` - 필터 타입
+  - `ContentIdeaResponse`, `ContentIdeasListResponse` - 응답 타입
+  - `BrandCategory`, `Tone`, `Country` - Enum 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
