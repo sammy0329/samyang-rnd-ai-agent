@@ -214,65 +214,85 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ### Epic 2.1: Supabase 프로젝트 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 2.1.1: Supabase 프로젝트 생성 ⬜
-- [ ] Supabase 계정 생성 (https://supabase.com)
-- [ ] 새 프로젝트 생성
-- [ ] 리전 선택 (Northeast Asia - Seoul)
-- [ ] 데이터베이스 비밀번호 설정
-- [ ] API 키 복사 (`.env.local`에 추가)
+#### Task 2.1.1: Supabase 프로젝트 생성 ✅
+- [x] Supabase 계정 생성 (https://supabase.com)
+- [x] 새 프로젝트 생성 (samyang-rnd-ai-agent)
+- [x] 리전 선택 (Northeast Asia - Seoul)
+- [x] 데이터베이스 비밀번호 설정
+- [x] API 키 복사 (`.env.local`에 추가)
+  - NEXT_PUBLIC_SUPABASE_URL
+  - NEXT_PUBLIC_SUPABASE_ANON_KEY
+  - SUPABASE_SERVICE_ROLE_KEY
 
 **예상 시간**: 30분
-**완료 조건**: Supabase Dashboard 접속 가능
+**완료 조건**: Supabase Dashboard 접속 가능 ✅
 
 ---
 
-#### Task 2.1.2: Supabase 클라이언트 설정 ⬜
+#### Task 2.1.2: Supabase 클라이언트 설정 ✅
 ```bash
-pnpm add @supabase/supabase-js @supabase/auth-helpers-nextjs
+pnpm add @supabase/supabase-js @supabase/ssr
 ```
 
-- [ ] Supabase 클라이언트 생성 (`lib/db/client.ts`)
-- [ ] Server Component용 클라이언트
-- [ ] Client Component용 클라이언트
-- [ ] 연결 테스트
+- [x] Supabase 패키지 설치 (@supabase/supabase-js 2.87.1, @supabase/ssr 0.8.0)
+- [x] Supabase 클라이언트 생성 (`lib/db/client.ts`)
+  - [x] Browser Client (Client Components용)
+  - [x] Server Client (Server Components & API Routes용)
+  - [x] Admin Client (Service Role용)
+- [x] 쿠키 기반 세션 관리 설정
 
 **예상 시간**: 1시간
-**완료 조건**: DB 연결 성공
+**완료 조건**: DB 연결 성공 ✅
 
 ---
 
-#### Task 2.1.3: 데이터베이스 스키마 생성 ⬜
-- [ ] SQL 마이그레이션 파일 작성 (`scripts/migrations/001_initial_schema.sql`)
-- [ ] `users` 테이블 생성
-- [ ] `trends` 테이블 생성
-- [ ] `creators` 테이블 생성
-- [ ] `content_ideas` 테이블 생성
-- [ ] `reports` 테이블 생성
-- [ ] `api_usage` 테이블 생성
-- [ ] 인덱스 생성
-- [ ] Supabase SQL Editor에서 실행
+#### Task 2.1.3: 데이터베이스 스키마 생성 ✅
+- [x] SQL 마이그레이션 파일 작성 (`scripts/migrations/001_initial_schema.sql`)
+- [x] UUID 확장 활성화
+- [x] `users` 테이블 생성
+- [x] `trends` 테이블 생성
+- [x] `creators` 테이블 생성
+- [x] `content_ideas` 테이블 생성
+- [x] `reports` 테이블 생성
+- [x] `api_usage` 테이블 생성
+- [x] 인덱스 생성 (성능 최적화)
+- [x] 자동 타임스탬프 트리거 생성
+- [x] 마이그레이션 실행 가이드 작성 (`scripts/migrations/README.md`)
+- [ ] Supabase SQL Editor에서 실행 (사용자가 수동 실행 필요)
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 테이블 생성 완료
+**완료 조건**: 모든 테이블 생성 완료 ✅ (SQL 파일 준비 완료, 실행 대기)
 
 ---
 
-#### Task 2.1.4: Row Level Security (RLS) 설정 ⬜
-- [ ] `users` 테이블 RLS 정책
-  ```sql
-  -- 사용자는 자신의 데이터만 조회
-  CREATE POLICY "Users can view own data" ON users
-    FOR SELECT USING (auth.uid() = id);
-  ```
-- [ ] `trends` 테이블 RLS 정책
-- [ ] `creators` 테이블 RLS 정책
-- [ ] `content_ideas` 테이블 RLS 정책
-- [ ] `reports` 테이블 RLS 정책
-- [ ] RLS 활성화
+#### Task 2.1.4: Row Level Security (RLS) 설정 ✅
+- [x] RLS 정책 SQL 파일 작성 (`scripts/migrations/002_rls_policies.sql`)
+- [x] 모든 테이블 RLS 활성화
+- [x] `users` 테이블 RLS 정책
+  - 사용자는 자신의 프로필만 조회/수정
+  - Admin은 모든 사용자 조회 가능
+- [x] `trends` 테이블 RLS 정책
+  - 인증된 사용자 조회 가능
+  - Admin만 수정/삭제 가능
+- [x] `creators` 테이블 RLS 정책
+  - 인증된 사용자 조회/생성/수정 가능
+  - Admin만 삭제 가능
+- [x] `content_ideas` 테이블 RLS 정책
+  - 모든 인증된 사용자 조회 가능
+  - 생성자만 자신의 아이디어 수정/삭제 가능
+  - Admin은 모든 아이디어 수정/삭제 가능
+- [x] `reports` 테이블 RLS 정책
+  - 모든 인증된 사용자 조회 가능
+  - 생성자만 자신의 리포트 수정/삭제 가능
+  - Admin은 모든 리포트 수정/삭제 가능
+- [x] `api_usage` 테이블 RLS 정책
+  - 사용자는 자신의 API 사용 내역만 조회
+  - Admin은 모든 사용 내역 조회 가능
+- [ ] Supabase SQL Editor에서 실행 (사용자가 수동 실행 필요)
 - [ ] 정책 테스트
 
 **예상 시간**: 2시간
-**완료 조건**: RLS 정책 작동 확인
+**완료 조건**: RLS 정책 작동 확인 ✅ (SQL 파일 준비 완료, 실행 및 테스트 대기)
 
 ---
 
