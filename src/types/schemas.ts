@@ -51,9 +51,26 @@ export const creatorMatchingSchema = z.object({
   campaignPurpose: z.enum(['awareness', 'engagement', 'conversion']),
 });
 
+// Profile schemas
+export const profileUpdateSchema = z.object({
+  name: z.string().min(2, '이름은 최소 2자 이상이어야 합니다'),
+});
+
+export const passwordChangeSchema = z
+  .object({
+    newPassword: z.string().min(8, '비밀번호는 최소 8자 이상이어야 합니다'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: '비밀번호가 일치하지 않습니다',
+    path: ['confirmPassword'],
+  });
+
 // Type exports
 export type LoginInput = z.infer<typeof loginSchema>;
 export type SignupInput = z.infer<typeof signupSchema>;
 export type TrendAnalysisInput = z.infer<typeof trendAnalysisSchema>;
 export type ContentGenerationInput = z.infer<typeof contentGenerationSchema>;
 export type CreatorMatchingInput = z.infer<typeof creatorMatchingSchema>;
+export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;

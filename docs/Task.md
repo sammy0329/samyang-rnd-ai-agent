@@ -395,14 +395,33 @@ pnpm add @supabase/supabase-js @supabase/ssr
 
 ---
 
-#### Task 2.2.6: 사용자 프로필 페이지 ⬜
-- [ ] `app/(dashboard)/profile/page.tsx` 생성
-- [ ] 프로필 조회
-- [ ] 프로필 수정
-- [ ] 비밀번호 변경
+#### Task 2.2.6: 사용자 프로필 페이지 ✅
+- [x] `app/(dashboard)/profile/page.tsx` 생성
+- [x] 프로필 조회 컴포넌트 (`ProfileInfoSection`)
+  - 사용자 정보 표시 (이름, 이메일, 역할, 가입일)
+  - 프로필 아이콘
+- [x] 프로필 수정 (`ProfileEditForm`)
+  - 이름 변경 기능
+  - React Hook Form + Zod 검증
+  - 에러/성공 메시지 표시
+- [x] 비밀번호 변경 (`PasswordChangeForm`)
+  - 새 비밀번호 입력 및 확인
+  - Zod 스키마 검증
+  - Supabase Auth 연동
+- [x] Auth 함수 추가 (`lib/auth/client.ts`)
+  - `updateProfile()` - 프로필 업데이트
+  - `updatePassword()` - 비밀번호 변경
+- [x] Zod 스키마 추가 (`types/schemas.ts`)
+  - `profileUpdateSchema`
+  - `passwordChangeSchema`
+- [x] 탭 UI (shadcn/ui Tabs)
+  - 프로필 수정 탭
+  - 비밀번호 변경 탭
+- [x] 네비게이션 링크 추가 (DashboardNav)
+  - 사용자 이름 클릭 시 프로필 페이지 이동
 
 **예상 시간**: 2시간
-**완료 조건**: 프로필 CRUD 작동
+**완료 조건**: 프로필 CRUD 작동 ✅
 
 ---
 

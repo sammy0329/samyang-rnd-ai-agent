@@ -61,7 +61,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="text-sm">
+            <Link href="/profile" className="text-sm hover:opacity-80">
               <span className="text-gray-500">안녕하세요, </span>
               <span className="font-medium text-gray-900">{user.name || user.email}</span>
               {user.role === 'admin' && (
@@ -69,7 +69,7 @@ export function DashboardNav({ user }: DashboardNavProps) {
                   Admin
                 </span>
               )}
-            </div>
+            </Link>
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               로그아웃
             </Button>

@@ -299,3 +299,88 @@ export async function getSession(): Promise<AuthResponse> {
 export async function getCurrentUser(): Promise<AuthResponse> {
   return getSession();
 }
+
+/**
+ * 프로필 업데이트 (이름 변경)
+ */
+export async function updateProfile(data: { name: string }): Promise<AuthResponse> {
+  try {
+    const supabase = createClient();
+
+    // 현재 사용자 확인
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+
+    if (!currentUser) {
+      throw new Error('User not authenticated');
+    }
+
+    // Supabase Auth user_metadata 업데이트
+    const { error: authError } = await supabase.auth.updateUser({
+      data: { name: data.name },
+    });
+
+    if (authError) {
+      throw authError;
+    }
+
+    // users 테이블 업데이트
+    const { error: dbError } = await supabase
+      .from('users')
+      .update({ name: data.name })
+      .eq('id', currentUser.id);
+
+    if (dbError) {
+      throw dbError;
+    }
+
+    // 업데이트된 사용자 정보 조회
+    const { data: userData } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+
+    const user: AuthUser = {
+      id: currentUser.id,
+      email: currentUser.email!,
+      name: userData?.name || data.name,
+      role: userData?.role || 'user',
+      created_at: userData?.created_at || currentUser.created_at,
+    };
+
+    return { data: user, error: null };
+  } catch (error) {
+    console.error('Update profile error:', error);
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('Failed to update profile'),
+    };
+  }
+}
+
+/**
+ * 비밀번호 변경
+ */
+export async function updatePassword(newPassword: string): Promise<AuthResponse<void>> {
+  try {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    return { data: null, error: null };
+  } catch (error) {
+    console.error('Update password error:', error);
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('Failed to update password'),
+    };
+  }
+}
