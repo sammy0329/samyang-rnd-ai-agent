@@ -666,21 +666,43 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 
 ---
 
-#### Task 3.2.3: LLM 응답 캐싱 구현 ⬜
+#### Task 3.2.3: LLM 응답 캐싱 구현 ✅
 ```bash
 pnpm add @upstash/redis
 ```
 
-- [ ] Upstash Redis 프로젝트 생성
-- [ ] Redis 클라이언트 설정 (`lib/cache/redis.ts`)
-- [ ] 캐시 키 생성 함수
-- [ ] 캐시 조회 함수
-- [ ] 캐시 저장 함수
-- [ ] TTL 설정 (24시간)
-- [ ] 캐시 무효화 함수
+- [x] Upstash Redis 패키지 설치 (@upstash/redis 1.35.8)
+- [x] Redis 클라이언트 설정 (`lib/cache/redis.ts`)
+  - 싱글톤 패턴으로 클라이언트 관리
+  - 환경 변수 기반 설정 (UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)
+  - Graceful degradation (Redis 없어도 앱 동작)
+  - 연결 테스트 함수 (testRedisConnection)
+- [x] 캐시 헬퍼 함수 (`lib/cache/ai-cache.ts`)
+  - generateCacheKey() - SHA256 해시 기반 키 생성
+  - getCachedResponse() - 캐시 조회
+  - setCachedResponse() - 캐시 저장
+  - deleteCachedResponse() - 캐시 삭제
+  - clearCacheByPattern() - 패턴 기반 삭제 (Upstash 제한으로 미구현)
+  - getCacheStats() - 캐시 통계 조회
+  - invalidateCache() - 조건 기반 무효화 (미구현)
+- [x] AI utils에 캐싱 통합 (`lib/ai/utils.ts`)
+  - generateAIText()에 캐싱 추가
+  - generateAIObject()에 캐싱 추가
+  - useCache 옵션 (기본값: true)
+  - cacheTTL 옵션 (기본값: 24시간)
+  - 캐시 히트 시 로그 출력 (개발 모드)
+  - 서버 사이드에서만 동작
+- [x] TTL 설정 (기본 24시간, 커스터마이징 가능)
+- [x] 에러 핸들링 (캐시 실패 시 무시하고 계속 진행)
 
 **예상 시간**: 3시간
-**완료 조건**: Redis 캐싱 작동 확인
+**완료 조건**: Redis 캐싱 작동 확인 ✅
+
+**구현 내용**:
+- 동일한 메시지 + 설정으로 AI 호출 시 캐시된 응답 반환
+- 캐시 키는 메시지 내용, provider, model, temperature로 생성
+- 캐시 조회/저장 실패 시에도 정상 작동 (비필수 기능)
+- Redis 미설정 시 캐싱 비활성화 (graceful degradation)
 
 ---
 

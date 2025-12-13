@@ -3,10 +3,16 @@
  * - 리트라이 로직
  * - 에러 핸들링
  * - 토큰 사용량 추적
+ * - 응답 캐싱
  */
 
 import { generateText, generateObject, streamText } from 'ai';
 import { getModel, type ProviderConfig } from './providers';
+import {
+  generateCacheKey,
+  getCachedResponse,
+  setCachedResponse,
+} from '@/lib/cache/ai-cache';
 
 // 리트라이 설정
 const MAX_RETRIES = 3;
@@ -119,18 +125,52 @@ async function logTokenUsage(log: AICallLog): Promise<void> {
 }
 
 /**
- * 텍스트 생성 래퍼 함수 (리트라이 로직 포함)
+ * 텍스트 생성 래퍼 함수 (리트라이 로직 + 캐싱 포함)
  */
 export async function generateAIText(
   messages: AIMessage[],
   config?: ProviderConfig & {
     temperature?: number;
     maxRetries?: number;
+    useCache?: boolean;
+    cacheTTL?: number;
   }
 ) {
   const maxRetries = config?.maxRetries ?? MAX_RETRIES;
+  const useCache = config?.useCache ?? true; // 기본적으로 캐싱 활성화
+  const cacheTTL = config?.cacheTTL; // undefined면 기본값 사용
   const startTime = Date.now();
   let lastError: Error | null = null;
+
+  // 캐시 확인 (서버 사이드에서만)
+  if (useCache && typeof window === 'undefined') {
+    try {
+      const cacheKey = generateCacheKey(messages, {
+        provider: config?.provider,
+        model: config?.model,
+        temperature: config?.temperature ?? 0.7,
+      });
+
+      const cached = await getCachedResponse<{
+        text: string;
+        usage: any;
+        finishReason: string;
+      }>(cacheKey);
+
+      if (cached) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[AI Cache] Hit:', cacheKey.substring(0, 20) + '...');
+        }
+        return {
+          ...cached,
+          error: null,
+        };
+      }
+    } catch (cacheError) {
+      // 캐시 조회 실패는 무시하고 계속 진행
+      console.warn('[AI Cache] Failed to get cached response:', cacheError);
+    }
+  }
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -158,6 +198,28 @@ export async function generateAIText(
         duration,
         success: true,
       });
+
+      // 캐시에 저장 (서버 사이드에서만)
+      if (useCache && typeof window === 'undefined') {
+        try {
+          const cacheKey = generateCacheKey(messages, {
+            provider: config?.provider,
+            model: config?.model,
+            temperature: config?.temperature ?? 0.7,
+          });
+
+          const responseToCache = {
+            text: result.text,
+            usage: result.usage,
+            finishReason: result.finishReason,
+          };
+
+          await setCachedResponse(cacheKey, responseToCache, cacheTTL);
+        } catch (cacheError) {
+          // 캐시 저장 실패는 무시
+          console.warn('[AI Cache] Failed to save response:', cacheError);
+        }
+      }
 
       return {
         text: result.text,
@@ -235,7 +297,7 @@ export async function streamAIText(
 }
 
 /**
- * 구조화된 객체 생성 래퍼 함수
+ * 구조화된 객체 생성 래퍼 함수 (리트라이 로직 + 캐싱 포함)
  */
 export async function generateAIObject<T>(
   messages: AIMessage[],
@@ -243,11 +305,45 @@ export async function generateAIObject<T>(
   config?: ProviderConfig & {
     temperature?: number;
     maxRetries?: number;
+    useCache?: boolean;
+    cacheTTL?: number;
   }
 ) {
   const maxRetries = config?.maxRetries ?? MAX_RETRIES;
+  const useCache = config?.useCache ?? true; // 기본적으로 캐싱 활성화
+  const cacheTTL = config?.cacheTTL; // undefined면 기본값 사용
   const startTime = Date.now();
   let lastError: Error | null = null;
+
+  // 캐시 확인 (서버 사이드에서만)
+  if (useCache && typeof window === 'undefined') {
+    try {
+      const cacheKey = generateCacheKey(messages, {
+        provider: config?.provider,
+        model: config?.model,
+        temperature: config?.temperature ?? 0.7,
+      });
+
+      const cached = await getCachedResponse<{
+        object: T;
+        usage: any;
+        finishReason: string;
+      }>(cacheKey);
+
+      if (cached) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[AI Cache] Hit:', cacheKey.substring(0, 20) + '...');
+        }
+        return {
+          ...cached,
+          error: null,
+        };
+      }
+    } catch (cacheError) {
+      // 캐시 조회 실패는 무시하고 계속 진행
+      console.warn('[AI Cache] Failed to get cached response:', cacheError);
+    }
+  }
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -276,6 +372,28 @@ export async function generateAIObject<T>(
         duration,
         success: true,
       });
+
+      // 캐시에 저장 (서버 사이드에서만)
+      if (useCache && typeof window === 'undefined') {
+        try {
+          const cacheKey = generateCacheKey(messages, {
+            provider: config?.provider,
+            model: config?.model,
+            temperature: config?.temperature ?? 0.7,
+          });
+
+          const responseToCache = {
+            object: result.object,
+            usage: result.usage,
+            finishReason: result.finishReason,
+          };
+
+          await setCachedResponse(cacheKey, responseToCache, cacheTTL);
+        } catch (cacheError) {
+          // 캐시 저장 실패는 무시
+          console.warn('[AI Cache] Failed to save response:', cacheError);
+        }
+      }
 
       return {
         object: result.object as T,
