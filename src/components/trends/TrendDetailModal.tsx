@@ -189,24 +189,158 @@ export function TrendDetailModal({
               )}
           </div>
 
-          {/* 분석 데이터 */}
+          {/* 추가 분석 정보 */}
           {trend.analysis_data && Object.keys(trend.analysis_data).length > 0 && (
-            <div className="rounded-lg border bg-blue-50 p-4">
-              <h3 className="mb-3 text-lg font-semibold">추가 분석 정보</h3>
-              <div className="space-y-2">
-                {Object.entries(trend.analysis_data).map(([key, value]) => (
-                  <div key={key} className="text-sm">
-                    <span className="font-medium text-gray-700">
-                      {key.replace(/_/g, ' ')}:
-                    </span>{' '}
-                    <span className="text-gray-600">
-                      {typeof value === 'object'
-                        ? JSON.stringify(value, null, 2)
-                        : String(value)}
-                    </span>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">추가 분석 정보</h3>
+
+              {/* 브랜드 적합성 이유 */}
+              {(trend.analysis_data as any).brand_fit_reason && (
+                <div className="rounded-lg border bg-blue-50 p-4">
+                  <h4 className="mb-2 font-medium text-blue-900">
+                    💡 브랜드 적합성
+                  </h4>
+                  <p className="text-sm text-gray-700">
+                    {(trend.analysis_data as any).brand_fit_reason}
+                  </p>
+                </div>
+              )}
+
+              {/* 타겟 오디언스 */}
+              {(trend.analysis_data as any).target_audience && (
+                <div className="rounded-lg border bg-purple-50 p-4">
+                  <h4 className="mb-2 font-medium text-purple-900">
+                    🎯 타겟 오디언스
+                  </h4>
+                  <p className="text-sm text-gray-700">
+                    {(trend.analysis_data as any).target_audience}
+                  </p>
+                </div>
+              )}
+
+              {/* 예상 도달률 */}
+              {(trend.analysis_data as any).estimated_reach && (
+                <div className="rounded-lg border bg-green-50 p-4">
+                  <h4 className="mb-2 font-medium text-green-900">
+                    📈 예상 도달률
+                  </h4>
+                  <p className="text-sm text-gray-700">
+                    {(trend.analysis_data as any).estimated_reach}
+                  </p>
+                </div>
+              )}
+
+              {/* 핵심 성공 요인 */}
+              {(trend.analysis_data as any).key_success_factors &&
+                Array.isArray((trend.analysis_data as any).key_success_factors) && (
+                  <div className="rounded-lg border p-4">
+                    <h4 className="mb-2 font-medium text-gray-900">
+                      ✨ 핵심 성공 요인
+                    </h4>
+                    <ul className="space-y-1">
+                      {(trend.analysis_data as any).key_success_factors.map(
+                        (factor: string, index: number) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm text-gray-700"
+                          >
+                            <span className="mt-1 text-green-500">•</span>
+                            <span>{factor}</span>
+                          </li>
+                        )
+                      )}
+                    </ul>
                   </div>
-                ))}
-              </div>
+                )}
+
+              {/* 리스크 */}
+              {(trend.analysis_data as any).risks &&
+                Array.isArray((trend.analysis_data as any).risks) && (
+                  <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+                    <h4 className="mb-2 font-medium text-orange-900">
+                      ⚠️ 잠재적 리스크
+                    </h4>
+                    <ul className="space-y-1">
+                      {(trend.analysis_data as any).risks.map(
+                        (risk: string, index: number) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm text-gray-700"
+                          >
+                            <span className="mt-1 text-orange-500">•</span>
+                            <span>{risk}</span>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+              {/* 추천 제품 */}
+              {(trend.analysis_data as any).recommended_products &&
+                Array.isArray((trend.analysis_data as any).recommended_products) && (
+                  <div className="rounded-lg border p-4">
+                    <h4 className="mb-3 font-medium text-gray-900">
+                      🍜 추천 제품
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {(trend.analysis_data as any).recommended_products.map(
+                        (product: string, index: number) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700"
+                          >
+                            {product === 'buldak'
+                              ? '불닭볶음면'
+                              : product === 'samyang_ramen'
+                                ? '삼양라면'
+                                : product === 'jelly'
+                                  ? '젤리'
+                                  : product}
+                          </span>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
+              {/* 수집된 동영상 */}
+              {(trend.analysis_data as any).collected_videos &&
+                Array.isArray((trend.analysis_data as any).collected_videos) &&
+                (trend.analysis_data as any).collected_videos.length > 0 && (
+                  <div className="rounded-lg border p-4">
+                    <h4 className="mb-3 font-medium text-gray-900">
+                      🎬 참고 영상 (상위 {(trend.analysis_data as any).collected_videos.length}개)
+                    </h4>
+                    <div className="space-y-2">
+                      {(trend.analysis_data as any).collected_videos.map(
+                        (
+                          video: { title: string; url: string; viewCount: number },
+                          index: number
+                        ) => (
+                          <a
+                            key={index}
+                            href={video.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block rounded-lg border bg-white p-3 transition-shadow hover:shadow-md"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="flex-1 text-sm font-medium text-gray-900 line-clamp-2">
+                                {video.title}
+                              </p>
+                              <span className="shrink-0 text-xs text-gray-500">
+                                {video.viewCount
+                                  ? `${(video.viewCount / 1000000).toFixed(1)}M`
+                                  : 'N/A'}
+                              </span>
+                            </div>
+                          </a>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
             </div>
           )}
 
