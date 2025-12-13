@@ -68,8 +68,7 @@ function isRetryableError(error: Error): boolean {
  */
 async function logTokenUsage(log: AICallLog): Promise<void> {
   try {
-    // TODO: DB에 저장하는 로직 추가 (api_usage 테이블)
-    // 현재는 콘솔에만 로그
+    // 개발 모드에서 콘솔 로그
     if (process.env.NODE_ENV === 'development') {
       console.log('[AI Call]', {
         provider: log.provider,
@@ -78,6 +77,40 @@ async function logTokenUsage(log: AICallLog): Promise<void> {
         duration: `${log.duration}ms`,
         success: log.success,
       });
+    }
+
+    // DB에 저장 (프로덕션에서만 또는 항상)
+    // Note: 서버 컴포넌트에서만 동작 (createAPIUsage는 서버 전용)
+    if (typeof window === 'undefined') {
+      try {
+        const { createAPIUsage } = await import('@/lib/db/queries/api-usage');
+        const { calculateCost, getModelName } = await import('./token-counter');
+
+        // 비용 계산
+        let cost = 0;
+        if (log.usage) {
+          const modelName = getModelName(log.provider, log.model);
+          if (modelName) {
+            const costCalc = calculateCost(log.usage, modelName);
+            cost = costCalc.totalCost;
+          }
+        }
+
+        // DB에 기록 (비동기, await하지 않음)
+        createAPIUsage({
+          endpoint: `ai/${log.model}`,
+          method: 'POST',
+          tokens_used: log.usage?.totalTokens || 0,
+          cost,
+          response_time_ms: log.duration,
+          status_code: log.success ? 200 : 500,
+        }).catch((err) => {
+          // DB 저장 실패해도 무시
+          console.error('Failed to save API usage to DB:', err);
+        });
+      } catch (importError) {
+        // Import 실패 무시 (클라이언트 사이드일 수 있음)
+      }
     }
   } catch (error) {
     // 로깅 실패해도 무시 (메인 로직에 영향 없도록)

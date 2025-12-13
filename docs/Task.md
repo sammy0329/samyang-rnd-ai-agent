@@ -626,17 +626,43 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 
 ---
 
-#### Task 3.2.2: 토큰 카운팅 & 비용 추적 ⬜
-- [ ] 토큰 카운터 함수 (`lib/ai/token-counter.ts`)
-- [ ] 비용 계산 함수
-  - GPT-4 Turbo 가격
-  - GPT-4 Mini 가격
-  - Claude 가격
-- [ ] API 사용량 로깅 (`lib/db/queries/api-usage.ts`)
-- [ ] 사용량 조회 API (`/api/usage`)
+#### Task 3.2.2: 토큰 카운팅 & 비용 추적 ✅
+- [x] 토큰 카운터 함수 (`lib/ai/token-counter.ts`)
+  - calculateCost() - 토큰 사용량으로 비용 계산
+  - estimateCost() - 사전 비용 추정
+  - formatCost() - 비용 포맷팅
+  - estimateMonthlyCost() - 월별 비용 추정
+  - getCheapestModel() - 가장 저렴한 모델 찾기
+- [x] 비용 계산 함수 - 2025년 1월 기준 가격
+  - GPT-4 Turbo: $10/$30 (input/output per 1M tokens)
+  - GPT-4: $30/$60
+  - GPT-4 Mini: $0.15/$0.6
+  - GPT-3.5 Turbo: $0.5/$1.5
+  - Claude Opus: $15/$75
+  - Claude Sonnet: $3/$15
+  - Claude Haiku: $0.25/$1.25
+- [x] API Usage 타입 정의 (`types/api-usage.ts`)
+  - APIUsage, CreateAPIUsageInput 인터페이스
+  - UsageStats 통계 타입
+- [x] API 사용량 쿼리 함수 (`lib/db/queries/api-usage.ts`)
+  - createAPIUsage() - 사용량 기록 생성
+  - getAPIUsage() - 사용량 목록 조회
+  - getUserUsageStats() - 사용자별 통계
+  - getSystemUsageStats() - 전체 시스템 통계 (Admin)
+  - getEndpointUsageStats() - 엔드포인트별 통계
+- [x] 사용량 조회 API (`/api/usage`)
+  - GET /api/usage?type=stats - 사용자 통계
+  - GET /api/usage?type=system - 시스템 통계 (Admin)
+  - GET /api/usage?type=list - 사용량 목록
+  - 날짜 필터링 (startDate, endDate)
+  - 페이지네이션 지원
+- [x] AI utils에 DB 로깅 통합
+  - logTokenUsage() 함수 업데이트
+  - 자동 비용 계산 및 DB 저장
+  - 서버 사이드에서만 동작
 
 **예상 시간**: 2시간
-**완료 조건**: 토큰 사용량 DB 저장 확인
+**완료 조건**: 토큰 사용량 DB 저장 확인 ✅
 
 ---
 
