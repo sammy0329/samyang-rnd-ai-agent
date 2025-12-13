@@ -13,12 +13,15 @@ import {
 } from '@/components/ui/dialog';
 import { TrendAnalysisForm } from '@/components/trends/TrendAnalysisForm';
 import { TrendCard } from '@/components/trends/TrendCard';
+import { TrendDetailModal } from '@/components/trends/TrendDetailModal';
 import { Trend } from '@/types/trends';
 
 export default function TrendsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [trends, setTrends] = useState<Trend[]>([]);
+  const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const handleAnalysisSuccess = (data: any) => {
     console.log('Analysis success:', data);
@@ -36,8 +39,8 @@ export default function TrendsPage() {
   };
 
   const handleViewDetail = (trend: Trend) => {
-    console.log('View detail:', trend);
-    // TODO: 상세 모달 열기
+    setSelectedTrend(trend);
+    setIsDetailModalOpen(true);
   };
 
   const handleGenerateIdea = (trend: Trend) => {
@@ -252,6 +255,14 @@ export default function TrendsPage() {
           />
         </DialogContent>
       </Dialog>
+
+      {/* 트렌드 상세 모달 */}
+      <TrendDetailModal
+        trend={selectedTrend}
+        open={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        onGenerateIdea={handleGenerateIdea}
+      />
     </div>
   );
 }
