@@ -904,6 +904,11 @@ pnpm add @upstash/redis
 - API 사용량 추적
 - 테스트 스크립트: scripts/test-trend-analyze-api.ts
 
+**주요 해결 이슈**:
+1. RLS 정책 우회: createTrend, createAPIUsage에서 createAdminClient() 사용
+2. AI 스키마 정렬: prompts/system/trend-analyzer.md를 Zod 스키마와 일치하도록 수정
+3. Provider 초기화: API 키 없을 때 모듈 로드 시점 에러 방지 (optional 처리)
+
 ---
 
 #### Task 4.2.2: 트렌드 목록 조회 API ⬜
