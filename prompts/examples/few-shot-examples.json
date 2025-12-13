@@ -1,0 +1,576 @@
+{
+  "trend_analysis_examples": [
+    {
+      "input": {
+        "keyword": "spicy noodle challenge",
+        "platform": "tiktok",
+        "country": "US"
+      },
+      "output": {
+        "keyword": "spicy noodle challenge",
+        "platform": "tiktok",
+        "country": "US",
+        "format_type": "Challenge",
+        "hook_pattern": "첫 3초에 불닭을 입에 넣는 순간의 과장된 표정으로 시청자의 시선을 사로잡음. '절대 따라하지 마세요' 같은 금지형 텍스트로 역설적 호기심 유발",
+        "visual_pattern": "빠른 컷 전환 (0.5-1초), 클로즈업 샷으로 땀 흘리는 모습과 붉어진 얼굴 강조, 타이머 오버레이로 긴장감 부여, 반응 장면에서 슬로우모션 활용",
+        "music_pattern": "긴박한 비트의 트렌딩 사운드 활용, 매운맛을 먹는 순간 음악 드랍, 사운드 이펙트로 불 타는 소리나 폭발음 추가",
+        "viral_score": 92,
+        "samyang_relevance": 95,
+        "analysis_data": {
+          "target_age": "13-25세 (Gen Z 중심)",
+          "best_product": "불닭볶음면 (핵심 제품), 불닭볶음면 2배 매운맛",
+          "recommended_tone": "도발적, 재미",
+          "key_elements": [
+            "극한의 매운맛 반응",
+            "타이머 챌린지 요소",
+            "친구들과 함께하는 단체 챌린지",
+            "과장된 리액션과 코미디 요소"
+          ],
+          "creative_ideas": "불닭 단계별 매운맛 챌린지 (오리지널 → 2배 → 핵불닭), 물 없이 먹기 챌린지, 외국인 친구 반응 챌린지, 타임 어택 (1분 안에 완식)",
+          "risk_factors": "과도한 매운맛 강조로 인한 부정적 이미지 가능성, 건강 우려 제기될 수 있음. 적절한 면책 문구 필요 (개인 체질에 따라 다를 수 있음)"
+        }
+      }
+    },
+    {
+      "input": {
+        "keyword": "easy ramen recipe",
+        "platform": "shorts",
+        "country": "KR"
+      },
+      "output": {
+        "keyword": "easy ramen recipe",
+        "platform": "shorts",
+        "country": "KR",
+        "format_type": "Recipe",
+        "hook_pattern": "완성된 비주얼로 시작 '이것만 있으면 5분 완성', 재료 3가지만 강조하며 간편함 어필",
+        "visual_pattern": "탑뷰 앵글로 조리 과정 전체 보여주기, 타임랩스로 빠른 전개, 재료 추가 시 클로즈업, 마지막 완성품은 스팀과 함께 식욕 자극",
+        "music_pattern": "경쾌하고 밝은 분위기의 배경음악, 재료 추가 시 통통 튀는 사운드 이펙트, ASMR 요소로 끓는 소리 강조",
+        "viral_score": 78,
+        "samyang_relevance": 88,
+        "analysis_data": {
+          "target_age": "20-40세 (자취생, 직장인)",
+          "best_product": "삼양라면, 불닭볶음면",
+          "recommended_tone": "재미, 따뜻함",
+          "key_elements": [
+            "간편한 3-5가지 재료",
+            "빠른 조리 시간 (5분 이내)",
+            "실용적이고 따라하기 쉬운 레시피",
+            "일상적인 재료 활용"
+          ],
+          "creative_ideas": "삼양라면 + 계란 + 파 = 완벽 조합, 치즈 불닭볶음면 (치즈 추가만으로 업그레이드), 컵라면 활용 꿀팁, 냉장고 파먹기 레시피",
+          "risk_factors": "레시피가 너무 평범하면 차별성 부족, 맛 보장 필요"
+        }
+      }
+    },
+    {
+      "input": {
+        "keyword": "gummy asmr",
+        "platform": "reels",
+        "country": "JP"
+      },
+      "output": {
+        "keyword": "gummy asmr",
+        "platform": "reels",
+        "country": "JP",
+        "format_type": "ASMR",
+        "hook_pattern": "조용한 배경에서 젤리 포장을 뜯는 첫 소리로 시작, 화면 가득 채운 컬러풀한 젤리의 시각적 매력",
+        "visual_pattern": "극도의 클로즈업, 부드러운 조명으로 젤리의 투명감과 광택 강조, 느린 템포의 컷 전환, 색깔별로 정렬된 젤리의 미학적 배치",
+        "music_pattern": "배경음악 없음 또는 아주 잔잔한 앰비언트 사운드, 젤리 씹는 소리, 포장지 바스락 소리, 물 마시는 소리 등 자연스러운 사운드만 활용",
+        "viral_score": 71,
+        "samyang_relevance": 82,
+        "analysis_data": {
+          "target_age": "15-30세 (ASMR 선호층)",
+          "best_product": "삼양 젤리 시리즈 (다양한 맛과 색깔)",
+          "recommended_tone": "카와이, 쿨톤",
+          "key_elements": [
+            "고품질 오디오 녹음",
+            "시각적 미학 (색깔 조합, 배치)",
+            "느린 템포의 편안한 분위기",
+            "귀여운 소품 활용"
+          ],
+          "creative_ideas": "색깔별 젤리 그라데이션 배치, 투명 그릇에 담아 빛 투과 효과, 젤리로 무지개 만들기, 일본 특유의 카와이 문화 반영 (캐릭터 접시, 파스텔 배경)",
+          "risk_factors": "ASMR 특성상 호불호가 명확, 일본 시장의 높은 미학적 기준 충족 필요"
+        }
+      }
+    }
+  ],
+  "creator_matching_examples": [
+    {
+      "input": {
+        "creator_profile": {
+          "username": "@spicy_foodie_king",
+          "platform": "tiktok",
+          "follower_count": 2500000,
+          "avg_views": 1800000,
+          "engagement_rate": 5.2,
+          "content_category": "음식/먹방",
+          "tone_manner": "도발적, 재미",
+          "recent_collaborations": ["매운 라면 브랜드 A", "핫소스 브랜드 B"]
+        }
+      },
+      "output": {
+        "creator_id": "spicy_foodie_king_001",
+        "username": "@spicy_foodie_king",
+        "platform": "tiktok",
+        "brand_fit_score": 94,
+        "quantitative_score": {
+          "follower_score": 10,
+          "view_score": 10,
+          "engagement_score": 20,
+          "total": 40
+        },
+        "qualitative_score": {
+          "category_fit": 20,
+          "tone_fit": 18,
+          "audience_fit": 16,
+          "total": 54
+        },
+        "collaboration_recommendation": {
+          "recommended_type": "장기 앰버서더",
+          "suitable_products": ["불닭볶음면", "불닭볶음면 2배 매운맛", "핵불닭볶음면"],
+          "campaign_ideas": [
+            "불닭 글로벌 챌린지 캠페인 주도",
+            "매운맛 단계별 시리즈 콘텐츠 (주 1회, 3개월)",
+            "신제품 출시 시 독점 선공개 및 리뷰",
+            "팬들과 함께하는 불닭 챌린지 이벤트"
+          ],
+          "expected_reach": "단일 콘텐츠당 150만-200만 도달, 캠페인 기간 누적 1,000만+ 예상",
+          "budget_range": "월 $15,000-$25,000 (장기 계약 시 협의 가능)"
+        },
+        "risk_assessment": {
+          "risk_level": "low",
+          "risk_factors": [
+            "경쟁 브랜드와의 협업 이력 (독점 계약 검토 필요)",
+            "과도한 매운맛 강조로 일부 시청자 이탈 가능성"
+          ],
+          "mitigation_strategies": [
+            "독점 계약 조항 포함 (매운 라면 카테고리)",
+            "콘텐츠 가이드라인 제시 (브랜드 이미지 보호)",
+            "건강 관련 면책 문구 필수 포함"
+          ]
+        },
+        "strengths": [
+          "매우 높은 참여율 (5.2%)로 진성 팬 보유",
+          "음식/매운맛 카테고리 전문성",
+          "글로벌 오디언스 (미국, 유럽 중심)",
+          "바이럴 콘텐츠 제작 능력 검증됨"
+        ],
+        "weaknesses": [
+          "높은 협업 비용",
+          "경쟁 브랜드 협업 이력"
+        ],
+        "final_recommendation": "매우 높은 브랜드 적합도로 장기 앰버서더로 적극 추천. 불닭 브랜드의 글로벌 확장에 핵심 역할 가능. 독점 계약 조건으로 3-6개월 중기 캠페인 제안. 예상 ROI: 높음 (브랜드 인지도 및 판매 전환 모두 기대)"
+      }
+    },
+    {
+      "input": {
+        "creator_profile": {
+          "username": "@home_cooking_mom",
+          "platform": "youtube",
+          "follower_count": 450000,
+          "avg_views": 280000,
+          "engagement_rate": 3.8,
+          "content_category": "요리/레시피",
+          "tone_manner": "따뜻함, 재미",
+          "recent_collaborations": ["주방용품 브랜드", "식재료 배송 서비스"]
+        }
+      },
+      "output": {
+        "creator_id": "home_cooking_mom_001",
+        "username": "@home_cooking_mom",
+        "platform": "youtube",
+        "brand_fit_score": 86,
+        "quantitative_score": {
+          "follower_score": 8,
+          "view_score": 8,
+          "engagement_score": 15,
+          "total": 31
+        },
+        "qualitative_score": {
+          "category_fit": 20,
+          "tone_fit": 20,
+          "audience_fit": 15,
+          "total": 55
+        },
+        "collaboration_recommendation": {
+          "recommended_type": "레시피 개발 + 시리즈 콘텐츠",
+          "suitable_products": ["삼양라면", "불닭볶음면 (순한맛 변형)"],
+          "campaign_ideas": [
+            "삼양라면 활용 가정식 레시피 시리즈 (10편)",
+            "가족이 함께 즐기는 라면 요리 콘텐츠",
+            "아이들을 위한 영양 균형 라면 레시피",
+            "계절별 라면 활용 요리 (여름: 비빔면, 겨울: 찌개)"
+          ],
+          "expected_reach": "시리즈당 누적 250만-300만 뷰, 높은 저장률 예상",
+          "budget_range": "시리즈 $8,000-$12,000 (10편 기준)"
+        },
+        "risk_assessment": {
+          "risk_level": "low",
+          "risk_factors": [
+            "젊은 층 대비 타겟 연령층 높음 (30-50대)"
+          ],
+          "mitigation_strategies": [
+            "가족 단위 소비 촉진 콘텐츠로 접근",
+            "건강한 레시피 개발로 긍정적 이미지 구축"
+          ]
+        },
+        "strengths": [
+          "요리 전문성과 신뢰도",
+          "따뜻하고 친근한 이미지",
+          "가족 단위 오디언스",
+          "실용적 콘텐츠로 저장률 높음"
+        ],
+        "weaknesses": [
+          "바이럴 가능성은 상대적으로 낮음",
+          "젊은 층 도달 제한적"
+        ],
+        "final_recommendation": "삼양라면 브랜드의 가족 친화적 이미지 구축에 최적. 레시피 시리즈로 장기 협업 추천. 매출 직접 전환보다는 브랜드 신뢰도 및 활용도 제고에 초점. 예상 ROI: 중상 (브랜드 이미지 개선 효과)"
+      }
+    },
+    {
+      "input": {
+        "creator_profile": {
+          "username": "@challenge_master_jp",
+          "platform": "instagram",
+          "follower_count": 85000,
+          "avg_views": 42000,
+          "engagement_rate": 6.8,
+          "content_category": "엔터테인먼트/챌린지",
+          "tone_manner": "카와이, 재미",
+          "recent_collaborations": ["일본 과자 브랜드", "음료 브랜드"]
+        }
+      },
+      "output": {
+        "creator_id": "challenge_master_jp_001",
+        "username": "@challenge_master_jp",
+        "platform": "instagram",
+        "brand_fit_score": 81,
+        "quantitative_score": {
+          "follower_score": 6,
+          "view_score": 6,
+          "engagement_score": 20,
+          "total": 32
+        },
+        "qualitative_score": {
+          "category_fit": 18,
+          "tone_fit": 18,
+          "audience_fit": 13,
+          "total": 49
+        },
+        "collaboration_recommendation": {
+          "recommended_type": "단발성 캠페인 + 챌린지 참여",
+          "suitable_products": ["불닭볶음면 (일본 시장용)", "삼양 젤리"],
+          "campaign_ideas": [
+            "일본판 불닭 챌린지 (카와이 버전)",
+            "젤리 색깔 챌린지 (#RainbowJellyChallenge)",
+            "친구들과 함께하는 단체 챌린지",
+            "일본 특유의 리액션 콘텐츠"
+          ],
+          "expected_reach": "4만-6만 도달, 높은 참여율로 2차 확산 기대",
+          "budget_range": "$1,500-$2,500 (단발 캠페인 기준)"
+        },
+        "risk_assessment": {
+          "risk_level": "medium",
+          "risk_factors": [
+            "상대적으로 작은 팔로워 기반",
+            "일본 시장 특성상 문화적 적합성 중요"
+          ],
+          "mitigation_strategies": [
+            "다수의 마이크로 인플루언서 동시 협업으로 리스크 분산",
+            "일본 문화에 맞는 콘텐츠 가이드라인 제공",
+            "현지 매니저와 협업하여 문화적 감수성 확보"
+          ]
+        },
+        "strengths": [
+          "매우 높은 참여율 (6.8%)",
+          "진성 팬 커뮤니티",
+          "일본 시장 특화",
+          "비용 효율적"
+        ],
+        "weaknesses": [
+          "제한적인 도달 범위",
+          "지속적인 영향력 제한"
+        ],
+        "final_recommendation": "마이크로 인플루언서 전략의 일환으로 추천. 일본 시장 테스트 마케팅 또는 틈새 공략에 적합. 여러 마이크로 인플루언서와 동시 협업 시 비용 대비 효과 극대화 가능. 예상 ROI: 중 (틈새 시장 공략 효과)"
+      }
+    }
+  ],
+  "content_idea_examples": [
+    {
+      "input": {
+        "trend_data": {
+          "keyword": "3-minute cooking",
+          "platform": "shorts"
+        },
+        "brand_category": "buldak",
+        "tone": "fun",
+        "target_country": "US"
+      },
+      "output": {
+        "title": "3분 완성! 불닭 치즈볼 레시피",
+        "format_type": "Recipe",
+        "brand_category": "buldak",
+        "tone": "fun",
+        "target_country": "US",
+        "hook_text": [
+          "이 조합 몰랐으면 인생 손해 봤다",
+          "불닭이 간식이 된다고? 3분이면 끝",
+          "치즈 좋아하면 무조건 해봐야 함"
+        ],
+        "scene_structure": {
+          "scene_1": {
+            "duration": "0-3초",
+            "description": "완성된 불닭 치즈볼을 한입 베어 물며 치즈가 쭈욱 늘어나는 장면",
+            "camera_angle": "클로즈업 (입 주변 포커스)",
+            "visual_note": "슬로우모션으로 치즈 늘어나는 순간 강조, 배경은 어둡게 하고 음식만 조명"
+          },
+          "scene_2": {
+            "duration": "3-10초",
+            "description": "재료 3가지 나열 (불닭볶음면, 모짜렐라 치즈, 빵가루)",
+            "camera_angle": "탑뷰 (재료가 한눈에 보이도록)",
+            "visual_note": "각 재료 등장 시 통통 튀는 애니메이션 효과"
+          },
+          "scene_3": {
+            "duration": "10-35초",
+            "description": "조리 과정 빠른 컷 - 면 삶기 → 치즈 속 넣기 → 빵가루 묻히기 → 에어프라이어",
+            "camera_angle": "탑뷰 + 손 클로즈업",
+            "visual_note": "타임랩스 효과로 빠르게 전개, 각 단계마다 텍스트 오버레이 (1단계, 2단계...)"
+          },
+          "scene_4": {
+            "duration": "35-50초",
+            "description": "에어프라이어에서 노릇하게 구워진 치즈볼 꺼내기, 김이 모락모락",
+            "camera_angle": "사이드 앵글 (김 올라오는 모습)",
+            "visual_note": "자연광 활용, 골든 브라운 색감 강조"
+          },
+          "scene_5": {
+            "duration": "50-60초",
+            "description": "한입 크게 베어 물고 만족스러운 표정, 엄지 척",
+            "camera_angle": "미디엄 샷 (얼굴 + 음식)",
+            "visual_note": "텍스트: '좋아요 누르면 치즈 복 받음 🧀', 해시태그 오버레이"
+          }
+        },
+        "editing_format": "빠른 템포",
+        "music_style": "업비트 팝 음악, 요리 과정에 맞춘 비트, 트렌딩 사운드 활용 (예: 'Cooking Time' 시리즈)",
+        "props_needed": [
+          "불닭볶음면 1봉지",
+          "모짜렐라 치즈 (큐브 또는 스틱)",
+          "빵가루",
+          "에어프라이어",
+          "흰색 그릇 (비주얼 대비)",
+          "나무 도마/배경",
+          "조명 (링라이트)"
+        ],
+        "shooting_guide": {
+          "lighting": "자연광 + 링라이트 조합, 음식에 그림자 없도록 45도 각도 조명",
+          "equipment": "스마트폰 + 미니 삼각대, 탑뷰 촬영을 위한 오버헤드 마운트",
+          "location": "밝은 주방 또는 식탁, 깔끔한 배경",
+          "estimated_time": "촬영 30분, 편집 1시간"
+        },
+        "expected_performance": {
+          "viral_potential": "high",
+          "engagement_type": "saves",
+          "target_audience": "15-35세 요리 초보, 간편식 선호층, 치즈 러버",
+          "estimated_reach": "10만-50만 뷰 (레시피 콘텐츠 특성상 저장률 높음)"
+        },
+        "key_messages": [
+          "불닭볶음면의 새로운 활용법",
+          "누구나 쉽게 따라할 수 있는 간편 레시피",
+          "트렌디하고 맛있는 간식"
+        ],
+        "cta": "저장하고 주말에 만들어보세요!",
+        "hashtags": [
+          "#불닭볶음면",
+          "#BuldakNoodles",
+          "#3MinuteRecipe",
+          "#CheeseLovers",
+          "#EasyRecipe",
+          "#AirFryerRecipe",
+          "#SpicyFood"
+        ]
+      }
+    },
+    {
+      "input": {
+        "brand_category": "samyang_ramen",
+        "tone": "kawaii",
+        "target_country": "JP"
+      },
+      "output": {
+        "title": "삼양라면 카와이 도시락 만들기 🍜✨",
+        "format_type": "Tutorial",
+        "brand_category": "samyang_ramen",
+        "tone": "kawaii",
+        "target_country": "JP",
+        "hook_text": [
+          "이렇게 귀여운 라면 도시락 처음이야 🌸",
+          "오늘 점심은 이거다! 카와이 라면 도시락",
+          "회사/학교 가져가면 인기폭발 예약"
+        ],
+        "scene_structure": {
+          "scene_1": {
+            "duration": "0-3초",
+            "description": "완성된 카와이 라면 도시락 오픈 - 하트 모양 계란, 꽃 모양 당근, 귀여운 배치",
+            "camera_angle": "탑뷰 클로즈업",
+            "visual_note": "파스텔 톤 필터, 반짝이는 애니메이션 효과, 일본 특유의 카와이 감성"
+          },
+          "scene_2": {
+            "duration": "3-12초",
+            "description": "준비물 소개 - 삼양라면, 귀여운 도시락 통, 하트/꽃 모양 틀, 식재료",
+            "camera_angle": "탑뷰, 재료를 차례로 배치",
+            "visual_note": "각 재료 등장 시 '핑~' 효과음, 파스텔 배경"
+          },
+          "scene_3": {
+            "duration": "12-35초",
+            "description": "단계별 만들기 - 라면 조리 → 계란 하트 만들기 → 채소 꽃 만들기 → 도시락 예쁘게 담기",
+            "camera_angle": "탑뷰 + 손 클로즈업",
+            "visual_note": "부드러운 전환 효과, 각 단계마다 귀여운 일러스트 텍스트"
+          },
+          "scene_4": {
+            "duration": "35-50초",
+            "description": "완성된 도시락 디테일 샷 - 각도 바꿔가며 보여주기",
+            "camera_angle": "다양한 앵글 (45도, 탑뷰, 사이드)",
+            "visual_note": "은은한 조명으로 음식 광택 살리기, 귀여운 픽 또는 깃발 장식"
+          },
+          "scene_5": {
+            "duration": "50-60초",
+            "description": "젓가락으로 라면 한 입 먹으며 행복한 표정, 양손 모아 '감사합니다' 포즈",
+            "camera_angle": "미디엄 샷",
+            "visual_note": "텍스트: 'いただきます! 💕', 하트 이모지 애니메이션"
+          }
+        },
+        "editing_format": "느린 템포",
+        "music_style": "잔잔하고 귀여운 일본 BGM, 피아노나 벨 소리 중심, 로파이 감성",
+        "props_needed": [
+          "삼양라면",
+          "파스텔 톤 도시락 통",
+          "하트/꽃/별 모양 틀",
+          "귀여운 젓가락",
+          "계란, 당근, 브로콜리 등 색깔 있는 채소",
+          "장식용 픽 (곰돌이, 토끼 등)",
+          "파스텔 톤 테이블 매트",
+          "조명"
+        ],
+        "shooting_guide": {
+          "lighting": "부드러운 자연광 또는 디퓨저 조명, 따뜻한 톤",
+          "equipment": "스마트폰 + 삼각대, 매크로 렌즈 어댑터 (디테일 샷)",
+          "location": "깨끗하고 밝은 테이블, 파스텔 배경지 사용",
+          "estimated_time": "촬영 45분, 편집 1.5시간"
+        },
+        "expected_performance": {
+          "viral_potential": "medium",
+          "engagement_type": "saves",
+          "target_audience": "15-30세 일본 여성, 도시락 문화 선호층, 카와이 문화 팬",
+          "estimated_reach": "5만-15만 뷰, 일본 시장 특성상 높은 저장률"
+        },
+        "key_messages": [
+          "삼양라면으로 만드는 일본식 카와이 도시락",
+          "실용성과 예쁨을 동시에",
+          "일상에 특별함을 더하기"
+        ],
+        "cta": "보관함에 저장하고 내일 만들어보세요! 🌸",
+        "hashtags": [
+          "#삼양라면",
+          "#カワイイ弁当",
+          "#お弁当",
+          "#ラーメン弁当",
+          "#KawaiiLunch",
+          "#サムヤンラーメン",
+          "#簡単レシピ"
+        ]
+      }
+    },
+    {
+      "input": {
+        "trend_data": {
+          "keyword": "extreme challenge",
+          "platform": "tiktok"
+        },
+        "brand_category": "buldak",
+        "tone": "provocative",
+        "target_country": "KR"
+      },
+      "output": {
+        "title": "핵불닭 5봉지 10분 챌린지 (절대 따라하지 마세요)",
+        "format_type": "Challenge",
+        "brand_category": "buldak",
+        "tone": "provocative",
+        "target_country": "KR",
+        "hook_text": [
+          "이거 성공하면 진짜 인간이 아님",
+          "절대 따라하지 마세요 (진심)",
+          "10분 안에 핵불닭 5봉지... 미쳤다"
+        ],
+        "scene_structure": {
+          "scene_1": {
+            "duration": "0-3초",
+            "description": "핵불닭 5봉지가 쌓여있는 충격적인 비주얼, 타이머 10:00 오버레이",
+            "camera_angle": "탑뷰에서 급격한 줌인",
+            "visual_note": "붉은 조명 효과, '위험' 경고 텍스트 깜빡임, 긴박한 분위기"
+          },
+          "scene_2": {
+            "duration": "3-8초",
+            "description": "챌린지 룰 설명 - 10분 안에 5봉지, 물 500ml만 허용, 타이머 시작",
+            "camera_angle": "미디엄 샷 (참가자 + 음식)",
+            "visual_note": "화면 분할로 룰 텍스트 + 참가자 긴장된 표정"
+          },
+          "scene_3": {
+            "duration": "8-40초",
+            "description": "챌린지 진행 - 빠른 컷으로 먹는 과정, 땀 흘리는 모습, 타이머 카운트다운",
+            "camera_angle": "클로즈업(얼굴) + 탑뷰(음식) 번갈아가며",
+            "visual_note": "0.5초 빠른 컷, 슬로우모션 리액션 삽입, 붉어지는 얼굴 강조"
+          },
+          "scene_4": {
+            "duration": "40-55초",
+            "description": "마지막 1분 - 긴박한 분위기 최고조, 성공/실패 직전",
+            "camera_angle": "멀티 앵글 (얼굴, 음식, 타이머)",
+            "visual_note": "화면 3분할, 긴박한 음악 클라이맥스, 땀 방울 클로즈업"
+          },
+          "scene_5": {
+            "duration": "55-60초",
+            "description": "결과 발표 - 성공 시 환호, 실패 시 좌절, 엔딩멘트",
+            "camera_angle": "미디엄 샷",
+            "visual_note": "텍스트: '성공/실패', 폭죽 또는 암전 효과, '절대 따라하지 마세요' 경고"
+          }
+        },
+        "editing_format": "빠른 템포",
+        "music_style": "긴박한 일렉트로닉 비트, EDM 빌드업 → 드랍, 타이머에 맞춘 비트",
+        "props_needed": [
+          "핵불닭볶음면 5봉지",
+          "큰 그릇 또는 냄비",
+          "디지털 타이머 (화면에 표시)",
+          "물 500ml",
+          "수건 (땀 닦기)",
+          "조명 (붉은 톤 조명 효과)",
+          "멀티 카메라 또는 앵글 전환 장비"
+        ],
+        "shooting_guide": {
+          "lighting": "강렬한 조명 + 붉은 컬러 필터, 드라마틱한 분위기",
+          "equipment": "최소 2대 카메라 (얼굴 + 음식), 스마트폰 + 액션캠 추천",
+          "location": "깔끔한 실내, 배경 심플하게 (챌린지 집중)",
+          "estimated_time": "촬영 20분 (챌린지 10분 + 준비), 편집 2시간"
+        },
+        "expected_performance": {
+          "viral_potential": "high",
+          "engagement_type": "shares",
+          "target_audience": "15-25세 남성, 챌린지 문화 참여층, 자극적 콘텐츠 선호",
+          "estimated_reach": "50만-200만 뷰 (바이럴 시 더 높아질 수 있음)"
+        },
+        "key_messages": [
+          "핵불닭의 극한 매운맛",
+          "챌린지 문화의 재미와 스릴",
+          "브랜드의 강렬한 이미지"
+        ],
+        "cta": "친구 태그하고 챌린지 도전! (하지만 진짜 조심하세요)",
+        "hashtags": [
+          "#핵불닭챌린지",
+          "#BuldakChallenge",
+          "#10분챌린지",
+          "#매운맛챌린지",
+          "#불닭",
+          "#ExtremeFoodChallenge",
+          "#절대따라하지마세요"
+        ]
+      }
+    }
+  ]
+}
