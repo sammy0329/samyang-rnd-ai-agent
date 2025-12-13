@@ -879,20 +879,30 @@ pnpm add @upstash/redis
 ### Epic 4.2: 트렌드 분석 API
 **담당**: Developer | **우선순위**: P0
 
-#### Task 4.2.1: 트렌드 분석 API 엔드포인트 ⬜
-- [ ] `app/api/trends/analyze/route.ts` 생성
-- [ ] POST 요청 핸들러
+#### Task 4.2.1: 트렌드 분석 API 엔드포인트 ✅
+- [x] `app/api/trends/analyze/route.ts` 생성
+- [x] POST 요청 핸들러
   - 요청 바디 검증 (Zod)
   - 트렌드 데이터 수집
   - AI 분석 호출
   - 결과 DB 저장
   - 응답 반환
-- [ ] Rate limiting 적용
-- [ ] 에러 핸들링
-- [ ] API 테스트
+- [x] Rate limiting 적용 (IP 기반, 5분에 10회)
+- [x] 에러 핸들링
+- [x] API 테스트 (테스트 스크립트 작성)
 
 **예상 시간**: 4시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- POST /api/trends/analyze 엔드포인트
+- Zod 스키마 검증 (keyword, platform, country)
+- 트렌드 데이터 수집 (trend-collector 연동)
+- AI 분석 (trend-analyzer 연동)
+- DB 저장 (Supabase trends 테이블)
+- Rate Limiting (Upstash Redis, 5분에 10회)
+- API 사용량 추적
+- 테스트 스크립트: scripts/test-trend-analyze-api.ts
 
 ---
 
