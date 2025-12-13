@@ -838,6 +838,44 @@ pnpm add @upstash/redis
 
 ---
 
+### 📌 Epic 4.1 완료 후 향후 개선 사항
+
+#### 1. TikTok/Instagram 전용 API 연동 필요
+**현재 상황:**
+- SerpAPI는 Google Videos API를 사용하여 TikTok/Instagram 검색
+- Google은 자사 플랫폼(YouTube)을 우선 노출하므로 TikTok/Instagram 결과 거의 없음
+- 테스트 결과: TikTok/Instagram 검색 시 대부분 0개 반환
+
+**권장 해결 방안:**
+- **TikTok**: TikTok Research API (공식, 연구/학술 목적) 또는 Apify/ScrapFly 등 스크래핑 서비스
+- **Instagram**: Instagram Graph API (공식, 제한적) 또는 Apify/ScrapFly 등 스크래핑 서비스
+- **현재 구조**: `src/lib/api/trend-collector.ts`의 플랫폼별 수집 함수만 교체하면 바로 작동 가능
+
+**관련 문서:**
+- [docs/TroubleShooting.md - SerpAPI TikTok/Instagram 제약](./TroubleShooting.md#serpapi---tiktokinstagram-검색-결과-0개-문제)
+- [docs/SERPAPI_SETUP.md - 제약 사항](./SERPAPI_SETUP.md#제약-사항)
+
+**우선순위**: P1 (프로덕션 배포 시 필수)
+
+---
+
+#### 2. 현재 구현 상태 요약
+**정상 작동:**
+- ✅ YouTube 트렌드 수집: YouTube Data API v3 사용
+- ✅ 멀티 플랫폼 데이터 정규화 프레임워크
+- ✅ URL/제목 기반 중복 제거
+- ✅ 플랫폼별 에러 핸들링
+
+**제한적 작동:**
+- ⚠️ TikTok 트렌드 수집: SerpAPI 사용 → 거의 0개 반환
+- ⚠️ Instagram 트렌드 수집: SerpAPI 사용 → 거의 0개 반환
+
+**다음 단계 시 유의사항:**
+- Epic 4.2 진행 시 YouTube 데이터만 사용하여 트렌드 분석 가능
+- TikTok/Instagram은 별도 API 연동 후 추가 구현 권장
+
+---
+
 ### Epic 4.2: 트렌드 분석 API
 **담당**: Developer | **우선순위**: P0
 
