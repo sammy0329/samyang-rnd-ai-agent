@@ -1154,44 +1154,50 @@ pnpm add @upstash/redis
 ### Epic 5.2: 크리에이터 매칭 API
 **담당**: Developer | **우선순위**: P0
 
-#### Task 5.2.1: 크리에이터 매칭 API 엔드포인트 ⬜
-- [ ] `app/api/creators/match/route.ts` 생성
-- [ ] POST 요청 핸들러
-  - 요청 바디 검증
-  - 크리에이터 프로필 조회
-  - AI 매칭 분석 호출
+#### Task 5.2.1: 크리에이터 매칭 API 엔드포인트 ✅
+- [x] `app/api/creators/match/route.ts` 생성
+- [x] POST 요청 핸들러
+  - 요청 바디 검증 (Zod 스키마)
+  - AI 매칭 분석 호출 (matchCreator)
   - 적합도 점수 산정
-  - 결과 DB 저장
+  - 결과 DB 저장 (createCreator/updateCreator)
   - 응답 반환
-- [ ] 에러 핸들링
+- [x] Rate limiting (IP 기반, 5분에 20회)
+- [x] API 사용량 추적
+- [x] 에러 핸들링
 
 **예상 시간**: 3시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
 
 ---
 
-#### Task 5.2.2: 크리에이터 목록 조회 API ⬜
-- [ ] `app/api/creators/route.ts` 생성
-- [ ] GET 요청 핸들러
-  - 페이지네이션
-  - 필터링 (플랫폼, 적합도 점수)
-  - 정렬 (점수순, 최신순)
-- [ ] 응답 반환
+#### Task 5.2.2: 크리에이터 목록 조회 API ✅
+- [x] `app/api/creators/route.ts` 생성
+- [x] GET 요청 핸들러
+  - 페이지네이션 (limit/offset)
+  - 필터링 (username, platform, content_category, follower_count, engagement_rate, brand_fit_score)
+  - 정렬 (follower_count, engagement_rate, brand_fit_score, last_analyzed_at, created_at)
+- [x] 응답 반환 (creators 배열, total count)
+- [x] API 사용량 추적
 
 **예상 시간**: 2시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
 
 ---
 
-#### Task 5.2.3: 크리에이터 프로필 분석 API ⬜
-- [ ] `app/api/creators/profile/route.ts` 생성
-- [ ] GET 요청 핸들러
-  - 크리에이터 ID로 조회
+#### Task 5.2.3: 크리에이터 프로필 분석 API ✅
+- [x] `app/api/creators/[id]/route.ts` 생성
+- [x] GET 요청 핸들러
+  - 크리에이터 ID로 조회 (getCreatorById)
   - 상세 정보 반환
-  - 협업 이력 포함
+  - 협업 전략 포함 (collaboration_history)
+  - 리스크 평가 포함 (risk_factors)
+  - 분석 데이터 포함 (analysis_data)
+- [x] 404/500 에러 핸들링
+- [x] API 사용량 추적
 
 **예상 시간**: 1시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
 
 ---
 
