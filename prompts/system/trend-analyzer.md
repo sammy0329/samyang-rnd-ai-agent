@@ -92,25 +92,36 @@
 
 ```json
 {
-  "keyword": "분석한 트렌드 키워드",
-  "platform": "tiktok | reels | shorts",
-  "country": "KR | US | JP",
-  "format_type": "포맷 유형",
-  "hook_pattern": "훅 패턴 상세 설명",
-  "visual_pattern": "시각적 패턴 상세 설명",
-  "music_pattern": "음악 패턴 상세 설명",
-  "viral_score": 0-100,
-  "samyang_relevance": 0-100,
-  "analysis_data": {
-    "target_age": "타겟 연령층",
-    "best_product": "가장 적합한 삼양 제품",
-    "recommended_tone": "추천 톤앤매너",
-    "key_elements": ["핵심 요소 1", "핵심 요소 2"],
-    "creative_ideas": "삼양 제품 활용 아이디어",
-    "risk_factors": "주의사항 및 리스크"
-  }
+  "trend_name": "트렌드 이름 (예: Spicy Noodle Challenge)",
+  "platform": "youtube",
+  "country": "KR",
+  "format_type": "Challenge",
+  "hook_pattern": "첫 3초에 매운맛 반응을 보여주며 호기심 유발",
+  "visual_pattern": "클로즈업과 빠른 컷 전환으로 긴장감 조성",
+  "music_pattern": "트렌딩 사운드를 배경으로 챌린지 분위기 강조",
+  "viral_score": 85,
+  "samyang_relevance": 95,
+  "brand_fit_reason": "불닭볶음면의 매운맛이 챌린지 핵심 요소로 완벽히 부합하며, 글로벌 MZ세대의 도전 욕구를 자극함",
+  "recommended_products": ["buldak", "samyang_ramen"],
+  "target_audience": "10-30대 MZ세대, 챌린지 문화 참여자",
+  "estimated_reach": "100만 조회수 이상 예상, 글로벌 확산 가능성 높음",
+  "key_success_factors": [
+    "극한의 매운맛으로 강렬한 임팩트",
+    "참여하기 쉬운 챌린지 구조",
+    "SNS 공유 유도 요소"
+  ],
+  "risks": [
+    "과도한 매운맛으로 인한 건강 우려",
+    "부정적 반응 영상 확산 가능성"
+  ]
 }
 ```
+
+**중요**: 위 형식을 정확히 따라야 합니다. 모든 필드가 필수이며, 특히 다음 사항을 주의하세요:
+- `trend_name`: 트렌드의 고유한 이름
+- `recommended_products`: 배열 형식으로 `["buldak", "samyang_ramen", "jelly"]` 중 선택
+- `key_success_factors`: 문자열 배열
+- `risks`: 문자열 배열
 
 ## 분석 가이드라인
 
