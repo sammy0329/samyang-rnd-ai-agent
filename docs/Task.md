@@ -960,19 +960,29 @@ pnpm add @upstash/redis
 ### Epic 4.3: 트렌드 분석 UI
 **담당**: Developer | **우선순위**: P0
 
-#### Task 4.3.1: 트렌드 분석 페이지 레이아웃 ⬜
-- [ ] `app/(dashboard)/trends/page.tsx` 생성
-- [ ] 헤더 섹션
+#### Task 4.3.1: 트렌드 분석 페이지 레이아웃 ✅
+- [x] `app/(dashboard)/trends/page.tsx` 생성
+- [x] 헤더 섹션
   - 페이지 제목
   - 분석 버튼
-- [ ] 필터링 섹션
+- [x] 필터링 섹션
   - 키워드 입력
   - 플랫폼 선택
   - 국가 선택
-- [ ] 결과 섹션 (그리드/리스트)
+- [x] 결과 섹션 (그리드/리스트)
 
 **예상 시간**: 3시간
-**완료 조건**: 레이아웃 완성
+**완료 조건**: 레이아웃 완성 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- app/(dashboard)/trends/page.tsx 생성
+- 헤더: 제목, 설명, "새 분석 시작" 버튼
+- 필터링: 키워드 입력, 플랫폼 선택 (YouTube/TikTok/Instagram), 국가 선택 (KR/US/JP)
+- 고품질 필터 체크박스 (바이럴 80+)
+- 정렬 드롭다운 (최신순/바이럴 점수순/삼양 연관성순)
+- 빈 상태 UI (CTA 포함)
+- shadcn/ui 컴포넌트 사용 (Button, Card, Input)
+- 반응형 그리드 레이아웃 (md:grid-cols-2, lg:grid-cols-3)
 
 ---
 
