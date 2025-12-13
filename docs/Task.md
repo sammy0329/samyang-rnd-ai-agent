@@ -911,17 +911,28 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 4.2.2: 트렌드 목록 조회 API ⬜
-- [ ] `app/api/trends/route.ts` 생성
-- [ ] GET 요청 핸들러
+#### Task 4.2.2: 트렌드 목록 조회 API ✅
+- [x] `app/api/trends/route.ts` 생성
+- [x] GET 요청 핸들러
   - 쿼리 파라미터 파싱 (페이지네이션, 필터링)
   - DB 조회
   - 응답 반환
-- [ ] 정렬 옵션 (최신순, 점수순)
-- [ ] 필터링 (플랫폼, 국가, 키워드)
+- [x] 정렬 옵션 (최신순, 점수순)
+- [x] 필터링 (플랫폼, 국가, 키워드)
 
 **예상 시간**: 2시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- GET /api/trends 엔드포인트
+- Zod 스키마 검증 (keyword, platform, country, minViralScore, minSamyangRelevance, sortBy, sortOrder, limit, offset)
+- 정렬 옵션: collected_at, viral_score, samyang_relevance, created_at (asc/desc)
+- 필터링: 키워드, 플랫폼, 국가, 최소 점수
+- 페이지네이션: limit (1-100, 기본 50), offset
+- 테스트 스크립트: scripts/test-trends-list-api.ts
+
+**주요 해결 이슈**:
+1. Zod 에러 핸들링: error.errors → error.issues로 수정 (Zod 공식 API)
 
 ---
 
