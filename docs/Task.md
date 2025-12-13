@@ -936,16 +936,24 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 4.2.3: 일일 트렌드 리포트 API ⬜
-- [ ] `app/api/trends/daily/route.ts` 생성
-- [ ] GET 요청 핸들러
+#### Task 4.2.3: 일일 트렌드 리포트 API ✅
+- [x] `app/api/trends/daily/route.ts` 생성
+- [x] GET 요청 핸들러
   - 오늘 수집된 트렌드 조회
   - Top 5 트렌드 선정
   - 요약 정보 생성
-- [ ] 캐싱 적용 (1시간)
+- [x] 캐싱 적용 (1시간)
 
 **예상 시간**: 2시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- GET /api/trends/daily 엔드포인트
+- 오늘(00:00~23:59) 수집된 트렌드 필터링 (collected_at 기준)
+- 바이럴 점수 + 삼양 연관성 합산하여 Top 5 선정
+- 요약 통계: 총 개수, 평균 점수, 플랫폼별 분포
+- 1시간 캐싱 (revalidate: 3600, Cache-Control 헤더)
+- 테스트 스크립트: scripts/test-daily-trends-api.ts
 
 ---
 
