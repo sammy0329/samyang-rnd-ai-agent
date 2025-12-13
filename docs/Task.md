@@ -789,32 +789,36 @@ pnpm add @upstash/redis
 ### Epic 4.1: 외부 API 통합
 **담당**: Developer | **우선순위**: P1
 
-#### Task 4.1.1: YouTube Data API 클라이언트 ⬜
-- [ ] YouTube API 키 발급
-- [ ] `lib/api/youtube.ts` 생성
-- [ ] `searchVideos()` 함수
+#### Task 4.1.1: YouTube Data API 클라이언트 ✅
+- [x] YouTube API 키 발급
+- [x] `lib/api/youtube.ts` 생성
+- [x] `searchVideos()` 함수
   - 키워드로 숏폼 검색
   - 필터링 (duration, date)
-- [ ] `getVideoDetails()` 함수
+- [x] `getVideoDetails()` 함수
   - 조회수, 좋아요, 댓글 수
-- [ ] API 응답 타입 정의
-- [ ] 에러 핸들링 (Quota 초과 등)
+- [x] API 응답 타입 정의
+- [x] 에러 핸들링 (Quota 초과 등)
 
 **예상 시간**: 3시간
-**완료 조건**: YouTube 검색 성공
+**완료 조건**: YouTube 검색 성공 ✅
+**완료 일시**: 2024-12-13
+**커밋**: 13f9e68
 
 ---
 
-#### Task 4.1.2: SerpAPI 클라이언트 (TikTok/Instagram 대체) ⬜
-- [ ] SerpAPI 키 발급
-- [ ] `lib/api/serpapi.ts` 생성
-- [ ] TikTok 검색 함수
-- [ ] Instagram Reels 검색 함수
-- [ ] 검색 결과 파싱
-- [ ] API 응답 타입 정의
+#### Task 4.1.2: SerpAPI 클라이언트 (TikTok/Instagram 대체) ✅
+- [x] SerpAPI 키 발급
+- [x] `lib/api/serpapi.ts` 생성
+- [x] TikTok 검색 함수
+- [x] Instagram Reels 검색 함수
+- [x] 검색 결과 파싱
+- [x] API 응답 타입 정의
 
 **예상 시간**: 3시간
-**완료 조건**: SerpAPI 검색 성공
+**완료 조건**: SerpAPI 검색 성공 ✅
+**완료 일시**: 2024-12-13
+**커밋**: 9be2716
 
 ---
 
