@@ -1,15 +1,33 @@
-import { Metadata } from 'next';
+'use client';
+
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
-
-export const metadata: Metadata = {
-  title: '트렌드 분석 | Samyang AI Agent',
-  description: '숏폼 플랫폼 트렌드 분석 및 AI 기반 인사이트 제공',
-};
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { TrendAnalysisForm } from '@/components/trends/TrendAnalysisForm';
 
 export default function TrendsPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+
+  const handleAnalysisSuccess = (data: any) => {
+    console.log('Analysis success:', data);
+    setAnalysisResult(data);
+    setIsDialogOpen(false);
+    // TODO: 결과를 목록에 추가하거나 새로고침
+  };
+
+  const handleAnalysisError = (error: any) => {
+    console.error('Analysis error:', error);
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* 헤더 섹션 */}
@@ -20,10 +38,41 @@ export default function TrendsPage() {
             TikTok, Instagram Reels, YouTube Shorts 트렌드를 AI가 분석합니다
           </p>
         </div>
-        <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          size="lg"
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={() => setIsDialogOpen(true)}
+        >
           새 분석 시작
         </Button>
       </div>
+
+      {/* 분석 성공 메시지 */}
+      {analysisResult && (
+        <div className="mb-6 rounded-md bg-green-50 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 text-green-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-green-800">분석 완료!</h3>
+              <p className="mt-1 text-sm text-green-700">
+                트렌드 분석이 성공적으로 완료되었습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 필터링 섹션 */}
       <Card className="mb-8 p-6">
@@ -145,7 +194,10 @@ export default function TrendsPage() {
               분석 결과를 검색하세요.
             </p>
             <div className="mt-6">
-              <Button className="bg-blue-600 hover:bg-blue-700">
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => setIsDialogOpen(true)}
+              >
                 첫 번째 분석 시작하기
               </Button>
             </div>
@@ -159,6 +211,23 @@ export default function TrendsPage() {
         </div>
         */}
       </div>
+
+      {/* 트렌드 분석 다이얼로그 */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>새 트렌드 분석</DialogTitle>
+            <DialogDescription>
+              분석하고자 하는 키워드와 플랫폼을 선택하세요. AI가 실시간 트렌드를
+              분석하여 인사이트를 제공합니다.
+            </DialogDescription>
+          </DialogHeader>
+          <TrendAnalysisForm
+            onSuccess={handleAnalysisSuccess}
+            onError={handleAnalysisError}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
