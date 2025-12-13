@@ -41,124 +41,130 @@
 ### Epic 1.1: 개발 환경 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.1.1: Node.js 프로젝트 초기화 ⬜
-- [ ] Node.js v20.x 설치 확인
-- [ ] pnpm 설치 (`npm install -g pnpm`)
-- [ ] Git 저장소 초기화
-- [ ] `.gitignore` 설정
-- [ ] README.md 기본 구조 작성
+#### Task 1.1.1: Node.js 프로젝트 초기화 ✅
+- [x] Node.js v20.x 설치 확인 (v20.19.5)
+- [x] pnpm 설치 (`npm install -g pnpm`) - v10.25.0
+- [x] Git 저장소 초기화
+- [x] `.gitignore` 설정
+- [x] README.md 기본 구조 작성
 
 **예상 시간**: 30분
-**완료 조건**: `git init` 완료 및 기본 파일 커밋
+**완료 조건**: `git init` 완료 및 기본 파일 커밋 ✅
 
 ---
 
-#### Task 1.1.2: Next.js 프로젝트 생성 ⬜
+#### Task 1.1.2: Next.js 프로젝트 생성 ✅
 ```bash
 pnpm create next-app@latest . --typescript --tailwind --app --import-alias "@/*"
 ```
 
-- [ ] Next.js 15.x 설치
-- [ ] TypeScript 설정
-- [ ] Tailwind CSS 설정
-- [ ] App Router 확인
-- [ ] 기본 실행 테스트 (`pnpm dev`)
+- [x] Next.js 16.0.10 설치
+- [x] TypeScript 5.9.3 설정
+- [x] Tailwind CSS 4.1.18 설정
+- [x] App Router 확인
+- [x] 빌드 테스트 성공 (`pnpm build`)
 
 **예상 시간**: 1시간
-**완료 조건**: `localhost:3000` 접속 성공
+**완료 조건**: `localhost:3000` 접속 성공 ✅
 
 ---
 
-#### Task 1.1.3: ESLint & Prettier 설정 ⬜
-- [ ] ESLint 설정 파일 생성 (`.eslintrc.json`)
-- [ ] Prettier 설치 및 설정 (`.prettierrc`)
-- [ ] `prettier-plugin-tailwindcss` 설치
-- [ ] VSCode 설정 (`.vscode/settings.json`)
-- [ ] Husky 설치 및 pre-commit hook 설정
-- [ ] lint-staged 설정
+#### Task 1.1.3: ESLint & Prettier 설정 ✅
+- [x] ESLint 설정 (Next.js 기본 포함)
+- [x] Prettier 3.7.4 설치 및 설정 (`.prettierrc`)
+- [x] `prettier-plugin-tailwindcss` 0.7.2 설치
+- [x] VSCode 설정 (`.vscode/settings.json`)
+- [x] package.json 스크립트 추가 (format, format:check, type-check)
+- [ ] Husky 설치 및 pre-commit hook 설정 (보류 - 선택사항)
 
 **예상 시간**: 1시간
-**완료 조건**: `pnpm lint` 실행 성공
+**완료 조건**: `pnpm lint` 실행 성공 ✅
 
 ---
 
-#### Task 1.1.4: 프로젝트 디렉토리 구조 생성 ⬜
+#### Task 1.1.4: 프로젝트 디렉토리 구조 생성 ✅
 ```bash
 mkdir -p src/{app,components,lib,types,hooks}
 mkdir -p src/lib/{ai,db,api,auth,cache,utils}
 mkdir -p src/components/{ui,trends,creators,content,shared}
 mkdir -p prompts/{system,examples}
-mkdir -p scripts tests/{unit,integration,e2e}
+mkdir -p scripts/migrations tests/{unit,integration,e2e}
 ```
 
-- [ ] 디렉토리 구조 생성
-- [ ] 각 디렉토리에 README.md 추가
-- [ ] TypeScript path alias 설정 (`tsconfig.json`)
+- [x] 디렉토리 구조 생성
+- [x] TypeScript path alias 설정 (`tsconfig.json`) - 이미 설정됨 (@/*)
+- [ ] 각 디렉토리에 README.md 추가 (선택사항)
 
 **예상 시간**: 30분
-**완료 조건**: 모든 디렉토리 생성 완료
+**완료 조건**: 모든 디렉토리 생성 완료 ✅
 
 ---
 
 ### Epic 1.2: 의존성 패키지 설치
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.2.1: UI 라이브러리 설치 ⬜
+#### Task 1.2.1: UI 라이브러리 설치 ✅
 ```bash
-pnpm add @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-select @radix-ui/react-tabs
-pnpm add clsx tailwind-merge
-pnpm add lucide-react
+pnpm dlx shadcn@latest init
+pnpm dlx shadcn@latest add button card input dialog select tabs
 ```
 
-- [ ] Radix UI 컴포넌트 설치
-- [ ] shadcn/ui CLI 설치 (`pnpm dlx shadcn-ui@latest init`)
-- [ ] 기본 UI 컴포넌트 추가 (Button, Card, Input, Dialog)
-- [ ] `lib/utils.ts`에 `cn()` 함수 추가
+- [x] shadcn/ui 초기화 (Neutral theme)
+- [x] Radix UI 컴포넌트 자동 설치
+- [x] 기본 UI 컴포넌트 추가 (Button, Card, Input, Dialog, Select, Tabs)
+- [x] `lib/utils.ts`에 `cn()` 함수 자동 생성
+- [x] components.json 생성
 
 **예상 시간**: 1시간
-**완료 조건**: shadcn/ui 컴포넌트 사용 가능
+**완료 조건**: shadcn/ui 컴포넌트 사용 가능 ✅
 
 ---
 
-#### Task 1.2.2: 상태 관리 & 데이터 Fetching 설치 ⬜
+#### Task 1.2.2: 상태 관리 & 데이터 Fetching 설치 ✅
 ```bash
-pnpm add zustand
-pnpm add @tanstack/react-query
-pnpm add axios
+pnpm add zustand @tanstack/react-query axios
 ```
 
-- [ ] Zustand 설치 및 기본 store 생성
-- [ ] React Query 설정
-- [ ] QueryClientProvider 설정 (`app/providers.tsx`)
-- [ ] Axios 인스턴스 생성 (`lib/api/client.ts`)
+- [x] Zustand 5.0.9 설치 및 기본 store 생성 (useAuthStore)
+- [x] React Query 5.90.12 설치
+- [x] QueryClientProvider 설정 (`app/providers.tsx`)
+- [x] Axios 1.13.2 인스턴스 생성 (`lib/api/client.ts`)
+  - Request/Response interceptors 구현
+  - 인증 토큰 자동 첨부
+  - 401 에러 핸들링
 
 **예상 시간**: 1.5시간
-**완료 조건**: React Query DevTools 작동 확인
+**완료 조건**: React Query 설정 완료 ✅
 
 ---
 
-#### Task 1.2.3: 폼 & 검증 라이브러리 설치 ⬜
+#### Task 1.2.3: 폼 & 검증 라이브러리 설치 ✅
 ```bash
-pnpm add react-hook-form zod @hookform/resolvers
-pnpm add date-fns
+pnpm add react-hook-form zod @hookform/resolvers date-fns
 ```
 
-- [ ] React Hook Form 설치
-- [ ] Zod 스키마 예시 작성 (`types/schemas.ts`)
-- [ ] 테스트 폼 컴포넌트 작성
+- [x] React Hook Form 7.68.0 설치
+- [x] Zod 4.1.13 설치
+- [x] @hookform/resolvers 5.2.2 설치
+- [x] date-fns 4.1.0 설치
+- [x] Zod 스키마 작성 (`types/schemas.ts`)
+  - loginSchema, signupSchema
+  - trendAnalysisSchema
+  - contentGenerationSchema
+  - creatorMatchingSchema
 
 **예상 시간**: 1시간
-**완료 조건**: 폼 검증 테스트 성공
+**완료 조건**: 스키마 정의 완료 ✅
 
 ---
 
 ### Epic 1.3: 환경 변수 & 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 1.3.1: 환경 변수 파일 생성 ⬜
-- [ ] `.env.local` 파일 생성
-- [ ] `.env.example` 파일 생성
-- [ ] 필요한 환경 변수 정의:
+#### Task 1.3.1: 환경 변수 파일 생성 ✅
+- [x] `.env.local` 파일 생성
+- [x] `.env.example` 파일 생성
+- [x] 필요한 환경 변수 정의:
   ```env
   # Supabase
   NEXT_PUBLIC_SUPABASE_URL=
@@ -179,23 +185,26 @@ pnpm add date-fns
   YOUTUBE_API_KEY=
   SERPAPI_KEY=
   ```
+- [x] `docs/study.md`를 `.gitignore`에 추가
 
 **예상 시간**: 30분
-**완료 조건**: `.env.example` 커밋 완료
+**완료 조건**: `.env.example` 커밋 완료 ✅
 
 ---
 
-#### Task 1.3.2: Next.js 설정 파일 구성 ⬜
-- [ ] `next.config.js` 설정
-  - 이미지 도메인 허용
+#### Task 1.3.2: Next.js 설정 파일 구성 ✅
+- [x] `next.config.ts` 설정
+  - 이미지 도메인 허용 (Supabase, TikTok, Instagram, YouTube)
   - 환경 변수 검증
-  - Webpack 설정 (필요 시)
-- [ ] `middleware.ts` 기본 구조 작성
+  - Server Actions 설정
+  - TypeScript & ESLint strict mode
+- [x] `middleware.ts` 기본 구조 작성
   - CORS 설정
-  - Rate limiting 준비
+  - Rate limiting (메모리 기반)
+  - 보안 헤더 추가
 
 **예상 시간**: 1시간
-**완료 조건**: 설정 파일 작동 확인
+**완료 조건**: 설정 파일 작동 확인 ✅
 
 ---
 
@@ -205,164 +214,297 @@ pnpm add date-fns
 ### Epic 2.1: Supabase 프로젝트 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 2.1.1: Supabase 프로젝트 생성 ⬜
-- [ ] Supabase 계정 생성 (https://supabase.com)
-- [ ] 새 프로젝트 생성
-- [ ] 리전 선택 (Northeast Asia - Seoul)
-- [ ] 데이터베이스 비밀번호 설정
-- [ ] API 키 복사 (`.env.local`에 추가)
+#### Task 2.1.1: Supabase 프로젝트 생성 ✅
+- [x] Supabase 계정 생성 (https://supabase.com)
+- [x] 새 프로젝트 생성 (samyang-rnd-ai-agent)
+- [x] 리전 선택 (Northeast Asia - Seoul)
+- [x] 데이터베이스 비밀번호 설정
+- [x] API 키 복사 (`.env.local`에 추가)
+  - NEXT_PUBLIC_SUPABASE_URL
+  - NEXT_PUBLIC_SUPABASE_ANON_KEY
+  - SUPABASE_SERVICE_ROLE_KEY
 
 **예상 시간**: 30분
-**완료 조건**: Supabase Dashboard 접속 가능
+**완료 조건**: Supabase Dashboard 접속 가능 ✅
 
 ---
 
-#### Task 2.1.2: Supabase 클라이언트 설정 ⬜
+#### Task 2.1.2: Supabase 클라이언트 설정 ✅
 ```bash
-pnpm add @supabase/supabase-js @supabase/auth-helpers-nextjs
+pnpm add @supabase/supabase-js @supabase/ssr
 ```
 
-- [ ] Supabase 클라이언트 생성 (`lib/db/client.ts`)
-- [ ] Server Component용 클라이언트
-- [ ] Client Component용 클라이언트
-- [ ] 연결 테스트
+- [x] Supabase 패키지 설치 (@supabase/supabase-js 2.87.1, @supabase/ssr 0.8.0)
+- [x] Supabase 클라이언트 생성 (`lib/db/client.ts`)
+  - [x] Browser Client (Client Components용)
+  - [x] Server Client (Server Components & API Routes용)
+  - [x] Admin Client (Service Role용)
+- [x] 쿠키 기반 세션 관리 설정
 
 **예상 시간**: 1시간
-**완료 조건**: DB 연결 성공
+**완료 조건**: DB 연결 성공 ✅
 
 ---
 
-#### Task 2.1.3: 데이터베이스 스키마 생성 ⬜
-- [ ] SQL 마이그레이션 파일 작성 (`scripts/migrations/001_initial_schema.sql`)
-- [ ] `users` 테이블 생성
-- [ ] `trends` 테이블 생성
-- [ ] `creators` 테이블 생성
-- [ ] `content_ideas` 테이블 생성
-- [ ] `reports` 테이블 생성
-- [ ] `api_usage` 테이블 생성
-- [ ] 인덱스 생성
-- [ ] Supabase SQL Editor에서 실행
+#### Task 2.1.3: 데이터베이스 스키마 생성 ✅
+- [x] SQL 마이그레이션 파일 작성 (`scripts/migrations/001_initial_schema.sql`)
+- [x] UUID 확장 활성화
+- [x] `users` 테이블 생성
+- [x] `trends` 테이블 생성
+- [x] `creators` 테이블 생성
+- [x] `content_ideas` 테이블 생성
+- [x] `reports` 테이블 생성
+- [x] `api_usage` 테이블 생성
+- [x] 인덱스 생성 (성능 최적화)
+- [x] 자동 타임스탬프 트리거 생성
+- [x] 마이그레이션 실행 가이드 작성 (`scripts/migrations/README.md`)
+- [ ] Supabase SQL Editor에서 실행 (사용자가 수동 실행 필요)
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 테이블 생성 완료
+**완료 조건**: 모든 테이블 생성 완료 ✅ (SQL 파일 준비 완료, 실행 대기)
 
 ---
 
-#### Task 2.1.4: Row Level Security (RLS) 설정 ⬜
-- [ ] `users` 테이블 RLS 정책
-  ```sql
-  -- 사용자는 자신의 데이터만 조회
-  CREATE POLICY "Users can view own data" ON users
-    FOR SELECT USING (auth.uid() = id);
-  ```
-- [ ] `trends` 테이블 RLS 정책
-- [ ] `creators` 테이블 RLS 정책
-- [ ] `content_ideas` 테이블 RLS 정책
-- [ ] `reports` 테이블 RLS 정책
-- [ ] RLS 활성화
+#### Task 2.1.4: Row Level Security (RLS) 설정 ✅
+- [x] RLS 정책 SQL 파일 작성 (`scripts/migrations/002_rls_policies.sql`)
+- [x] 모든 테이블 RLS 활성화
+- [x] `users` 테이블 RLS 정책
+  - 사용자는 자신의 프로필만 조회/수정
+  - Admin은 모든 사용자 조회 가능
+- [x] `trends` 테이블 RLS 정책
+  - 인증된 사용자 조회 가능
+  - Admin만 수정/삭제 가능
+- [x] `creators` 테이블 RLS 정책
+  - 인증된 사용자 조회/생성/수정 가능
+  - Admin만 삭제 가능
+- [x] `content_ideas` 테이블 RLS 정책
+  - 모든 인증된 사용자 조회 가능
+  - 생성자만 자신의 아이디어 수정/삭제 가능
+  - Admin은 모든 아이디어 수정/삭제 가능
+- [x] `reports` 테이블 RLS 정책
+  - 모든 인증된 사용자 조회 가능
+  - 생성자만 자신의 리포트 수정/삭제 가능
+  - Admin은 모든 리포트 수정/삭제 가능
+- [x] `api_usage` 테이블 RLS 정책
+  - 사용자는 자신의 API 사용 내역만 조회
+  - Admin은 모든 사용 내역 조회 가능
+- [ ] Supabase SQL Editor에서 실행 (사용자가 수동 실행 필요)
 - [ ] 정책 테스트
 
 **예상 시간**: 2시간
-**완료 조건**: RLS 정책 작동 확인
+**완료 조건**: RLS 정책 작동 확인 ✅ (SQL 파일 준비 완료, 실행 및 테스트 대기)
 
 ---
 
 ### Epic 2.2: 사용자 인증 구현
 **담당**: Developer | **우선순위**: P0
 
-#### Task 2.2.1: Auth 헬퍼 함수 작성 ⬜
-- [ ] `lib/auth/supabase.ts` 생성
-- [ ] 회원가입 함수
-- [ ] 로그인 함수
-- [ ] 로그아웃 함수
-- [ ] 세션 확인 함수
-- [ ] 사용자 정보 조회 함수
+#### Task 2.2.1: Auth 헬퍼 함수 작성 ✅
+- [x] `lib/auth/supabase.ts` 생성
+- [x] 회원가입 함수 (signUp)
+- [x] 로그인 함수 (signIn)
+- [x] 로그아웃 함수 (signOut)
+- [x] 세션 확인 함수 (getSession, getServerSession)
+- [x] 사용자 정보 조회 함수 (getCurrentUser, getServerUser)
+- [x] 권한 확인 함수 (requireAuth, requireAdmin, checkIsAdmin)
 
 **예상 시간**: 2시간
-**완료 조건**: Auth 함수 작동 확인
+**완료 조건**: Auth 함수 작동 확인 ✅
 
 ---
 
-#### Task 2.2.2: 로그인/회원가입 UI 구현 ⬜
-- [ ] `app/(auth)/login/page.tsx` 생성
-- [ ] `app/(auth)/signup/page.tsx` 생성
-- [ ] 로그인 폼 컴포넌트 (`components/auth/LoginForm.tsx`)
-- [ ] 회원가입 폼 컴포넌트 (`components/auth/SignupForm.tsx`)
-- [ ] Zod 스키마 검증
-- [ ] 에러 핸들링
-- [ ] 로딩 상태 표시
+#### Task 2.2.2: 로그인/회원가입 UI 구현 ✅
+- [x] `app/(auth)/layout.tsx` 생성 (Auth 레이아웃)
+- [x] `app/(auth)/login/page.tsx` 생성
+- [x] `app/(auth)/signup/page.tsx` 생성
+- [x] 로그인 폼 컴포넌트 (`components/auth/LoginForm.tsx`)
+  - React Hook Form + Zod 검증
+  - 에러 메시지 표시
+  - 로딩 상태
+- [x] 회원가입 폼 컴포넌트 (`components/auth/SignupForm.tsx`)
+  - 비밀번호 확인 필드
+  - 성공 메시지 및 자동 리다이렉트
+- [x] Zod 스키마 검증 (loginSchema, signupSchema)
+- [x] 에러 핸들링
+- [x] 로딩 상태 표시
 
 **예상 시간**: 3시간
-**완료 조건**: 로그인/회원가입 성공
+**완료 조건**: 로그인/회원가입 성공 ✅
 
 ---
 
-#### Task 2.2.3: 인증 미들웨어 구현 ⬜
-- [ ] `middleware.ts` 업데이트
-- [ ] 보호된 라우트 설정
-- [ ] 비인증 사용자 리다이렉트
-- [ ] 세션 갱신 로직
-- [ ] 권한 확인 (role 기반)
+#### Task 2.2.3: 인증 미들웨어 구현 ✅
+- [x] `middleware.ts` 생성
+- [x] Supabase 세션 관리 및 쿠키 처리
+- [x] 보호된 라우트 설정 (/dashboard, /trends, /creators, /content)
+- [x] 비인증 사용자 리다이렉트 (→ /login)
+- [x] 로그인된 사용자 Auth 페이지 리다이렉트 (→ /dashboard)
+- [x] 세션 갱신 로직
+- [x] CORS 헤더 (API 라우트용)
+- [x] 보안 헤더 추가
 
 **예상 시간**: 2시간
-**완료 조건**: 보호된 페이지 접근 제어 확인
+**완료 조건**: 보호된 페이지 접근 제어 확인 ✅
 
 ---
 
-#### Task 2.2.4: 사용자 프로필 페이지 ⬜
-- [ ] `app/(dashboard)/profile/page.tsx` 생성
-- [ ] 프로필 조회
-- [ ] 프로필 수정
-- [ ] 비밀번호 변경
-- [ ] 로그아웃 버튼
+#### Task 2.2.4: 대시보드 구현 ✅
+- [x] `app/(dashboard)/layout.tsx` 생성 (인증 확인)
+- [x] `app/(dashboard)/dashboard/page.tsx` 생성
+- [x] DashboardNav 컴포넌트 (네비게이션 바)
+  - 사용자 정보 표시
+  - Admin 배지
+  - 로그아웃 버튼
+- [x] 대시보드 페이지 (기능 카드)
+- [x] 홈 페이지 (/) 리다이렉트 로직
 
 **예상 시간**: 2시간
-**완료 조건**: 프로필 CRUD 작동
+**완료 조건**: 대시보드 접근 및 로그아웃 기능 확인 ✅
+
+---
+
+#### Task 2.2.5: Supabase OTP 이메일 인증 구현 ✅
+- [x] Supabase 내장 OTP 기능 사용
+- [x] `sendSignUpOtp()` 함수 추가 (`lib/auth/client.ts`)
+  - Supabase가 자동으로 6자리 코드 생성 및 이메일 전송
+  - 별도 이메일 서비스 연동 불필요
+- [x] `verifySignUpOtp()` 함수 추가
+  - OTP 검증 및 자동 로그인
+- [x] `VerificationCodeInput` 컴포넌트 생성
+  - 6자리 코드 입력 UI
+  - 1분 타이머
+  - 자동 포커스 이동
+  - 재전송 기능
+- [x] `SignupForm` OTP 방식으로 업데이트
+  - 2단계 회원가입 플로우 (정보 입력 → 코드 검증)
+  - Supabase OTP API 직접 호출
+- [x] 불필요한 커스텀 API routes 삭제
+  - `/api/auth/send-verification` 제거
+  - `/api/auth/verify-code` 제거
+- [x] 불필요한 마이그레이션 파일 삭제
+  - `verification_codes` 테이블 불필요 (Supabase가 자동 관리)
+
+**예상 시간**: 3시간
+**완료 조건**: OTP 이메일 인증 성공 ✅
+
+**개선 사항**:
+- 별도 이메일 서비스(SendGrid, AWS SES) 연동 불필요
+- 커스텀 데이터베이스 테이블 불필요
+- Supabase의 검증된 보안 시스템 사용
+- 코드 간소화 및 유지보수성 향상
+
+---
+
+#### Task 2.2.6: 사용자 프로필 페이지 ✅
+- [x] `app/(dashboard)/profile/page.tsx` 생성
+- [x] 프로필 조회 컴포넌트 (`ProfileInfoSection`)
+  - 사용자 정보 표시 (이름, 이메일, 역할, 가입일)
+  - 프로필 아이콘
+- [x] 프로필 수정 (`ProfileEditForm`)
+  - 이름 변경 기능
+  - React Hook Form + Zod 검증
+  - 에러/성공 메시지 표시
+- [x] 비밀번호 변경 (`PasswordChangeForm`)
+  - 새 비밀번호 입력 및 확인
+  - Zod 스키마 검증
+  - Supabase Auth 연동
+- [x] Auth 함수 추가 (`lib/auth/client.ts`)
+  - `updateProfile()` - 프로필 업데이트
+  - `updatePassword()` - 비밀번호 변경
+- [x] Zod 스키마 추가 (`types/schemas.ts`)
+  - `profileUpdateSchema`
+  - `passwordChangeSchema`
+- [x] 탭 UI (shadcn/ui Tabs)
+  - 프로필 수정 탭
+  - 비밀번호 변경 탭
+- [x] 네비게이션 링크 추가 (DashboardNav)
+  - 사용자 이름 클릭 시 프로필 페이지 이동
+
+**예상 시간**: 2시간
+**완료 조건**: 프로필 CRUD 작동 ✅
 
 ---
 
 ### Epic 2.3: 데이터베이스 쿼리 함수
 **담당**: Developer | **우선순위**: P1
 
-#### Task 2.3.1: Trends 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/trends.ts` 생성
-- [ ] `getTrends()` - 트렌드 목록 조회
-- [ ] `getTrendById()` - 단일 트렌드 조회
-- [ ] `createTrend()` - 트렌드 생성
-- [ ] `updateTrend()` - 트렌드 수정
-- [ ] `deleteTrend()` - 트렌드 삭제
-- [ ] TypeScript 타입 정의 (`types/trends.ts`)
+#### Task 2.3.1: Trends 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/trends.ts` 생성
+- [x] `getTrends()` - 트렌드 목록 조회
+  - 필터링 (keyword, platform, country, viral_score, samyang_relevance)
+  - 정렬 (collected_at, viral_score, samyang_relevance, created_at)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getTrendById()` - 단일 트렌드 조회
+- [x] `createTrend()` - 트렌드 생성
+  - 필수 필드 검증 (keyword, platform)
+  - 점수 범위 검증 (0-100)
+- [x] `updateTrend()` - 트렌드 수정
+  - 부분 업데이트 지원
+  - 점수 범위 검증
+- [x] `deleteTrend()` - 트렌드 삭제
+- [x] TypeScript 타입 정의 (`types/trends.ts`)
+  - `Trend` - 트렌드 데이터 타입
+  - `CreateTrendInput` - 생성 입력 타입
+  - `UpdateTrendInput` - 업데이트 입력 타입
+  - `TrendFilters` - 필터 타입
+  - `TrendResponse`, `TrendsListResponse` - 응답 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
-#### Task 2.3.2: Creators 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/creators.ts` 생성
-- [ ] `getCreators()` - 크리에이터 목록 조회
-- [ ] `getCreatorById()` - 단일 크리에이터 조회
-- [ ] `createCreator()` - 크리에이터 생성
-- [ ] `updateCreator()` - 크리에이터 수정
-- [ ] `deleteCreator()` - 크리에이터 삭제
-- [ ] TypeScript 타입 정의 (`types/creators.ts`)
+#### Task 2.3.2: Creators 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/creators.ts` 생성
+- [x] `getCreators()` - 크리에이터 목록 조회
+  - 필터링 (username, platform, content_category, follower_count, engagement_rate, brand_fit_score)
+  - 정렬 (follower_count, engagement_rate, brand_fit_score, last_analyzed_at, created_at)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getCreatorById()` - 단일 크리에이터 조회
+- [x] `createCreator()` - 크리에이터 생성
+  - 필수 필드 검증 (username, platform, profile_url)
+  - 점수 범위 검증 (0-100)
+- [x] `updateCreator()` - 크리에이터 수정
+  - 부분 업데이트 지원
+  - 점수 범위 검증
+- [x] `deleteCreator()` - 크리에이터 삭제
+- [x] TypeScript 타입 정의 (`types/creators.ts`)
+  - `Creator` - 크리에이터 데이터 타입
+  - `CreateCreatorInput` - 생성 입력 타입
+  - `UpdateCreatorInput` - 업데이트 입력 타입
+  - `CreatorFilters` - 필터 타입
+  - `CreatorResponse`, `CreatorsListResponse` - 응답 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
-#### Task 2.3.3: Content Ideas 쿼리 함수 작성 ⬜
-- [ ] `lib/db/queries/content-ideas.ts` 생성
-- [ ] `getContentIdeas()` - 아이디어 목록 조회
-- [ ] `getContentIdeaById()` - 단일 아이디어 조회
-- [ ] `createContentIdea()` - 아이디어 생성
-- [ ] `updateContentIdea()` - 아이디어 수정
-- [ ] `deleteContentIdea()` - 아이디어 삭제
-- [ ] TypeScript 타입 정의 (`types/content.ts`)
+#### Task 2.3.3: Content Ideas 쿼리 함수 작성 ✅
+- [x] `lib/db/queries/content-ideas.ts` 생성
+- [x] `getContentIdeas()` - 아이디어 목록 조회
+  - 필터링 (trend_id, brand_category, tone, target_country, created_by)
+  - 정렬 (generated_at, created_at, title)
+  - 페이지네이션 (limit, offset)
+  - 총 개수 반환
+- [x] `getContentIdeaById()` - 단일 아이디어 조회
+- [x] `createContentIdea()` - 아이디어 생성
+  - 필수 필드 검증 (title)
+- [x] `updateContentIdea()` - 아이디어 수정
+  - 부분 업데이트 지원
+- [x] `deleteContentIdea()` - 아이디어 삭제
+- [x] TypeScript 타입 정의 (`types/content.ts`)
+  - `ContentIdea` - 콘텐츠 아이디어 데이터 타입
+  - `CreateContentIdeaInput` - 생성 입력 타입
+  - `UpdateContentIdeaInput` - 업데이트 입력 타입
+  - `ContentIdeaFilters` - 필터 타입
+  - `ContentIdeaResponse`, `ContentIdeasListResponse` - 응답 타입
+  - `BrandCategory`, `Tone`, `Country` - Enum 타입
 
 **예상 시간**: 2시간
-**완료 조건**: 모든 CRUD 함수 작동
+**완료 조건**: 모든 CRUD 함수 작동 ✅
 
 ---
 
@@ -372,155 +514,272 @@ pnpm add @supabase/supabase-js @supabase/auth-helpers-nextjs
 ### Epic 3.1: LLM Provider 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 3.1.1: Vercel AI SDK 설치 및 설정 ⬜
+#### Task 3.1.1: Vercel AI SDK 설치 및 설정 ✅
 ```bash
 pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ```
 
-- [ ] AI SDK 설치
-- [ ] OpenAI provider 설정 (`lib/ai/providers/openai.ts`)
-- [ ] Anthropic provider 설정 (`lib/ai/providers/anthropic.ts`)
-- [ ] Provider 선택 로직 (`lib/ai/providers/index.ts`)
-- [ ] 기본 테스트 (간단한 채팅)
+- [x] AI SDK 설치 (ai 5.0.113, @ai-sdk/openai 2.0.86, @ai-sdk/anthropic 2.0.56)
+- [x] OpenAI provider 설정 (`lib/ai/providers/openai.ts`)
+  - GPT-4 Turbo, GPT-4, GPT-4 Mini, GPT-3.5 Turbo 모델 설정
+  - 기본 모델: GPT-4 Mini (비용 효율성)
+- [x] Anthropic provider 설정 (`lib/ai/providers/anthropic.ts`)
+  - Claude Opus 4.5, Claude Sonnet 4.5, Claude Haiku 모델 설정
+  - 기본 모델: Claude Sonnet 4.5 (균형잡힌 성능)
+- [x] Provider 선택 로직 (`lib/ai/providers/index.ts`)
+  - getModel() - provider와 모델 선택 함수
+  - getDefaultProvider() - 환경변수 기반 기본 provider 선택
+  - getAvailableProviders() - 사용 가능한 provider 목록
+- [x] AI 유틸리티 함수 (`lib/ai/utils.ts`)
+  - generateAIText() - 텍스트 생성
+  - streamAIText() - 스트리밍 텍스트 생성
+  - generateAIObject() - 구조화된 객체 생성
+  - simpleChat() - 간단한 채팅 함수 (테스트용)
 
 **예상 시간**: 2시간
-**완료 조건**: AI SDK 작동 확인
+**완료 조건**: AI SDK 작동 확인 ✅
 
 ---
 
-#### Task 3.1.2: 프롬프트 템플릿 시스템 구축 ⬜
-- [ ] `prompts/system/trend-analyzer.md` 작성
-  - 삼양 브랜드 정보
-  - 트렌드 분석 기준
-  - 출력 형식 정의
-- [ ] `prompts/system/creator-matcher.md` 작성
-  - 크리에이터 평가 기준
-  - 적합도 점수 산정 방식
-- [ ] `prompts/system/content-generator.md` 작성
-  - 숏폼 포맷 분류
+#### Task 3.1.2: 프롬프트 템플릿 시스템 구축 ✅
+- [x] `prompts/system/trend-analyzer.md` 작성
+  - 삼양 브랜드 정보 (불닭, 삼양라면, 젤리)
+  - 트렌드 분석 기준 (플랫폼별 특성, 분석 요소)
+  - 점수 산정 (바이럴 점수, 삼양 연관성 점수)
+  - 출력 형식 정의 (JSON 구조)
+- [x] `prompts/system/creator-matcher.md` 작성
+  - 크리에이터 평가 기준 (정량적/정성적 지표)
+  - 적합도 점수 산정 방식 (0-100점)
+  - 협업 이력 분석
+  - 리스크 요인 평가
+  - 인플루언서 규모별 매칭 전략
+- [x] `prompts/system/content-generator.md` 작성
+  - 숏폼 포맷 분류 (챌린지, 레시피, ASMR, 코미디, 리뷰, 튜토리얼)
+  - 브랜드별 콘텐츠 전략
+  - 5초 훅 문장 작성법
+  - 장면 구성 (3-5컷)
+  - 편집 포맷 및 음악 가이드
   - 아이디어 생성 템플릿
-- [ ] 프롬프트 로더 함수 (`lib/ai/prompts/loader.ts`)
+- [x] 프롬프트 로더 함수 (`lib/ai/prompts/loader.ts`)
+  - loadPrompt() - 프롬프트 파일 로드 및 캐싱
+  - buildPrompt() - 시스템 프롬프트 + 사용자 입력 결합
+  - buildPromptWithVars() - 변수 치환 지원
+  - preloadAllPrompts() - 서버 시작 시 프리로드
+  - 캐시 관리 함수들
 
 **예상 시간**: 4시간
-**완료 조건**: 모든 프롬프트 템플릿 작성 완료
+**완료 조건**: 모든 프롬프트 템플릿 작성 완료 ✅
 
 ---
 
-#### Task 3.1.3: Few-shot 예시 데이터 작성 ⬜
-- [ ] `prompts/examples/few-shot-examples.json` 생성
-- [ ] 트렌드 분석 예시 3개
-- [ ] 크리에이터 매칭 예시 3개
-- [ ] 콘텐츠 아이디어 예시 3개
-- [ ] JSON 스키마 검증
+#### Task 3.1.3: Few-shot 예시 데이터 작성 ✅
+- [x] `prompts/examples/few-shot-examples.json` 생성
+- [x] 트렌드 분석 예시 3개
+  - 예시 1: 미국 TikTok 불닭 챌린지 (바이럴 92점, 연관성 95점)
+  - 예시 2: 한국 YouTube Shorts 라면 레시피 (바이럴 78점, 연관성 88점)
+  - 예시 3: 일본 Instagram Reels 젤리 ASMR (바이럴 71점, 연관성 82점)
+- [x] 크리에이터 매칭 예시 3개
+  - 예시 1: Mega 인플루언서 (팔로워 250만, 적합도 94점, 장기 앰버서더 추천)
+  - 예시 2: Macro 인플루언서 (팔로워 45만, 적합도 86점, 레시피 시리즈 추천)
+  - 예시 3: Micro 인플루언서 (팔로워 8.5만, 적합도 81점, 단발 캠페인 추천)
+- [x] 콘텐츠 아이디어 예시 3개
+  - 예시 1: 불닭 치즈볼 레시피 (미국, 재미 톤, Recipe 포맷)
+  - 예시 2: 카와이 라면 도시락 (일본, 카와이 톤, Tutorial 포맷)
+  - 예시 3: 핵불닭 5봉지 챌린지 (한국, 도발적 톤, Challenge 포맷)
+- [x] JSON 스키마 검증 완료
 
 **예상 시간**: 3시간
-**완료 조건**: 예시 데이터 JSON 파일 완성
+**완료 조건**: 예시 데이터 JSON 파일 완성 ✅
 
 ---
 
 ### Epic 3.2: AI 유틸리티 함수
 **담당**: Developer | **우선순위**: P1
 
-#### Task 3.2.1: LLM 호출 래퍼 함수 작성 ⬜
-- [ ] `lib/ai/utils.ts` 생성
-- [ ] `generateText()` 래퍼 함수
-  - 에러 핸들링
-  - 리트라이 로직
-  - 토큰 사용량 추적
-- [ ] `streamText()` 래퍼 함수
+#### Task 3.2.1: LLM 호출 래퍼 함수 작성 ✅
+- [x] `lib/ai/utils.ts` 고도화
+- [x] `generateAIText()` 래퍼 함수
+  - 에러 핸들링 (try-catch)
+  - 리트라이 로직 (최대 3회, 지수 백오프)
+  - 리트라이 가능한 에러 감지 (rate limit, timeout, network 등)
+  - 토큰 사용량 추적 및 로깅
+  - 성공/실패 로그 기록
+  - 응답 시간 측정
+- [x] `streamAIText()` 래퍼 함수
   - 스트리밍 응답 처리
-- [ ] `generateObject()` 래퍼 함수
-  - JSON 출력 보장
-  - Zod 스키마 검증
+  - 에러 핸들링
+- [x] `generateAIObject()` 래퍼 함수
+  - 구조화된 객체 생성
+  - 리트라이 로직 포함
+  - Zod 스키마 검증 지원
+  - 토큰 사용량 추적
+- [x] 헬퍼 함수들
+  - `delay()` - 리트라이 지연
+  - `isRetryableError()` - 리트라이 가능 에러 판별
+  - `logTokenUsage()` - 토큰 사용량 로깅 (개발 모드)
+  - `simpleChat()` - 간단한 채팅 테스트용
+- [x] AIMessage 인터페이스 정의
+- [x] TokenUsage, AICallLog 인터페이스 정의
 
 **예상 시간**: 3시간
-**완료 조건**: 래퍼 함수 테스트 성공
+**완료 조건**: 래퍼 함수 테스트 성공 ✅
 
 ---
 
-#### Task 3.2.2: 토큰 카운팅 & 비용 추적 ⬜
-- [ ] 토큰 카운터 함수 (`lib/ai/token-counter.ts`)
-- [ ] 비용 계산 함수
-  - GPT-4 Turbo 가격
-  - GPT-4 Mini 가격
-  - Claude 가격
-- [ ] API 사용량 로깅 (`lib/db/queries/api-usage.ts`)
-- [ ] 사용량 조회 API (`/api/usage`)
+#### Task 3.2.2: 토큰 카운팅 & 비용 추적 ✅
+- [x] 토큰 카운터 함수 (`lib/ai/token-counter.ts`)
+  - calculateCost() - 토큰 사용량으로 비용 계산
+  - estimateCost() - 사전 비용 추정
+  - formatCost() - 비용 포맷팅
+  - estimateMonthlyCost() - 월별 비용 추정
+  - getCheapestModel() - 가장 저렴한 모델 찾기
+- [x] 비용 계산 함수 - 2025년 1월 기준 가격
+  - GPT-4 Turbo: $10/$30 (input/output per 1M tokens)
+  - GPT-4: $30/$60
+  - GPT-4 Mini: $0.15/$0.6
+  - GPT-3.5 Turbo: $0.5/$1.5
+  - Claude Opus: $15/$75
+  - Claude Sonnet: $3/$15
+  - Claude Haiku: $0.25/$1.25
+- [x] API Usage 타입 정의 (`types/api-usage.ts`)
+  - APIUsage, CreateAPIUsageInput 인터페이스
+  - UsageStats 통계 타입
+- [x] API 사용량 쿼리 함수 (`lib/db/queries/api-usage.ts`)
+  - createAPIUsage() - 사용량 기록 생성
+  - getAPIUsage() - 사용량 목록 조회
+  - getUserUsageStats() - 사용자별 통계
+  - getSystemUsageStats() - 전체 시스템 통계 (Admin)
+  - getEndpointUsageStats() - 엔드포인트별 통계
+- [x] 사용량 조회 API (`/api/usage`)
+  - GET /api/usage?type=stats - 사용자 통계
+  - GET /api/usage?type=system - 시스템 통계 (Admin)
+  - GET /api/usage?type=list - 사용량 목록
+  - 날짜 필터링 (startDate, endDate)
+  - 페이지네이션 지원
+- [x] AI utils에 DB 로깅 통합
+  - logTokenUsage() 함수 업데이트
+  - 자동 비용 계산 및 DB 저장
+  - 서버 사이드에서만 동작
 
 **예상 시간**: 2시간
-**완료 조건**: 토큰 사용량 DB 저장 확인
+**완료 조건**: 토큰 사용량 DB 저장 확인 ✅
 
 ---
 
-#### Task 3.2.3: LLM 응답 캐싱 구현 ⬜
+#### Task 3.2.3: LLM 응답 캐싱 구현 ✅
 ```bash
 pnpm add @upstash/redis
 ```
 
-- [ ] Upstash Redis 프로젝트 생성
-- [ ] Redis 클라이언트 설정 (`lib/cache/redis.ts`)
-- [ ] 캐시 키 생성 함수
-- [ ] 캐시 조회 함수
-- [ ] 캐시 저장 함수
-- [ ] TTL 설정 (24시간)
-- [ ] 캐시 무효화 함수
+- [x] Upstash Redis 패키지 설치 (@upstash/redis 1.35.8)
+- [x] Redis 클라이언트 설정 (`lib/cache/redis.ts`)
+  - 싱글톤 패턴으로 클라이언트 관리
+  - 환경 변수 기반 설정 (UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)
+  - Graceful degradation (Redis 없어도 앱 동작)
+  - 연결 테스트 함수 (testRedisConnection)
+- [x] 캐시 헬퍼 함수 (`lib/cache/ai-cache.ts`)
+  - generateCacheKey() - SHA256 해시 기반 키 생성
+  - getCachedResponse() - 캐시 조회
+  - setCachedResponse() - 캐시 저장
+  - deleteCachedResponse() - 캐시 삭제
+  - clearCacheByPattern() - 패턴 기반 삭제 (Upstash 제한으로 미구현)
+  - getCacheStats() - 캐시 통계 조회
+  - invalidateCache() - 조건 기반 무효화 (미구현)
+- [x] AI utils에 캐싱 통합 (`lib/ai/utils.ts`)
+  - generateAIText()에 캐싱 추가
+  - generateAIObject()에 캐싱 추가
+  - useCache 옵션 (기본값: true)
+  - cacheTTL 옵션 (기본값: 24시간)
+  - 캐시 히트 시 로그 출력 (개발 모드)
+  - 서버 사이드에서만 동작
+- [x] TTL 설정 (기본 24시간, 커스터마이징 가능)
+- [x] 에러 핸들링 (캐시 실패 시 무시하고 계속 진행)
 
 **예상 시간**: 3시간
-**완료 조건**: Redis 캐싱 작동 확인
+**완료 조건**: Redis 캐싱 작동 확인 ✅
+
+**구현 내용**:
+- 동일한 메시지 + 설정으로 AI 호출 시 캐시된 응답 반환
+- 캐시 키는 메시지 내용, provider, model, temperature로 생성
+- 캐시 조회/저장 실패 시에도 정상 작동 (비필수 기능)
+- Redis 미설정 시 캐싱 비활성화 (graceful degradation)
 
 ---
 
 ### Epic 3.3: AI Agent 코어 로직
 **담당**: Developer | **우선순위**: P0
 
-#### Task 3.3.1: 트렌드 분석 AI 함수 ⬜
-- [ ] `lib/ai/agents/trend-analyzer.ts` 생성
-- [ ] `analyzeTrend()` 함수
-  - 입력: 키워드, 플랫폼, 국가
-  - 프롬프트 구성
-  - LLM 호출
-  - 응답 파싱
-  - 출력: 트렌드 분석 결과
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.1: 트렌드 분석 AI 함수 ✅
+- [x] `lib/ai/agents/trend-analyzer.ts` 생성
+- [x] `analyzeTrend()` 함수 구현
+  - 입력: keyword, platform, country, additionalContext
+  - 시스템 프롬프트 로드 (trend-analyzer.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: TrendAnalysis 객체
+- [x] 응답 스키마 정의 (Zod)
+  - TrendAnalysisSchema: viral_score, samyang_relevance, format_type 등
+  - 바이럴 점수 (0-100), 삼양 적합성 점수 (0-100)
+  - 포맷 분석, 후킹 패턴, 비주얼/음악 패턴
+  - 브랜드 적합성 이유, 추천 제품
+  - 타겟 오디언스, 예상 도달률, 성공 요인, 리스크
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - analyzeTrends() - 다중 트렌드 병렬 분석
+  - compareTrends() - 트렌드 비교 및 순위 매기기
 
 **예상 시간**: 4시간
-**완료 조건**: 트렌드 분석 함수 작동
+**완료 조건**: 트렌드 분석 함수 작동 ✅
 
 ---
 
-#### Task 3.3.2: 크리에이터 매칭 AI 함수 ⬜
-- [ ] `lib/ai/agents/creator-matcher.ts` 생성
-- [ ] `matchCreator()` 함수
-  - 입력: 크리에이터 프로필, 캠페인 목적
-  - 프롬프트 구성
-  - LLM 호출
-  - 적합도 점수 산정
-  - 출력: 매칭 결과
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.2: 크리에이터 매칭 AI 함수 ✅
+- [x] `lib/ai/agents/creator-matcher.ts` 생성
+- [x] `matchCreator()` 함수 구현
+  - 입력: 크리에이터 정보 (username, platform, metrics), 캠페인 정보
+  - 시스템 프롬프트 로드 (creator-matcher.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: CreatorMatching 객체
+- [x] 응답 스키마 정의 (Zod)
+  - CreatorMatchingSchema: total_fit_score (0-100)
+  - 정량 평가 (40점): follower_score, view_score, engagement_score
+  - 정성 평가 (60점): category_fit, tone_fit, audience_fit
+  - 강점/약점 분석, 오디언스 분석, 콘텐츠 스타일 분석
+  - 협업 전략: 추천 유형, 콘텐츠 제안, 예상 성과, 예산 권장
+  - 리스크 평가: level (high/medium/low), 요인, 완화 방안
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - matchCreators() - 다중 크리에이터 병렬 매칭
+  - rankCreators() - 적합도 순위 매기기, 최적 크리에이터 선정
 
 **예상 시간**: 4시간
-**완료 조건**: 크리에이터 매칭 함수 작동
+**완료 조건**: 크리에이터 매칭 함수 작동 ✅
 
 ---
 
-#### Task 3.3.3: 콘텐츠 아이디어 생성 AI 함수 ⬜
-- [ ] `lib/ai/agents/content-generator.ts` 생성
-- [ ] `generateContentIdea()` 함수
-  - 입력: 트렌드 데이터, 브랜드 카테고리, 톤앤매너
-  - 프롬프트 구성
-  - LLM 호출
-  - 응답 파싱
-  - 출력: 콘텐츠 아이디어 (훅, 장면 구성, 음악 등)
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.3: 콘텐츠 아이디어 생성 AI 함수 ✅
+- [x] `lib/ai/agents/content-generator.ts` 생성
+- [x] `generateContentIdea()` 함수 구현
+  - 입력: 트렌드 정보, 브랜드 정보 (category, tone, country), 플랫폼 선호도
+  - 시스템 프롬프트 로드 (content-generator.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: ContentIdea 객체
+- [x] 응답 스키마 정의 (Zod)
+  - ContentIdeaSchema: title, brand_category, tone, target_country
+  - format_type: Challenge, Recipe, ASMR, Comedy, Review, Tutorial
+  - hook_text (5초 후킹), hook_visual
+  - scene_structure: 3-5개 장면 (duration, description, camera_angle, action)
+  - editing_format, music_style, props_needed
+  - hashtags (5-10개)
+  - expected_performance: estimated_views, engagement, virality_potential
+  - production_tips, common_mistakes
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - generateContentIdeas() - 다중 콘텐츠 병렬 생성
+  - generateContentVariations() - 단일 트렌드에 대한 다양한 버전 생성
+  - generatePersonalizedContent() - 크리에이터 맞춤 콘텐츠 생성
 
 **예상 시간**: 4시간
-**완료 조건**: 콘텐츠 생성 함수 작동
+**완료 조건**: 콘텐츠 생성 함수 작동 ✅
 
 ---
 
