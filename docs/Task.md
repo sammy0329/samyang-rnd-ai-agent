@@ -514,19 +514,30 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ### Epic 3.1: LLM Provider 설정
 **담당**: Developer | **우선순위**: P0
 
-#### Task 3.1.1: Vercel AI SDK 설치 및 설정 ⬜
+#### Task 3.1.1: Vercel AI SDK 설치 및 설정 ✅
 ```bash
 pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ```
 
-- [ ] AI SDK 설치
-- [ ] OpenAI provider 설정 (`lib/ai/providers/openai.ts`)
-- [ ] Anthropic provider 설정 (`lib/ai/providers/anthropic.ts`)
-- [ ] Provider 선택 로직 (`lib/ai/providers/index.ts`)
-- [ ] 기본 테스트 (간단한 채팅)
+- [x] AI SDK 설치 (ai 5.0.113, @ai-sdk/openai 2.0.86, @ai-sdk/anthropic 2.0.56)
+- [x] OpenAI provider 설정 (`lib/ai/providers/openai.ts`)
+  - GPT-4 Turbo, GPT-4, GPT-4 Mini, GPT-3.5 Turbo 모델 설정
+  - 기본 모델: GPT-4 Mini (비용 효율성)
+- [x] Anthropic provider 설정 (`lib/ai/providers/anthropic.ts`)
+  - Claude Opus 4.5, Claude Sonnet 4.5, Claude Haiku 모델 설정
+  - 기본 모델: Claude Sonnet 4.5 (균형잡힌 성능)
+- [x] Provider 선택 로직 (`lib/ai/providers/index.ts`)
+  - getModel() - provider와 모델 선택 함수
+  - getDefaultProvider() - 환경변수 기반 기본 provider 선택
+  - getAvailableProviders() - 사용 가능한 provider 목록
+- [x] AI 유틸리티 함수 (`lib/ai/utils.ts`)
+  - generateAIText() - 텍스트 생성
+  - streamAIText() - 스트리밍 텍스트 생성
+  - generateAIObject() - 구조화된 객체 생성
+  - simpleChat() - 간단한 채팅 함수 (테스트용)
 
 **예상 시간**: 2시간
-**완료 조건**: AI SDK 작동 확인
+**완료 조건**: AI SDK 작동 확인 ✅
 
 ---
 
