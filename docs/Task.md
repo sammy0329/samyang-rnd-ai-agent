@@ -1100,15 +1100,18 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 4.3.5: 트렌드 목록 & 페이지네이션 ⬜
-- [ ] `components/trends/TrendList.tsx` 생성
-- [ ] React Query로 데이터 Fetching
-- [ ] 무한 스크롤 또는 페이지네이션
-- [ ] 로딩 스켈레톤
-- [ ] 빈 상태 처리
+#### Task 4.3.5: 트렌드 목록 & 페이지네이션 ✅
+- [x] `hooks/useTrends.ts` 생성 (React Query hook)
+- [x] React Query로 데이터 Fetching
+- [x] 페이지네이션 (limit/offset)
+- [x] 로딩 스켈레톤 (`TrendCardSkeleton.tsx`)
+- [x] 빈 상태 처리
+- [x] 에러 상태 처리 (retry 버튼 포함)
+- [x] trends/page.tsx에 통합
+- [x] 자동 refetch (분석 성공 시)
 
 **예상 시간**: 3시간
-**완료 조건**: 목록 표시 성공
+**완료 조건**: 목록 표시 성공 ✅
 
 ---
 

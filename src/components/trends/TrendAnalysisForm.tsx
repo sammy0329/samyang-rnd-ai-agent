@@ -15,7 +15,7 @@ const trendAnalysisSchema = z.object({
     .min(1, '키워드를 입력해주세요')
     .max(100, '키워드는 100자 이내로 입력해주세요'),
   platform: z.enum(['youtube', 'tiktok', 'instagram'], {
-    errorMap: () => ({ message: '플랫폼을 선택해주세요' }),
+    message: '플랫폼을 선택해주세요',
   }),
   country: z.enum(['KR', 'US', 'JP']).default('KR'),
   additionalContext: z.string().optional(),
@@ -37,12 +37,12 @@ export function TrendAnalysisForm({ onSuccess, onError }: TrendAnalysisFormProps
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<TrendAnalysisFormData>({
+  } = useForm({
     resolver: zodResolver(trendAnalysisSchema),
     defaultValues: {
       keyword: '',
-      platform: 'youtube',
-      country: 'KR',
+      platform: 'youtube' as const,
+      country: 'KR' as const,
       additionalContext: '',
     },
   });

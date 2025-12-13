@@ -14,24 +14,32 @@ import {
 import { TrendAnalysisForm } from '@/components/trends/TrendAnalysisForm';
 import { TrendCard } from '@/components/trends/TrendCard';
 import { TrendDetailModal } from '@/components/trends/TrendDetailModal';
+import { TrendCardSkeletonGrid } from '@/components/trends/TrendCardSkeleton';
+import { useTrends } from '@/hooks/useTrends';
 import { Trend } from '@/types/trends';
 
 export default function TrendsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
-  const [trends, setTrends] = useState<Trend[]>([]);
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  // React Query로 트렌드 목록 가져오기
+  const { data, isLoading, error, refetch } = useTrends({
+    sortBy: 'created_at',
+    sortOrder: 'desc',
+    limit: 50,
+  });
+
+  const trends = data?.trends || [];
+  const totalCount = data?.total || 0;
 
   const handleAnalysisSuccess = (data: any) => {
     console.log('Analysis success:', data);
     setAnalysisResult(data);
     setIsDialogOpen(false);
-    // TODO: 실제로는 API에서 트렌드 목록을 다시 가져와야 함
-    // 임시로 분석 결과를 trends 배열에 추가
-    if (data.trend) {
-      setTrends((prev) => [data.trend, ...prev]);
-    }
+    // 트렌드 목록 새로고침
+    refetch();
   };
 
   const handleAnalysisError = (error: any) => {
@@ -173,7 +181,7 @@ export default function TrendsPage() {
       <div>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
-            분석 결과 <span className="text-gray-500">({trends.length}개)</span>
+            분석 결과 <span className="text-gray-500">({totalCount}개)</span>
           </h2>
           <div className="flex items-center gap-2">
             <label htmlFor="sort" className="text-sm text-gray-600">
@@ -190,7 +198,43 @@ export default function TrendsPage() {
           </div>
         </div>
 
-        {trends.length === 0 ? (
+        {/* 로딩 상태 */}
+        {isLoading && <TrendCardSkeletonGrid count={6} />}
+
+        {/* 에러 상태 */}
+        {error && (
+          <Card className="p-12 text-center">
+            <div className="mx-auto max-w-md">
+              <svg
+                className="mx-auto h-12 w-12 text-red-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h3 className="mt-4 text-lg font-medium text-gray-900">
+                데이터를 불러올 수 없습니다
+              </h3>
+              <p className="mt-2 text-sm text-gray-500">
+                트렌드 목록을 가져오는 중 오류가 발생했습니다.
+              </p>
+              <div className="mt-6">
+                <Button onClick={() => refetch()} variant="outline">
+                  다시 시도
+                </Button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* 데이터 표시 */}
+        {!isLoading && !error && trends.length === 0 && (
           /* 빈 상태 */
           <Card className="p-12 text-center">
             <div className="mx-auto max-w-md">
@@ -224,8 +268,10 @@ export default function TrendsPage() {
               </div>
             </div>
           </Card>
-        ) : (
-          /* 트렌드 카드 그리드 */
+        )}
+
+        {/* 트렌드 카드 그리드 */}
+        {!isLoading && !error && trends.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {trends.map((trend) => (
               <TrendCard

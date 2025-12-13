@@ -129,13 +129,17 @@ ${input.additionalContext ? `\n**추가 정보**: ${input.additionalContext}` : 
     ];
 
     // AI 호출 (구조화된 객체 생성)
+    const aiConfig = config?.provider ? {
+      provider: config.provider,
+      ...(config.model && { model: config.model }),
+      ...(config.useCache !== undefined && { useCache: config.useCache }),
+      temperature: config.temperature ?? 0.3, // 일관성 있는 분석을 위해 낮은 temperature
+    } : undefined;
+
     const result = await generateAIObject<CreatorMatching>(
       messages,
       CreatorMatchingSchema,
-      {
-        ...config,
-        temperature: config?.temperature ?? 0.3, // 일관성 있는 분석을 위해 낮은 temperature
-      }
+      aiConfig
     );
 
     // 에러 처리

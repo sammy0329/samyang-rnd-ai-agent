@@ -28,7 +28,7 @@ import { rateLimitByIP } from '@/lib/rate-limit';
 const AnalyzeTrendRequestSchema = z.object({
   keyword: z.string().min(1, 'Keyword is required').max(100, 'Keyword must be less than 100 characters'),
   platform: z.enum(['youtube', 'tiktok', 'instagram'], {
-    errorMap: () => ({ message: 'Platform must be youtube, tiktok, or instagram' }),
+    message: 'Platform must be youtube, tiktok, or instagram',
   }),
   country: z.enum(['KR', 'US', 'JP']).optional().default('KR'),
   additionalContext: z.string().optional(),

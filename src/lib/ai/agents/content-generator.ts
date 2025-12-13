@@ -127,13 +127,17 @@ ${input.additionalRequirements ? `**추가 요구사항**:\n${input.additionalRe
     ];
 
     // AI 호출 (구조화된 객체 생성)
+    const aiConfig = config?.provider ? {
+      provider: config.provider,
+      ...(config.model && { model: config.model }),
+      ...(config.useCache !== undefined && { useCache: config.useCache }),
+      temperature: config.temperature ?? 0.7, // 창의성을 위해 적당한 temperature
+    } : undefined;
+
     const result = await generateAIObject<ContentIdea>(
       messages,
       ContentIdeaSchema,
-      {
-        ...config,
-        temperature: config?.temperature ?? 0.7, // 창의성을 위해 적당한 temperature
-      }
+      aiConfig
     );
 
     // 에러 처리
@@ -205,11 +209,14 @@ export async function generateContentVariations(
 
   for (let i = 0; i < Math.min(count, 5); i++) {
     const temperature = temperatures[i % temperatures.length];
-    const result = await generateContentIdea(baseInput, {
-      ...config,
+    const variationConfig = config?.provider ? {
+      provider: config.provider,
+      ...(config.model && { model: config.model }),
       temperature,
       useCache: false, // 버전 생성 시 캐시 사용 안 함
-    });
+    } : undefined;
+
+    const result = await generateContentIdea(baseInput, variationConfig);
     variations.push(result);
   }
 
