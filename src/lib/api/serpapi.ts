@@ -143,14 +143,69 @@ export async function searchShortVideos(
         `${SERPAPI_BASE_URL}?${params.toString()}`
       );
 
+      // 디버그: 응답 구조 확인
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[SerpAPI Debug] Response keys:', Object.keys(response.data));
+        console.log('[SerpAPI Debug] short_videos count:', response.data.short_videos?.length || 0);
+        console.log('[SerpAPI Debug] video_results count:', response.data.video_results?.length || 0);
+      }
+
       // short_videos 결과가 있으면 사용, 없으면 빈 배열
       const shortVideos = response.data.short_videos || [];
 
       if (shortVideos.length === 0) {
         // video_results에서 숏폼으로 보이는 것들 찾기 (선택 사항)
-        console.warn(
-          `[SerpAPI] No short_videos found for keyword: ${filters.keyword}`
-        );
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(
+            `[SerpAPI] No short_videos found for keyword: ${filters.keyword}`
+          );
+          console.warn(
+            `[SerpAPI] Trying video_results instead... (${response.data.video_results?.length || 0} results)`
+          );
+        }
+
+        // video_results가 있으면 시도해보기
+        if (response.data.video_results && response.data.video_results.length > 0) {
+          console.log('[SerpAPI] Using video_results as fallback');
+
+          // 디버그: 첫 번째 비디오 구조 확인
+          if (process.env.NODE_ENV === 'development' && response.data.video_results[0]) {
+            console.log('[SerpAPI Debug] First video sample:', JSON.stringify(response.data.video_results[0], null, 2));
+          }
+
+          // video_results를 short_videos 형식으로 변환
+          const videoResults = response.data.video_results.slice(0, filters.maxResults || DEFAULT_MAX_RESULTS);
+
+          return videoResults.map(video => {
+            // URL에서 플랫폼 추론
+            let platform: 'TikTok' | 'Instagram' | 'YouTube' | 'Facebook' | 'Other' = 'Other';
+
+            if (video.link.includes('tiktok.com')) {
+              platform = 'TikTok';
+            } else if (video.link.includes('instagram.com')) {
+              platform = 'Instagram';
+            } else if (video.link.includes('youtube.com') || video.link.includes('youtu.be')) {
+              platform = 'YouTube';
+            } else if (video.link.includes('facebook.com')) {
+              platform = 'Facebook';
+            } else if (video.source) {
+              // source 필드가 있으면 사용
+              platform = video.source as any;
+            }
+
+            return {
+              id: generateVideoId(video.link),
+              title: video.title,
+              platform,
+              thumbnailUrl: video.thumbnail,
+              videoUrl: video.link,
+              creatorName: video.channel?.name,
+              duration: video.duration,
+              position: video.position,
+            };
+          }) as SimplifiedSerpAPIVideo[];
+        }
+
         return [];
       }
 

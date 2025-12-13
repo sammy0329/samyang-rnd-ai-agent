@@ -231,9 +231,24 @@ Google Short Videos 결과
 
 ### 제약 사항
 
+⚠️ **중요: Google Videos API 한계**
+
+SerpAPI는 Google Videos API를 사용하므로 다음 제약이 있습니다:
+
+- **주로 YouTube 결과**: Google은 자사 플랫폼(YouTube)을 우선 노출
+- **TikTok/Instagram 제한**: 이 플랫폼들의 컨텐츠는 Google 검색에 거의 인덱싱되지 않음
+- **실제 사용 권장**:
+  - YouTube Shorts 검색: ✅ 매우 효과적
+  - TikTok/Instagram 검색: ⚠️ 제한적 (직접 API 사용 권장)
+
+**기타 제약:**
 - **직접 플랫폼 API가 아님**: Google 검색 결과에 의존
 - **제한적인 메타데이터**: 조회수, 좋아요 등은 제공되지 않음
 - **검색 결과 수**: Google에 인덱싱된 컨텐츠만 검색 가능
+
+**권장 사항:**
+- YouTube 컨텐츠 검색에는 YouTube Data API (Task 4.1.1) 사용
+- TikTok/Instagram은 별도의 전용 API 또는 스크래핑 서비스 필요
 
 ---
 
