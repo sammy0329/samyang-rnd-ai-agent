@@ -62,7 +62,7 @@ npx tsx scripts/test-serpapi.ts
 **관련 문서:**
 - [docs/SERPAPI_SETUP.md - 제약 사항](./SERPAPI_SETUP.md#제약-사항)
 
-**완료 일시:** 2024-12-13
+**완료 일시:** 2025-12-13
 **담당자:** AI Agent
 **상태:** ✅ 정상 (제약사항 문서화 완료)
 
@@ -140,4 +140,4 @@ is not assignable to parameter of type 'ProviderConfig'
 
 ---
 
-**마지막 업데이트:** 2024-12-13
+**마지막 업데이트:** 2025-12-13
