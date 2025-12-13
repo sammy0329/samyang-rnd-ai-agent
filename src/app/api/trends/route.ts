@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
     if (!validationResult.success) {
       console.error('[Trends List API] Validation error:', validationResult.error);
 
-      const errors = validationResult.error.errors.map((err) => ({
+      const errors = validationResult.error.issues.map((err) => ({
         field: err.path.join('.'),
         message: err.message,
       }));
