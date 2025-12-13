@@ -2,7 +2,7 @@
  * API Usage 테이블 쿼리 함수
  */
 
-import { createServerSupabaseClient } from '@/lib/db/server';
+import { createServerSupabaseClient, createAdminClient } from '@/lib/db/server';
 import type {
   APIUsage,
   CreateAPIUsageInput,
@@ -20,7 +20,8 @@ export async function createAPIUsage(
   input: CreateAPIUsageInput
 ): Promise<APIUsageResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // Admin Client 사용 (RLS 우회, API 사용량 기록용)
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from('api_usage')
       .insert([
