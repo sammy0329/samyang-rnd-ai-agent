@@ -1058,19 +1058,45 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 4.3.4: 트렌드 상세 모달 ⬜
-- [ ] `components/trends/TrendDetailModal.tsx` 생성
-- [ ] Dialog 컴포넌트 사용
-- [ ] 트렌드 전체 정보 표시
+#### Task 4.3.4: 트렌드 상세 모달 ✅
+- [x] `components/trends/TrendDetailModal.tsx` 생성
+- [x] Dialog 컴포넌트 사용
+- [x] 트렌드 전체 정보 표시
   - 훅 패턴
   - 시각적 패턴
   - 음악 패턴
   - 댓글 분석
   - 삼양 적용 사례
-- [ ] 닫기 버튼
+- [x] 닫기 버튼
 
 **예상 시간**: 3시간
-**완료 조건**: 모달 작동 확인
+**완료 조건**: 모달 작동 확인 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- components/trends/TrendDetailModal.tsx 생성
+- shadcn/ui Dialog 컴포넌트 사용
+- 기본 정보 섹션:
+  - 플랫폼 이름, 국가, 포맷 유형, 수집 시간
+- 점수 섹션:
+  - 바이럴 점수 / 삼양 연관성 점수
+  - 배지 (80+ 초록, 60+ 노랑, 40+ 주황, <40 빨강)
+  - 진행바 시각화
+- 패턴 분석 섹션:
+  - 훅 패턴 (🎣 아이콘)
+  - 시각적 패턴 (🎨 아이콘)
+  - 음악 패턴 (🎵 아이콘)
+  - 빈 상태 처리
+- 추가 분석 정보 (analysis_data):
+  - JSON 데이터 표시
+  - 파란색 배경 섹션
+- 액션 버튼:
+  - 닫기 (아웃라인)
+  - 콘텐츠 아이디어 생성 (파란색)
+- trends/page.tsx 통합:
+  - selectedTrend 상태 관리
+  - handleViewDetail 구현
+  - 모달 열기/닫기 제어
+- 반응형: max-w-3xl, max-h-90vh, overflow-y-auto
 
 ---
 
