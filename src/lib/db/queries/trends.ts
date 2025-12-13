@@ -4,7 +4,7 @@
  * 트렌드 데이터 CRUD 작업을 위한 함수들
  */
 
-import { createServerSupabaseClient } from '@/lib/db/server';
+import { createServerSupabaseClient, createAdminClient } from '@/lib/db/server';
 import {
   Trend,
   CreateTrendInput,
@@ -122,7 +122,8 @@ export async function createTrend(
   input: CreateTrendInput
 ): Promise<TrendResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // API 경로에서 호출되므로 Admin Client 사용 (RLS 우회)
+    const supabase = createAdminClient();
 
     // 데이터 검증
     if (!input.keyword || !input.platform) {
