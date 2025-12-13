@@ -541,21 +541,34 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 
 ---
 
-#### Task 3.1.2: 프롬프트 템플릿 시스템 구축 ⬜
-- [ ] `prompts/system/trend-analyzer.md` 작성
-  - 삼양 브랜드 정보
-  - 트렌드 분석 기준
-  - 출력 형식 정의
-- [ ] `prompts/system/creator-matcher.md` 작성
-  - 크리에이터 평가 기준
-  - 적합도 점수 산정 방식
-- [ ] `prompts/system/content-generator.md` 작성
-  - 숏폼 포맷 분류
+#### Task 3.1.2: 프롬프트 템플릿 시스템 구축 ✅
+- [x] `prompts/system/trend-analyzer.md` 작성
+  - 삼양 브랜드 정보 (불닭, 삼양라면, 젤리)
+  - 트렌드 분석 기준 (플랫폼별 특성, 분석 요소)
+  - 점수 산정 (바이럴 점수, 삼양 연관성 점수)
+  - 출력 형식 정의 (JSON 구조)
+- [x] `prompts/system/creator-matcher.md` 작성
+  - 크리에이터 평가 기준 (정량적/정성적 지표)
+  - 적합도 점수 산정 방식 (0-100점)
+  - 협업 이력 분석
+  - 리스크 요인 평가
+  - 인플루언서 규모별 매칭 전략
+- [x] `prompts/system/content-generator.md` 작성
+  - 숏폼 포맷 분류 (챌린지, 레시피, ASMR, 코미디, 리뷰, 튜토리얼)
+  - 브랜드별 콘텐츠 전략
+  - 5초 훅 문장 작성법
+  - 장면 구성 (3-5컷)
+  - 편집 포맷 및 음악 가이드
   - 아이디어 생성 템플릿
-- [ ] 프롬프트 로더 함수 (`lib/ai/prompts/loader.ts`)
+- [x] 프롬프트 로더 함수 (`lib/ai/prompts/loader.ts`)
+  - loadPrompt() - 프롬프트 파일 로드 및 캐싱
+  - buildPrompt() - 시스템 프롬프트 + 사용자 입력 결합
+  - buildPromptWithVars() - 변수 치환 지원
+  - preloadAllPrompts() - 서버 시작 시 프리로드
+  - 캐시 관리 함수들
 
 **예상 시간**: 4시간
-**완료 조건**: 모든 프롬프트 템플릿 작성 완료
+**완료 조건**: 모든 프롬프트 템플릿 작성 완료 ✅
 
 ---
 
