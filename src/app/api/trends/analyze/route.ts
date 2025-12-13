@@ -21,7 +21,7 @@ import { z } from 'zod';
 import { collectTrends } from '@/lib/api/trend-collector';
 import { analyzeTrend } from '@/lib/ai/agents/trend-analyzer';
 import { createTrend } from '@/lib/db/queries/trends';
-import { trackAPIUsage } from '@/lib/db/queries/api-usage';
+import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { rateLimitByIP } from '@/lib/rate-limit';
 
 // 요청 바디 검증 스키마
@@ -204,17 +204,11 @@ export async function POST(request: NextRequest) {
     // 5. API 사용량 기록
     const duration = Date.now() - startTime;
     try {
-      await trackAPIUsage({
+      await createAPIUsage({
         endpoint: '/api/trends/analyze',
         method: 'POST',
         status_code: 200,
-        response_time: duration,
-        metadata: {
-          keyword,
-          platform,
-          videosCollected: collectionResult.totalVideos,
-          viralScore: analysis.viral_score,
-        },
+        response_time_ms: duration,
       });
     } catch (error) {
       // API 사용량 기록 실패는 무시 (메인 플로우에 영향 없음)
@@ -269,12 +263,11 @@ export async function POST(request: NextRequest) {
     // API 사용량 기록 (에러 케이스)
     const duration = Date.now() - startTime;
     try {
-      await trackAPIUsage({
+      await createAPIUsage({
         endpoint: '/api/trends/analyze',
         method: 'POST',
         status_code: 500,
-        response_time: duration,
-        error_message: error instanceof Error ? error.message : 'Unknown error',
+        response_time_ms: duration,
       });
     } catch (trackError) {
       console.warn('[Trend Analyze API] Failed to track API usage:', trackError);
