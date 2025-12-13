@@ -709,54 +709,77 @@ pnpm add @upstash/redis
 ### Epic 3.3: AI Agent 코어 로직
 **담당**: Developer | **우선순위**: P0
 
-#### Task 3.3.1: 트렌드 분석 AI 함수 ⬜
-- [ ] `lib/ai/agents/trend-analyzer.ts` 생성
-- [ ] `analyzeTrend()` 함수
-  - 입력: 키워드, 플랫폼, 국가
-  - 프롬프트 구성
-  - LLM 호출
-  - 응답 파싱
-  - 출력: 트렌드 분석 결과
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.1: 트렌드 분석 AI 함수 ✅
+- [x] `lib/ai/agents/trend-analyzer.ts` 생성
+- [x] `analyzeTrend()` 함수 구현
+  - 입력: keyword, platform, country, additionalContext
+  - 시스템 프롬프트 로드 (trend-analyzer.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: TrendAnalysis 객체
+- [x] 응답 스키마 정의 (Zod)
+  - TrendAnalysisSchema: viral_score, samyang_relevance, format_type 등
+  - 바이럴 점수 (0-100), 삼양 적합성 점수 (0-100)
+  - 포맷 분석, 후킹 패턴, 비주얼/음악 패턴
+  - 브랜드 적합성 이유, 추천 제품
+  - 타겟 오디언스, 예상 도달률, 성공 요인, 리스크
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - analyzeTrends() - 다중 트렌드 병렬 분석
+  - compareTrends() - 트렌드 비교 및 순위 매기기
 
 **예상 시간**: 4시간
-**완료 조건**: 트렌드 분석 함수 작동
+**완료 조건**: 트렌드 분석 함수 작동 ✅
 
 ---
 
-#### Task 3.3.2: 크리에이터 매칭 AI 함수 ⬜
-- [ ] `lib/ai/agents/creator-matcher.ts` 생성
-- [ ] `matchCreator()` 함수
-  - 입력: 크리에이터 프로필, 캠페인 목적
-  - 프롬프트 구성
-  - LLM 호출
-  - 적합도 점수 산정
-  - 출력: 매칭 결과
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.2: 크리에이터 매칭 AI 함수 ✅
+- [x] `lib/ai/agents/creator-matcher.ts` 생성
+- [x] `matchCreator()` 함수 구현
+  - 입력: 크리에이터 정보 (username, platform, metrics), 캠페인 정보
+  - 시스템 프롬프트 로드 (creator-matcher.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: CreatorMatching 객체
+- [x] 응답 스키마 정의 (Zod)
+  - CreatorMatchingSchema: total_fit_score (0-100)
+  - 정량 평가 (40점): follower_score, view_score, engagement_score
+  - 정성 평가 (60점): category_fit, tone_fit, audience_fit
+  - 강점/약점 분석, 오디언스 분석, 콘텐츠 스타일 분석
+  - 협업 전략: 추천 유형, 콘텐츠 제안, 예상 성과, 예산 권장
+  - 리스크 평가: level (high/medium/low), 요인, 완화 방안
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - matchCreators() - 다중 크리에이터 병렬 매칭
+  - rankCreators() - 적합도 순위 매기기, 최적 크리에이터 선정
 
 **예상 시간**: 4시간
-**완료 조건**: 크리에이터 매칭 함수 작동
+**완료 조건**: 크리에이터 매칭 함수 작동 ✅
 
 ---
 
-#### Task 3.3.3: 콘텐츠 아이디어 생성 AI 함수 ⬜
-- [ ] `lib/ai/agents/content-generator.ts` 생성
-- [ ] `generateContentIdea()` 함수
-  - 입력: 트렌드 데이터, 브랜드 카테고리, 톤앤매너
-  - 프롬프트 구성
-  - LLM 호출
-  - 응답 파싱
-  - 출력: 콘텐츠 아이디어 (훅, 장면 구성, 음악 등)
-- [ ] 응답 스키마 정의 (Zod)
-- [ ] 에러 핸들링
-- [ ] 단위 테스트
+#### Task 3.3.3: 콘텐츠 아이디어 생성 AI 함수 ✅
+- [x] `lib/ai/agents/content-generator.ts` 생성
+- [x] `generateContentIdea()` 함수 구현
+  - 입력: 트렌드 정보, 브랜드 정보 (category, tone, country), 플랫폼 선호도
+  - 시스템 프롬프트 로드 (content-generator.md)
+  - generateAIObject()로 구조화된 응답 생성
+  - 출력: ContentIdea 객체
+- [x] 응답 스키마 정의 (Zod)
+  - ContentIdeaSchema: title, brand_category, tone, target_country
+  - format_type: Challenge, Recipe, ASMR, Comedy, Review, Tutorial
+  - hook_text (5초 후킹), hook_visual
+  - scene_structure: 3-5개 장면 (duration, description, camera_angle, action)
+  - editing_format, music_style, props_needed
+  - hashtags (5-10개)
+  - expected_performance: estimated_views, engagement, virality_potential
+  - production_tips, common_mistakes
+- [x] 에러 핸들링 (try-catch, null 체크)
+- [x] 추가 기능
+  - generateContentIdeas() - 다중 콘텐츠 병렬 생성
+  - generateContentVariations() - 단일 트렌드에 대한 다양한 버전 생성
+  - generatePersonalizedContent() - 크리에이터 맞춤 콘텐츠 생성
 
 **예상 시간**: 4시간
-**완료 조건**: 콘텐츠 생성 함수 작동
+**완료 조건**: 콘텐츠 생성 함수 작동 ✅
 
 ---
 
