@@ -596,20 +596,33 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ### Epic 3.2: AI 유틸리티 함수
 **담당**: Developer | **우선순위**: P1
 
-#### Task 3.2.1: LLM 호출 래퍼 함수 작성 ⬜
-- [ ] `lib/ai/utils.ts` 생성
-- [ ] `generateText()` 래퍼 함수
-  - 에러 핸들링
-  - 리트라이 로직
-  - 토큰 사용량 추적
-- [ ] `streamText()` 래퍼 함수
+#### Task 3.2.1: LLM 호출 래퍼 함수 작성 ✅
+- [x] `lib/ai/utils.ts` 고도화
+- [x] `generateAIText()` 래퍼 함수
+  - 에러 핸들링 (try-catch)
+  - 리트라이 로직 (최대 3회, 지수 백오프)
+  - 리트라이 가능한 에러 감지 (rate limit, timeout, network 등)
+  - 토큰 사용량 추적 및 로깅
+  - 성공/실패 로그 기록
+  - 응답 시간 측정
+- [x] `streamAIText()` 래퍼 함수
   - 스트리밍 응답 처리
-- [ ] `generateObject()` 래퍼 함수
-  - JSON 출력 보장
-  - Zod 스키마 검증
+  - 에러 핸들링
+- [x] `generateAIObject()` 래퍼 함수
+  - 구조화된 객체 생성
+  - 리트라이 로직 포함
+  - Zod 스키마 검증 지원
+  - 토큰 사용량 추적
+- [x] 헬퍼 함수들
+  - `delay()` - 리트라이 지연
+  - `isRetryableError()` - 리트라이 가능 에러 판별
+  - `logTokenUsage()` - 토큰 사용량 로깅 (개발 모드)
+  - `simpleChat()` - 간단한 채팅 테스트용
+- [x] AIMessage 인터페이스 정의
+- [x] TokenUsage, AICallLog 인터페이스 정의
 
 **예상 시간**: 3시간
-**완료 조건**: 래퍼 함수 테스트 성공
+**완료 조건**: 래퍼 함수 테스트 성공 ✅
 
 ---
 
