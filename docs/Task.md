@@ -986,19 +986,37 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 4.3.2: 트렌드 분석 폼 컴포넌트 ⬜
-- [ ] `components/trends/TrendAnalysisForm.tsx` 생성
-- [ ] React Hook Form 연동
-- [ ] Zod 스키마 검증
-- [ ] 키워드 입력 필드
-- [ ] 플랫폼 선택 (Select)
-- [ ] 국가 선택 (Select)
-- [ ] 제출 버튼
-- [ ] 로딩 상태 표시
-- [ ] 에러 메시지 표시
+#### Task 4.3.2: 트렌드 분석 폼 컴포넌트 ✅
+- [x] `components/trends/TrendAnalysisForm.tsx` 생성
+- [x] React Hook Form 연동
+- [x] Zod 스키마 검증
+- [x] 키워드 입력 필드
+- [x] 플랫폼 선택 (Select)
+- [x] 국가 선택 (Select)
+- [x] 제출 버튼
+- [x] 로딩 상태 표시
+- [x] 에러 메시지 표시
 
 **예상 시간**: 3시간
-**완료 조건**: 폼 제출 성공
+**완료 조건**: 폼 제출 성공 ✅
+**완료 일시**: 2025-12-13
+**구현 내용**:
+- components/trends/TrendAnalysisForm.tsx 생성
+- React Hook Form + @hookform/resolvers 연동
+- Zod 스키마 검증 (API 스키마와 동일)
+- 폼 필드:
+  - keyword: 필수, 1-100자
+  - platform: YouTube/TikTok/Instagram 선택
+  - country: KR/US/JP 선택 (기본: KR)
+  - additionalContext: 선택적 텍스트 영역
+- 로딩 상태: 스피너 애니메이션 + "분석 중..." 메시지
+- 에러 처리:
+  - 클라이언트 검증 에러 (Zod)
+  - API 에러 (400, 429, 500)
+  - Rate limit 감지 및 안내
+- 성공 시: onSuccess 콜백 + 폼 초기화
+- Dialog 컴포넌트 통합 (trends/page.tsx)
+- 성공 알림 메시지 표시
 
 ---
 
