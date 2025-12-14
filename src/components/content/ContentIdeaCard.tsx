@@ -95,9 +95,7 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
   const platformConfig = PLATFORM_CONFIG[platform] || PLATFORM_CONFIG.youtube;
 
   // scene_structure를 배열로 변환
-  const scenes: Scene[] = Array.isArray(idea.scene_structure)
-    ? idea.scene_structure
-    : [];
+  const scenes: Scene[] = Array.isArray(idea.scene_structure) ? idea.scene_structure : [];
 
   // expected_performance 처리
   const performance = idea.expected_performance as ExpectedPerformance;
@@ -109,7 +107,7 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
 
   return (
     <Card
-      className="group relative flex h-full min-h-[480px] flex-col overflow-hidden p-6 transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
+      className="group relative flex h-full min-h-[480px] cursor-pointer flex-col overflow-hidden p-6 transition-all hover:scale-[1.02] hover:shadow-lg"
       onClick={onClick}
     >
       {/* 삭제 버튼 - 우측 상단 */}
@@ -119,15 +117,10 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
             e.stopPropagation();
             onDelete(idea);
           }}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
+          className="absolute top-2 right-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
           title="삭제"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -139,15 +132,17 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
       )}
 
       {/* 헤더 */}
-      <div className="mb-4">
+      <div className="mb-4 pt-6">
         <div className="mb-2 flex items-start justify-between">
           <div className="flex-1 pr-8">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
               {idea.title}
             </h3>
           </div>
           {/* 플랫폼 배지 */}
-          <span className={`ml-2 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${platformConfig.color}`}>
+          <span
+            className={`ml-2 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium ${platformConfig.color}`}
+          >
             <span>{platformConfig.icon}</span>
             <span className="uppercase">{platform}</span>
           </span>
@@ -179,9 +174,7 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
       {/* 장면 구성 */}
       {scenes.length > 0 && (
         <div className="mb-4 flex-shrink-0">
-          <h4 className="mb-2 text-sm font-medium text-gray-700">
-            장면 구성 ({scenes.length}컷)
-          </h4>
+          <h4 className="mb-2 text-sm font-medium text-gray-700">장면 구성 ({scenes.length}컷)</h4>
           <div className="space-y-2">
             {scenes.slice(0, 2).map((scene, index) => (
               <div key={index} className="flex items-start gap-2 text-sm">
@@ -191,7 +184,9 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
                 <div className="flex-1">
                   <p className="line-clamp-2 text-gray-900">
                     {scene.description}
-                    {scene.duration && <span className="ml-1 text-gray-500">({scene.duration})</span>}
+                    {scene.duration && (
+                      <span className="ml-1 text-gray-500">({scene.duration})</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -219,11 +214,13 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
       <div className="flex-grow" />
 
       {/* 예상 성과 */}
-      <div className="border-t pt-4 flex-shrink-0">
+      <div className="flex-shrink-0 border-t pt-4">
         <div className="flex items-center justify-between">
           <div className="text-sm">
             <span className="font-medium text-gray-700">바이럴 잠재력: </span>
-            <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${viralityConfig.color}`}>
+            <span
+              className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${viralityConfig.color}`}
+            >
               {viralityConfig.text}
             </span>
           </div>
