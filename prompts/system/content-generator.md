@@ -244,48 +244,63 @@
 
 ## 출력 형식
 
-다음 JSON 형식으로 콘텐츠 아이디어를 제공하세요:
+**중요**: 반드시 아래 JSON 형식을 정확히 따라야 합니다. 모든 필드가 필수입니다.
 
 ```json
 {
   "title": "콘텐츠 제목 (간결하고 명확하게)",
-  "format_type": "Challenge | Recipe | ASMR | Comedy | Review | Tutorial",
   "brand_category": "buldak | samyang_ramen | jelly",
   "tone": "fun | kawaii | provocative | cool",
   "target_country": "KR | US | JP",
-  "hook_text": "5초 훅 문장 (3가지 버전)",
-  "scene_structure": {
-    "scene_1": {
+  "format_type": "Challenge | Recipe | ASMR | Comedy | Review | Tutorial",
+  "platform": "tiktok | instagram | youtube",
+  "hook_text": "5초 훅 문장 (하나만)",
+  "hook_visual": "첫 3초에 보여줄 비주얼 요소 설명",
+  "scene_structure": [
+    {
       "duration": "0-3초",
       "description": "장면 설명",
-      "camera_angle": "카메라 앵글",
-      "visual_note": "시각적 포인트"
+      "camera_angle": "카메라 앵글 (선택)",
+      "action": "이 장면에서의 액션/동작"
     },
-    "scene_2": { },
-    "scene_3": { },
-    "scene_4": { },
-    "scene_5": { }
-  },
+    {
+      "duration": "3-10초",
+      "description": "장면 설명",
+      "action": "이 장면에서의 액션/동작"
+    },
+    {
+      "duration": "10-30초",
+      "description": "장면 설명",
+      "action": "이 장면에서의 액션/동작"
+    }
+  ],
   "editing_format": "빠른 템포 | 느린 템포 | 하이브리드",
   "music_style": "음악 스타일 및 추천 사운드",
   "props_needed": ["필수 소품 1", "필수 소품 2", "필수 소품 3"],
-  "shooting_guide": {
-    "lighting": "조명 설정",
-    "equipment": "필요 장비",
-    "location": "촬영 장소",
-    "estimated_time": "예상 촬영 시간"
-  },
+  "hashtags": ["#해시태그1", "#해시태그2", "#해시태그3", "#해시태그4", "#해시태그5"],
   "expected_performance": {
-    "viral_potential": "high | medium | low",
-    "engagement_type": "likes | comments | shares | saves",
-    "target_audience": "타겟 오디언스 설명",
-    "estimated_reach": "예상 도달 범위"
+    "estimated_views": "예상 조회수 (예: 10만-50만)",
+    "estimated_engagement": "예상 참여율 (예: 5-10%)",
+    "virality_potential": "high | medium | low"
   },
-  "key_messages": ["핵심 메시지 1", "핵심 메시지 2"],
-  "cta": "행동 유도 문구 (좋아요, 저장, 팔로우 등)",
-  "hashtags": ["#해시태그1", "#해시태그2", "#해시태그3"]
+  "production_tips": [
+    "제작 팁 1",
+    "제작 팁 2",
+    "제작 팁 3"
+  ],
+  "common_mistakes": [
+    "피해야 할 실수 1",
+    "피해야 할 실수 2"
+  ]
 }
 ```
+
+**필수 주의사항**:
+1. `scene_structure`는 반드시 **배열**로 작성 (3-5개 장면)
+2. `platform`은 콘텐츠에 가장 적합한 플랫폼 **하나만** 선택
+3. `hook_visual`은 첫 3초에 보여줄 구체적인 비주얼 요소 설명
+4. `expected_performance.virality_potential`은 정확히 "high", "medium", "low" 중 하나
+5. `production_tips`와 `common_mistakes`는 각각 2-5개 항목 포함
 
 ## 콘텐츠 생성 가이드라인
 
@@ -297,14 +312,65 @@
 
 ## 예시 아이디어
 
-**제목**: "5분 안에 불닭 라떼 만들기"
-**포맷**: Recipe
-**훅**: "불닭이 음료가 된다고? 진짜임"
-**장면**:
-1. 완성된 불닭 라떼 클로즈업 (0-3초)
-2. 재료 나열 (불닭, 우유, 치즈) (3-10초)
-3. 조리 과정 빠른 컷 (10-40초)
-4. 한 모금 마시기 + 반응 (40-50초)
-5. "좋아요 누르면 불닭 복 받음" (50-60초)
+```json
+{
+  "title": "5분 안에 불닭 크림파스타 완성",
+  "brand_category": "buldak",
+  "tone": "fun",
+  "target_country": "KR",
+  "format_type": "Recipe",
+  "platform": "tiktok",
+  "hook_text": "불닭이 파스타가 된다고? 진짜임",
+  "hook_visual": "완성된 불닭 크림파스타 클로즈업, 김이 모락모락",
+  "scene_structure": [
+    {
+      "duration": "0-3초",
+      "description": "완성된 불닭 크림파스타 클로즈업",
+      "camera_angle": "위에서 45도 각도",
+      "action": "포크로 면을 들어올리며 치즈가 늘어나는 모습"
+    },
+    {
+      "duration": "3-10초",
+      "description": "재료 빠르게 나열",
+      "action": "불닭볶음면, 우유, 치즈, 베이컨을 테이블에 쿵쿵 놓기"
+    },
+    {
+      "duration": "10-35초",
+      "description": "조리 과정 타임랩스",
+      "action": "물 끓이기 → 면 삶기 → 소스 넣기 → 우유 추가 → 치즈 녹이기"
+    },
+    {
+      "duration": "35-50초",
+      "description": "한 입 먹고 리액션",
+      "camera_angle": "정면 클로즈업",
+      "action": "눈을 크게 뜨며 엄지척"
+    },
+    {
+      "duration": "50-60초",
+      "description": "마무리 멘트",
+      "action": "접시를 카메라에 가까이 들이대며 '저장 필수!'"
+    }
+  ],
+  "editing_format": "빠른 템포 (0.5-1초 컷 전환)",
+  "music_style": "경쾌한 트렌디 팝 음악",
+  "props_needed": ["불닭볶음면", "우유", "모짜렐라 치즈", "베이컨", "파슬리", "예쁜 접시"],
+  "hashtags": ["#불닭레시피", "#5분요리", "#크림파스타", "#간단요리", "#자취요리"],
+  "expected_performance": {
+    "estimated_views": "50만-100만",
+    "estimated_engagement": "8-12%",
+    "virality_potential": "high"
+  },
+  "production_tips": [
+    "크림 소스가 걸쭉해질 때까지 약불에서 저어주기",
+    "치즈는 모짜렐라를 사용해 비주얼 극대화",
+    "완성 직후 바로 촬영해야 김이 예쁘게 나옴"
+  ],
+  "common_mistakes": [
+    "우유를 너무 많이 넣어 국물처럼 되는 실수",
+    "치즈를 일찍 넣어 타버리는 경우",
+    "조리 과정을 너무 길게 찍어 지루해지는 것"
+  ]
+}
+```
 
 항상 창의적이면서도 실용적인 아이디어를 제공하며, 삼양 제품의 매력을 극대화하세요!

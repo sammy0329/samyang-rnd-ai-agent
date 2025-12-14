@@ -50,14 +50,14 @@ export async function getCachedResponse<T = any>(
   }
 
   try {
-    const cached = await redis.get<string>(cacheKey);
+    // Upstash Redis는 자동으로 JSON을 역직렬화하므로 JSON.parse 불필요
+    const cached = await redis.get<T>(cacheKey);
 
     if (!cached) {
       return null;
     }
 
-    // JSON 파싱
-    return JSON.parse(cached) as T;
+    return cached;
   } catch (error) {
     console.error('Error getting cached response:', error);
     return null;
@@ -79,8 +79,8 @@ export async function setCachedResponse(
   }
 
   try {
-    // JSON 문자열로 변환하여 저장
-    await redis.setex(cacheKey, ttl, JSON.stringify(response));
+    // Upstash Redis는 자동으로 JSON을 직렬화하므로 JSON.stringify 불필요
+    await redis.setex(cacheKey, ttl, response);
     return true;
   } catch (error) {
     console.error('Error setting cached response:', error);

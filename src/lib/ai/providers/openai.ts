@@ -4,14 +4,11 @@
 
 import { createOpenAI } from '@ai-sdk/openai';
 
-// OpenAI API 키 확인
-const apiKey = process.env.OPENAI_API_KEY;
-
-if (!apiKey) {
-  throw new Error('OPENAI_API_KEY environment variable is not set');
-}
+// OpenAI API 키 확인 (optional - Anthropic만 사용할 수도 있음)
+const apiKey = process.env.OPENAI_API_KEY || '';
 
 // OpenAI provider 생성
+// 주의: API 키가 없으면 사용 시 에러 발생 (getDefaultProvider에서 검증)
 export const openai = createOpenAI({
   apiKey,
 });

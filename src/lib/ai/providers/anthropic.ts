@@ -4,14 +4,11 @@
 
 import { createAnthropic } from '@ai-sdk/anthropic';
 
-// Anthropic API 키 확인
-const apiKey = process.env.ANTHROPIC_API_KEY;
-
-if (!apiKey) {
-  throw new Error('ANTHROPIC_API_KEY environment variable is not set');
-}
+// Anthropic API 키 확인 (optional - OpenAI만 사용할 수도 있음)
+const apiKey = process.env.ANTHROPIC_API_KEY || '';
 
 // Anthropic provider 생성
+// 주의: API 키가 없으면 사용 시 에러 발생 (getDefaultProvider에서 검증)
 export const anthropic = createAnthropic({
   apiKey,
 });

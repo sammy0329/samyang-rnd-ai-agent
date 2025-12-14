@@ -127,13 +127,17 @@ ${input.additionalRequirements ? `**추가 요구사항**:\n${input.additionalRe
     ];
 
     // AI 호출 (구조화된 객체 생성)
+    const aiConfig = config?.provider ? {
+      provider: config.provider,
+      ...(config.model && { model: config.model }),
+      ...(config.useCache !== undefined && { useCache: config.useCache }),
+      temperature: config.temperature ?? 0.7, // 창의성을 위해 적당한 temperature
+    } : undefined;
+
     const result = await generateAIObject<ContentIdea>(
       messages,
       ContentIdeaSchema,
-      {
-        ...config,
-        temperature: config?.temperature ?? 0.7, // 창의성을 위해 적당한 temperature
-      }
+      aiConfig
     );
 
     // 에러 처리
@@ -199,17 +203,43 @@ export async function generateContentVariations(
   variations: GenerateContentIdeaResult[];
   successCount: number;
 }> {
-  // 약간 다른 temperature로 여러 버전 생성
-  const temperatures = [0.6, 0.7, 0.8];
+  // 다양한 버전 생성을 위한 설정
+  const variationStrategies = [
+    {
+      temperature: 0.7,
+      additionalPrompt: '시청자의 호기심을 자극하고 재미있는 요소를 강조한 콘텐츠를 만들어주세요.',
+    },
+    {
+      temperature: 0.8,
+      additionalPrompt: '독창적이고 참신한 아이디어를 제시하되, 실행 가능성도 고려해주세요.',
+    },
+    {
+      temperature: 0.9,
+      additionalPrompt: '기존 트렌드와는 다른 새로운 각도에서 접근한 콘텐츠를 제안해주세요.',
+    },
+  ];
+
   const variations: GenerateContentIdeaResult[] = [];
 
   for (let i = 0; i < Math.min(count, 5); i++) {
-    const temperature = temperatures[i % temperatures.length];
-    const result = await generateContentIdea(baseInput, {
-      ...config,
-      temperature,
+    const strategy = variationStrategies[i % variationStrategies.length];
+
+    // 각 버전마다 다른 추가 요구사항 추가
+    const enhancedInput = {
+      ...baseInput,
+      additionalRequirements: baseInput.additionalRequirements
+        ? `${baseInput.additionalRequirements}\n\n${strategy.additionalPrompt}`
+        : strategy.additionalPrompt,
+    };
+
+    const variationConfig = config?.provider ? {
+      provider: config.provider,
+      ...(config.model && { model: config.model }),
+      temperature: strategy.temperature,
       useCache: false, // 버전 생성 시 캐시 사용 안 함
-    });
+    } : undefined;
+
+    const result = await generateContentIdea(enhancedInput, variationConfig);
     variations.push(result);
   }
 

@@ -4,7 +4,7 @@
  * 트렌드 데이터 CRUD 작업을 위한 함수들
  */
 
-import { createServerSupabaseClient } from '@/lib/db/server';
+import { createServerSupabaseClient, createAdminClient } from '@/lib/db/server';
 import {
   Trend,
   CreateTrendInput,
@@ -20,9 +20,7 @@ import {
  * @param filters - 필터 및 정렬 옵션
  * @returns 트렌드 목록 및 총 개수
  */
-export async function getTrends(
-  filters: TrendFilters = {}
-): Promise<TrendsListResponse> {
+export async function getTrends(filters: TrendFilters = {}): Promise<TrendsListResponse> {
   try {
     const supabase = await createServerSupabaseClient();
 
@@ -89,11 +87,7 @@ export async function getTrendById(id: string): Promise<TrendResponse> {
   try {
     const supabase = await createServerSupabaseClient();
 
-    const { data, error } = await supabase
-      .from('trends')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const { data, error } = await supabase.from('trends').select('*').eq('id', id).single();
 
     if (error) {
       throw error;
@@ -118,11 +112,10 @@ export async function getTrendById(id: string): Promise<TrendResponse> {
  * @param input - 트렌드 생성 데이터
  * @returns 생성된 트렌드
  */
-export async function createTrend(
-  input: CreateTrendInput
-): Promise<TrendResponse> {
+export async function createTrend(input: CreateTrendInput): Promise<TrendResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // API 경로에서 호출되므로 Admin Client 사용 (RLS 우회)
+    const supabase = createAdminClient();
 
     // 데이터 검증
     if (!input.keyword || !input.platform) {
@@ -142,6 +135,27 @@ export async function createTrend(
       }
     }
 
+    // 한국 시간대(KST, UTC+9)의 현재 시간을 ISO 형식으로 변환
+    const getKoreaTimeISO = (): string => {
+      const now = new Date();
+      // 한국 시간대의 현재 시간을 얻기 위해 UTC+9 오프셋 적용
+      const koreaOffset = 9 * 60; // 9시간을 분으로 변환
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const koreaTime = new Date(utc + koreaOffset * 60000);
+
+      // ISO 형식으로 변환 (YYYY-MM-DDTHH:MM:SS)
+      const year = koreaTime.getFullYear();
+      const month = String(koreaTime.getMonth() + 1).padStart(2, '0');
+      const day = String(koreaTime.getDate()).padStart(2, '0');
+      const hours = String(koreaTime.getHours()).padStart(2, '0');
+      const minutes = String(koreaTime.getMinutes()).padStart(2, '0');
+      const seconds = String(koreaTime.getSeconds()).padStart(2, '0');
+
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    };
+
+    const koreaTime = getKoreaTimeISO();
+
     const { data, error } = await supabase
       .from('trends')
       .insert([
@@ -156,6 +170,8 @@ export async function createTrend(
           viral_score: input.viral_score,
           samyang_relevance: input.samyang_relevance,
           analysis_data: input.analysis_data,
+          created_at: koreaTime,
+          collected_at: koreaTime, // 수집 시간도 한국 시간대로 설정
         },
       ])
       .select()
@@ -185,10 +201,7 @@ export async function createTrend(
  * @param input - 업데이트할 데이터
  * @returns 업데이트된 트렌드
  */
-export async function updateTrend(
-  id: string,
-  input: UpdateTrendInput
-): Promise<TrendResponse> {
+export async function updateTrend(id: string, input: UpdateTrendInput): Promise<TrendResponse> {
   try {
     const supabase = await createServerSupabaseClient();
 
