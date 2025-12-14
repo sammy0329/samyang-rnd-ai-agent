@@ -10,6 +10,7 @@ export function RecommendedCreatorsWidget() {
     limit: 3,
     sortBy: 'brand_fit_score',
     sortOrder: 'desc',
+    showAll: true, // 대시보드에서는 전체 데이터 표시
   });
 
   const creators = data?.creators || [];

@@ -25,6 +25,7 @@ const GetReportsSchema = z.object({
   endDate: z.string().optional(),
   limit: z.coerce.number().min(1).max(100).optional(),
   offset: z.coerce.number().min(0).optional(),
+  showAll: z.string().optional().transform((val) => val === 'true').default('false'),
 });
 
 /**
@@ -51,8 +52,8 @@ export async function POST(request: NextRequest) {
     const { type } = validationResult.data;
 
     // 사용자 세션 확인
-    const { data: session } = await getServerSession();
-    const userId = session?.id || null;
+    const session = await getServerSession();
+    const userId = session?.data?.id || null;
 
     // 리포트 생성 로직 실행
     let reportData: Record<string, unknown>;
@@ -126,6 +127,10 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    // 사용자 세션 확인
+    const session = await getServerSession();
+    const userId = session?.data?.id;
+
     // 쿼리 파라미터 파싱
     const searchParams = request.nextUrl.searchParams;
     const queryParams = {
@@ -134,6 +139,7 @@ export async function GET(request: NextRequest) {
       endDate: searchParams.get('endDate') || undefined,
       limit: searchParams.get('limit') || undefined,
       offset: searchParams.get('offset') || undefined,
+      showAll: searchParams.get('showAll') || undefined,
     };
 
     const validationResult = GetReportsSchema.safeParse(queryParams);
@@ -151,8 +157,11 @@ export async function GET(request: NextRequest) {
 
     const filters = validationResult.data;
 
-    // 리포트 조회
-    const result = await getReports(filters);
+    // 리포트 조회 (showAll이 false이고 userId가 있으면 본인 데이터만)
+    const result = await getReports({
+      ...filters,
+      userId: !filters.showAll && userId ? userId : undefined,
+    });
 
     if (result.error || !result.data) {
       return NextResponse.json(

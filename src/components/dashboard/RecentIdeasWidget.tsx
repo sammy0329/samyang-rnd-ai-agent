@@ -8,6 +8,7 @@ import { Lightbulb } from 'lucide-react';
 export function RecentIdeasWidget() {
   const { data, isLoading } = useContentIdeas({
     limit: 3,
+    showAll: true, // 대시보드에서는 전체 데이터 표시
   });
 
   const ideas = data?.data?.ideas || [];

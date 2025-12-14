@@ -10,6 +10,7 @@ export function TodayTrendsWidget() {
     limit: 5,
     sortBy: 'viral_score',
     sortOrder: 'desc',
+    showAll: true, // 대시보드에서는 전체 데이터 표시
   });
 
   const trends = data?.trends || [];
