@@ -46,7 +46,31 @@ export async function getServerSession(): Promise<AuthResponse> {
       throw authError;
     }
 
+    // 개발 환경에서 세션이 없을 때 기본 사용자 사용
     if (!authUser) {
+      if (process.env.NODE_ENV === 'development' && process.env.DEV_DEFAULT_USER_ID) {
+        // 개발 환경에서는 기본 사용자 ID 사용 (환경 변수로 설정)
+        const defaultUserId = process.env.DEV_DEFAULT_USER_ID;
+        const adminClient = createAdminClient();
+
+        const { data: userData, error: dbError } = await adminClient
+          .from('users')
+          .select('*')
+          .eq('id', defaultUserId)
+          .single();
+
+        if (!dbError && userData) {
+          const user: AuthUser = {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.role,
+            created_at: userData.created_at,
+          };
+          console.log('[DEV] Using default user:', user.email);
+          return { data: user, error: null };
+        }
+      }
       return { data: null, error: null };
     }
 
