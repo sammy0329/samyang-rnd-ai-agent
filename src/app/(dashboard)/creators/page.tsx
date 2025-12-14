@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -31,6 +32,7 @@ const CreatorMatchForm = dynamic(
 export default function CreatorsPage() {
   const { user } = useAuthStore();
   const currentUserId = user?.id;
+  const queryClient = useQueryClient();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [matchResult, setMatchResult] = useState<any>(null);
@@ -97,8 +99,8 @@ export default function CreatorsPage() {
         throw new Error(data.message || '크리에이터 삭제에 실패했습니다.');
       }
 
-      // 성공 시 목록 새로고침
-      refetch();
+      // 성공 시 모든 creators 쿼리 무효화 (전체/내 작업 모두)
+      queryClient.invalidateQueries({ queryKey: ['creators'] });
     } catch (error) {
       console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : '크리에이터 삭제에 실패했습니다.');

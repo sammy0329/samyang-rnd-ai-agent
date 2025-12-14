@@ -34,7 +34,10 @@ export function ReportCard({ report, onView, onDownload, onDelete, currentUserId
   const canDelete = !!onDelete;
 
   return (
-    <Card className="group relative overflow-hidden p-6 transition-all hover:shadow-lg">
+    <Card
+      className="group relative overflow-hidden p-6 transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
+      onClick={onView}
+    >
       {/* 삭제 버튼 - 우측 상단 */}
       {canDelete && (
         <button
@@ -68,7 +71,7 @@ export function ReportCard({ report, onView, onDownload, onDelete, currentUserId
             <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${typeConfig.color}`}>
               {typeConfig.title}
             </span>
-            <h3 className="mt-2 text-lg font-semibold text-gray-900">
+            <h3 className="mt-2 text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
               {report.title}
             </h3>
           </div>
@@ -89,19 +92,14 @@ export function ReportCard({ report, onView, onDownload, onDelete, currentUserId
       </div>
 
       {/* 액션 버튼 */}
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
-          onClick={onView}
-        >
-          상세 보기
-        </Button>
+      <div>
         <Button
           size="sm"
-          className="bg-blue-600 hover:bg-blue-700"
-          onClick={onDownload}
+          className="w-full bg-blue-600 hover:bg-blue-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDownload();
+          }}
         >
           다운로드
         </Button>

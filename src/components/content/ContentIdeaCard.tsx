@@ -234,21 +234,6 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
           </div>
         </div>
       </div>
-
-      {/* 상세 보기 버튼 (호버 시 표시) */}
-      <div className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-white to-transparent pb-4 pt-8 opacity-0 transition-opacity group-hover:opacity-100">
-        <Button
-          size="sm"
-          variant="outline"
-          className="bg-white shadow-md"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClick?.();
-          }}
-        >
-          상세 보기
-        </Button>
-      </div>
     </Card>
   );
 }

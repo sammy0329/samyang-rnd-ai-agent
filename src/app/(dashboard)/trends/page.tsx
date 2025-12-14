@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -32,6 +33,7 @@ const TrendDetailModal = dynamic(
 export default function TrendsPage() {
   const { user } = useAuthStore();
   const currentUserId = user?.id;
+  const queryClient = useQueryClient();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
@@ -123,8 +125,8 @@ export default function TrendsPage() {
         throw new Error(data.message || '트렌드 삭제에 실패했습니다.');
       }
 
-      // 성공 시 목록 새로고침
-      refetch();
+      // 성공 시 모든 trends 쿼리 무효화 (전체/내 작업 모두)
+      queryClient.invalidateQueries({ queryKey: ['trends'] });
     } catch (error) {
       console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : '트렌드 삭제에 실패했습니다.');

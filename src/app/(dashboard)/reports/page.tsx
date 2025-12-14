@@ -87,7 +87,7 @@ export default function ReportsPage() {
 
     try {
       await deleteReportMutation.mutateAsync(reportId);
-      refetch();
+      // deleteReportMutation already invalidates queries, no need to refetch
     } catch (error) {
       console.error('Failed to delete report:', error);
       alert(error instanceof Error ? error.message : '리포트 삭제에 실패했습니다.');

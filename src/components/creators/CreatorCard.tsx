@@ -76,7 +76,10 @@ export function CreatorCard({ creator, onViewDetail, onDelete, currentUserId }: 
   const canDelete = !!onDelete;
 
   return (
-    <Card className="relative overflow-hidden transition-shadow hover:shadow-lg">
+    <Card
+      className="group relative overflow-hidden transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
+      onClick={() => onViewDetail(creator)}
+    >
       {/* 삭제 버튼 - 우측 상단 */}
       {canDelete && (
         <button
@@ -115,7 +118,7 @@ export function CreatorCard({ creator, onViewDetail, onDelete, currentUserId }: 
                 {platformInfo.label}
               </span>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
               {creator.username}
             </h3>
             {creator.content_category && (
@@ -189,19 +192,13 @@ export function CreatorCard({ creator, onViewDetail, onDelete, currentUserId }: 
         )}
 
         {/* 액션 버튼 */}
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            className="flex-1"
-            onClick={() => onViewDetail(creator)}
-          >
-            상세보기
-          </Button>
+        <div>
           <a
             href={creator.profile_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1"
+            className="block"
+            onClick={(e) => e.stopPropagation()}
           >
             <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700">
               프로필 방문

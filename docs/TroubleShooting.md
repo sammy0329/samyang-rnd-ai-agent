@@ -337,6 +337,111 @@ function getDefaultProvider(): ProviderType {
 
 ---
 
+## React Query 캐시 관련 이슈
+
+### 삭제 후 토글 전환 시 즉시 반영 안되는 문제
+
+**증상:**
+- "내 작업" 모드에서 항목 삭제 후 "전체" 토글로 전환
+- 삭제된 항목이 여전히 표시됨
+- 페이지 새로고침해야만 삭제가 반영됨
+
+**원인:**
+React Query는 쿼리 키(queryKey)별로 캐시를 관리합니다. `refetch()`는 현재 쿼리만 새로고침하므로, 다른 필터 조건의 쿼리 캐시는 업데이트되지 않습니다.
+
+```typescript
+// 문제 코드
+const { refetch } = useTrends({ showAll }); // showAll=false 일 때의 쿼리
+
+const handleDelete = async (trend: Trend) => {
+  await fetch(`/api/trends?id=${trend.id}`, { method: 'DELETE' });
+  refetch(); // showAll=false 쿼리만 새로고침
+  // showAll=true 쿼리는 여전히 삭제 전 데이터를 캐시에 유지
+};
+```
+
+**queryKey 구조 예시:**
+```typescript
+// showAll=false 일 때
+['trends', { keyword: '', platform: undefined, ..., showAll: false }]
+
+// showAll=true 일 때
+['trends', { keyword: '', platform: undefined, ..., showAll: true }]
+
+// 두 개는 서로 다른 캐시 엔트리!
+```
+
+**해결 방법:**
+
+`queryClient.invalidateQueries()`를 사용하여 queryKey 접두사가 일치하는 모든 쿼리를 무효화:
+
+```typescript
+import { useQueryClient } from '@tanstack/react-query';
+
+export default function TrendsPage() {
+  const queryClient = useQueryClient();
+
+  const handleDelete = async (trend: Trend) => {
+    await fetch(`/api/trends?id=${trend.id}`, { method: 'DELETE' });
+
+    // ✅ 모든 trends 관련 쿼리 무효화 (전체/내 작업 모두)
+    queryClient.invalidateQueries({ queryKey: ['trends'] });
+  };
+}
+```
+
+**적용 파일:**
+- `src/app/(dashboard)/trends/page.tsx` - trends 쿼리 무효화
+- `src/app/(dashboard)/creators/page.tsx` - creators 쿼리 무효화
+- `src/app/(dashboard)/content/page.tsx` - contentIdeas 쿼리 무효화
+- `src/app/(dashboard)/reports/page.tsx` - reports 쿼리는 mutation hook에서 자동 처리
+
+**동작 방식:**
+```typescript
+// queryClient.invalidateQueries({ queryKey: ['trends'] }) 호출 시:
+
+// 무효화되는 쿼리들:
+['trends', { showAll: false, ... }]  // ✅ 무효화
+['trends', { showAll: true, ... }]   // ✅ 무효화
+['trends', { keyword: '불닭', ... }] // ✅ 무효화
+
+// 무효화되지 않는 쿼리들:
+['creators', { ... }]  // ❌ 다른 접두사
+['reports', { ... }]   // ❌ 다른 접두사
+```
+
+**베스트 프랙티스:**
+1. **Create/Update/Delete 시 invalidateQueries 사용**
+   - `refetch()`는 현재 쿼리만 새로고침
+   - `invalidateQueries()`는 관련된 모든 쿼리 무효화
+
+2. **React Query mutation hooks 활용**
+   ```typescript
+   // src/hooks/useReports.ts
+   export function useDeleteReport() {
+     const queryClient = useQueryClient();
+
+     return useMutation({
+       mutationFn: deleteReport,
+       onSuccess: () => {
+         // mutation 성공 시 자동으로 쿼리 무효화
+         queryClient.invalidateQueries({ queryKey: ['reports'] });
+       },
+     });
+   }
+   ```
+
+3. **queryKey 네이밍 규칙**
+   - 첫 번째 요소는 리소스 타입 (`'trends'`, `'creators'`, ...)
+   - 두 번째 요소는 필터 객체
+   - 이렇게 하면 `invalidateQueries({ queryKey: ['trends'] })`로 모든 trends 쿼리 무효화 가능
+
+**완료 일시:** 2025-12-15
+**담당자:** AI Agent
+**상태:** ✅ 해결됨
+
+---
+
 ## 다음 단계
 
 이 문서는 프로젝트 진행 중 발견되는 이슈들을 계속 추가할 예정입니다.
@@ -349,4 +454,4 @@ function getDefaultProvider(): ProviderType {
 
 ---
 
-**마지막 업데이트:** 2025-12-13
+**마지막 업데이트:** 2025-12-15

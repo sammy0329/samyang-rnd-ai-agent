@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { ContentIdeaCard } from '@/components/content/ContentIdeaCard';
 import { ContentIdeaLoadingCard } from '@/components/content/ContentIdeaLoadingCard';
@@ -23,6 +24,7 @@ const ContentIdeaDetailModal = dynamic(
 export default function ContentPage() {
   const { user } = useAuthStore();
   const currentUserId = user?.id;
+  const queryClient = useQueryClient();
 
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -93,8 +95,8 @@ export default function ContentPage() {
         throw new Error(data.message || '콘텐츠 아이디어 삭제에 실패했습니다.');
       }
 
-      // 성공 시 목록 새로고침
-      refetch();
+      // 성공 시 모든 contentIdeas 쿼리 무효화 (전체/내 작업 모두)
+      queryClient.invalidateQueries({ queryKey: ['contentIdeas'] });
     } catch (error) {
       console.error('Delete error:', error);
       alert(error instanceof Error ? error.message : '콘텐츠 아이디어 삭제에 실패했습니다.');
