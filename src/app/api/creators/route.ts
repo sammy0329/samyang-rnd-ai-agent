@@ -23,7 +23,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCreators } from '@/lib/db/queries/creators';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
-import { getServerSession } from '@/lib/auth/session';
+import { getServerSession } from '@/lib/auth/server';
 import type { CreatorFilters } from '@/types/creators';
 
 /**

@@ -31,7 +31,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getTrends } from '@/lib/db/queries/trends';
 import { Platform, Country } from '@/types/trends';
-import { getServerSession } from '@/lib/auth/session';
+import { getServerSession } from '@/lib/auth/server';
 
 // 쿼리 파라미터 검증 스키마
 const TrendListQuerySchema = z.object({
