@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
 
     // 1. 사용자 세션 가져오기
     const session = await getServerSession();
-    const userId = session?.user?.id;
+    const userId = session?.data?.id;
 
     // 2. 요청 바디 파싱 및 검증
     const body = await request.json();

@@ -103,7 +103,7 @@ export async function GET(request: NextRequest) {
   try {
     // 1. 세션 확인
     const session = await getServerSession();
-    const userId = session?.user?.id;
+    const userId = session?.data?.id;
 
     // 2. 쿼리 파라미터 파싱
     const { searchParams } = new URL(request.url);
