@@ -8,6 +8,7 @@ interface ReportCardProps {
   report: Report;
   onView: () => void;
   onDownload: () => void;
+  onDelete?: () => void;
 }
 
 const REPORT_TYPE_LABELS: Record<string, { title: string; color: string }> = {
@@ -16,7 +17,7 @@ const REPORT_TYPE_LABELS: Record<string, { title: string; color: string }> = {
   content_idea: { title: '콘텐츠 아이디어', color: 'bg-purple-100 text-purple-800' },
 };
 
-export function ReportCard({ report, onView, onDownload }: ReportCardProps) {
+export function ReportCard({ report, onView, onDownload, onDelete }: ReportCardProps) {
   const typeConfig = REPORT_TYPE_LABELS[report.type] || { title: report.type, color: 'bg-gray-100 text-gray-800' };
   const createdDate = new Date(report.created_at).toLocaleDateString('ko-KR');
 
@@ -74,6 +75,16 @@ export function ReportCard({ report, onView, onDownload }: ReportCardProps) {
         >
           다운로드
         </Button>
+        {onDelete && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700"
+            onClick={onDelete}
+          >
+            삭제
+          </Button>
+        )}
       </div>
     </Card>
   );

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ReportCard } from '@/components/reports/ReportCard';
-import { useReports, useCreateReport, type Report } from '@/hooks/useReports';
+import { useReports, useCreateReport, useDeleteReport, type Report } from '@/hooks/useReports';
 
 // Dynamic import for modal
 const ReportDetailModal = dynamic(
@@ -21,6 +21,7 @@ export default function ReportsPage() {
 
   const { data: reportsData, isLoading, refetch } = useReports({ limit: 50, showAll });
   const createReportMutation = useCreateReport();
+  const deleteReportMutation = useDeleteReport();
 
   const handleCreateReport = async (type: 'daily_trend' | 'creator_match' | 'content_idea') => {
     try {
@@ -72,6 +73,20 @@ export default function ReportsPage() {
   const handleDownloadFromModal = () => {
     if (selectedReport) {
       handleDownloadReport(selectedReport);
+    }
+  };
+
+  const handleDeleteReport = async (reportId: string) => {
+    if (!confirm('정말 이 리포트를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      await deleteReportMutation.mutateAsync(reportId);
+      refetch();
+    } catch (error) {
+      console.error('Failed to delete report:', error);
+      alert(error instanceof Error ? error.message : '리포트 삭제에 실패했습니다.');
     }
   };
 
@@ -205,6 +220,7 @@ export default function ReportsPage() {
                 report={report}
                 onView={() => handleViewReport(report)}
                 onDownload={() => handleDownloadReport(report)}
+                onDelete={!showAll ? () => handleDeleteReport(report.id) : undefined}
               />
             ))}
           </div>

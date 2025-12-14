@@ -28,6 +28,7 @@ export interface ReportFilters {
   endDate?: string;
   limit?: number;
   offset?: number;
+  userId?: string;
 }
 
 export interface DBResponse<T> {
@@ -94,6 +95,11 @@ export async function getReports(filters: ReportFilters = {}): Promise<DBRespons
       query = query.lte('created_at', filters.endDate);
     }
 
+    // 사용자별 필터링
+    if (filters.userId) {
+      query = query.eq('created_by', filters.userId);
+    }
+
     // 정렬
     query = query.order('created_at', { ascending: false });
 
@@ -150,11 +156,30 @@ export async function getReportById(id: string): Promise<DBResponse<Report>> {
 }
 
 /**
- * 리포트 삭제
+ * 리포트 삭제 (본인이 작성한 리포트만 삭제 가능)
  */
-export async function deleteReport(id: string): Promise<DBResponse<null>> {
+export async function deleteReport(id: string, userId?: string): Promise<DBResponse<null>> {
   try {
     const supabase = createAdminClient();
+
+    // 먼저 리포트 조회하여 소유권 확인
+    if (userId) {
+      const { data: report, error: fetchError } = await supabase
+        .from('reports')
+        .select('created_by')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) {
+        console.error('[deleteReport] Fetch error:', fetchError);
+        return { data: null, error: new Error(fetchError.message) };
+      }
+
+      // 본인이 작성한 리포트가 아니면 삭제 불가
+      if (report.created_by !== userId) {
+        return { data: null, error: new Error('본인이 작성한 리포트만 삭제할 수 있습니다.') };
+      }
+    }
 
     const { error } = await supabase
       .from('reports')

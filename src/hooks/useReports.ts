@@ -99,3 +99,32 @@ export function useCreateReport() {
     },
   });
 }
+
+/**
+ * Delete a report (only if created by current user)
+ */
+async function deleteReport(reportId: string): Promise<void> {
+  const response = await fetch(`/api/reports?id=${reportId}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to delete report');
+  }
+}
+
+/**
+ * React Query mutation hook for deleting reports
+ */
+export function useDeleteReport() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteReport,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
+    },
+  });
+}

@@ -3,11 +3,12 @@
  *
  * POST /api/reports - 리포트 생성
  * GET /api/reports - 리포트 목록 조회
+ * DELETE /api/reports - 리포트 삭제 (본인이 작성한 리포트만)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createReport, getReports } from '@/lib/db/queries/reports';
+import { createReport, getReports, deleteReport } from '@/lib/db/queries/reports';
 import { generateDailyTrendReport } from '@/lib/reports/daily-trend-report';
 import { generateCreatorMatchReport } from '@/lib/reports/creator-match-report';
 import { generateContentIdeaReport } from '@/lib/reports/content-idea-report';
@@ -184,6 +185,74 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('[Reports API] GET Error:', error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/reports
+ * 리포트 삭제 (본인이 작성한 리포트만)
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // 사용자 세션 확인
+    const session = await getServerSession();
+    const userId = session?.data?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized',
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 }
+      );
+    }
+
+    // 쿼리 파라미터에서 리포트 ID 가져오기
+    const searchParams = request.nextUrl.searchParams;
+    const reportId = searchParams.get('id');
+
+    if (!reportId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          message: '리포트 ID가 필요합니다.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // 리포트 삭제 (소유권 확인 포함)
+    const result = await deleteReport(reportId, userId);
+
+    if (result.error) {
+      const status = result.error.message.includes('본인이 작성한') ? 403 : 500;
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to delete report',
+          message: result.error.message,
+        },
+        { status }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: '리포트가 삭제되었습니다.',
+    });
+  } catch (error) {
+    console.error('[Reports API] DELETE Error:', error);
     return NextResponse.json(
       {
         success: false,
