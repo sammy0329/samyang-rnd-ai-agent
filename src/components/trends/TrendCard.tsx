@@ -6,6 +6,8 @@ interface TrendCardProps {
   trend: Trend;
   onViewDetail?: (trend: Trend) => void;
   onGenerateIdea?: (trend: Trend) => void;
+  onDelete?: (trend: Trend) => void;
+  currentUserId?: string;
 }
 
 /**
@@ -87,13 +89,42 @@ function formatDate(dateString: string) {
   }
 }
 
-export function TrendCard({ trend, onViewDetail, onGenerateIdea }: TrendCardProps) {
+export function TrendCard({ trend, onViewDetail, onGenerateIdea, onDelete, currentUserId }: TrendCardProps) {
   const platformInfo = getPlatformInfo(trend.platform);
   const viralScore = trend.viral_score || 0;
   const samyangScore = trend.samyang_relevance || 0;
 
+  // 삭제 버튼 표시: onDelete가 있으면 표시 (서버에서 권한 체크)
+  const canDelete = !!onDelete;
+
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+    <Card className="relative overflow-hidden transition-shadow hover:shadow-lg">
+      {/* 삭제 버튼 - 우측 상단 */}
+      {canDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(trend);
+          }}
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
+          title="삭제"
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* 헤더 */}
       <div className="border-b bg-gray-50 p-4">
         <div className="flex items-start justify-between">

@@ -9,6 +9,7 @@ interface ReportCardProps {
   onView: () => void;
   onDownload: () => void;
   onDelete?: () => void;
+  currentUserId?: string;
 }
 
 const REPORT_TYPE_LABELS: Record<string, { title: string; color: string }> = {
@@ -17,7 +18,7 @@ const REPORT_TYPE_LABELS: Record<string, { title: string; color: string }> = {
   content_idea: { title: '콘텐츠 아이디어', color: 'bg-purple-100 text-purple-800' },
 };
 
-export function ReportCard({ report, onView, onDownload, onDelete }: ReportCardProps) {
+export function ReportCard({ report, onView, onDownload, onDelete, currentUserId }: ReportCardProps) {
   const typeConfig = REPORT_TYPE_LABELS[report.type] || { title: report.type, color: 'bg-gray-100 text-gray-800' };
   const createdDate = new Date(report.created_at).toLocaleDateString('ko-KR');
 
@@ -29,8 +30,37 @@ export function ReportCard({ report, onView, onDownload, onDelete }: ReportCardP
     summary: content.summary || {},
   };
 
+  // 삭제 버튼 표시: onDelete가 있으면 표시 (서버에서 권한 체크)
+  const canDelete = !!onDelete;
+
   return (
-    <Card className="group overflow-hidden p-6 transition-all hover:shadow-lg">
+    <Card className="group relative overflow-hidden p-6 transition-all hover:shadow-lg">
+      {/* 삭제 버튼 - 우측 상단 */}
+      {canDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
+          title="삭제"
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* 헤더 */}
       <div className="mb-4">
         <div className="mb-2 flex items-start justify-between">
@@ -75,16 +105,6 @@ export function ReportCard({ report, onView, onDownload, onDelete }: ReportCardP
         >
           다운로드
         </Button>
-        {onDelete && (
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700"
-            onClick={onDelete}
-          >
-            삭제
-          </Button>
-        )}
       </div>
     </Card>
   );

@@ -32,6 +32,7 @@ import { z } from 'zod';
 import { getTrends } from '@/lib/db/queries/trends';
 import { Platform, Country } from '@/types/trends';
 import { getServerSession } from '@/lib/auth/server';
+import { createAdminClient } from '@/lib/db/server';
 
 // 쿼리 파라미터 검증 스키마
 const TrendListQuerySchema = z.object({
@@ -94,7 +95,7 @@ const TrendListQuerySchema = z.object({
     .string()
     .optional()
     .transform((val) => val === 'true')
-    .default('false'),
+    .default(false),
 });
 
 export async function GET(request: NextRequest) {
@@ -190,6 +191,109 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('[Trends List API] Unexpected error:', error);
 
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/trends
+ * 트렌드 삭제 (본인이 작성한 트렌드만)
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // 사용자 세션 확인
+    const session = await getServerSession();
+    const userId = session?.data?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized',
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 }
+      );
+    }
+
+    // 쿼리 파라미터에서 트렌드 ID 가져오기
+    const searchParams = request.nextUrl.searchParams;
+    const trendId = searchParams.get('id');
+
+    if (!trendId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          message: '트렌드 ID가 필요합니다.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Admin client로 트렌드 조회 (소유권 확인)
+    const adminClient = createAdminClient();
+
+    const { data: trend, error: fetchError } = await adminClient
+      .from('trends')
+      .select('*')
+      .eq('id', trendId)
+      .single();
+
+    if (fetchError || !trend) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Not found',
+          message: '트렌드를 찾을 수 없습니다.',
+        },
+        { status: 404 }
+      );
+    }
+
+    // 소유권 확인
+    if (trend.created_by !== userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Forbidden',
+          message: '본인이 작성한 트렌드만 삭제할 수 있습니다.',
+        },
+        { status: 403 }
+      );
+    }
+
+    // 트렌드 삭제
+    const { error: deleteError } = await adminClient
+      .from('trends')
+      .delete()
+      .eq('id', trendId);
+
+    if (deleteError) {
+      console.error('[Trends DELETE API] Delete error:', deleteError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to delete trend',
+          message: deleteError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: '트렌드가 삭제되었습니다.',
+    });
+  } catch (error) {
+    console.error('[Trends DELETE API] Unexpected error:', error);
     return NextResponse.json(
       {
         success: false,

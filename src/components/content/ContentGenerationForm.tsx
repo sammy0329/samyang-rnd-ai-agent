@@ -37,6 +37,7 @@ interface ContentIdea {
   target_country: string;
   expected_performance: Record<string, unknown>;
   created_at: string;
+  created_by: string | null;
 }
 
 interface ContentGenerationFormProps {

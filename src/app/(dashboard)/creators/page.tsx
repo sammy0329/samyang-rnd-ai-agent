@@ -15,6 +15,7 @@ import {
 import { useCreators } from '@/hooks/useCreators';
 import { CreatorCard } from '@/components/creators/CreatorCard';
 import type { Creator } from '@/types/creators';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Dynamic imports for heavy components
 const CreatorDetailModal = dynamic(
@@ -28,6 +29,9 @@ const CreatorMatchForm = dynamic(
 );
 
 export default function CreatorsPage() {
+  const { user } = useAuthStore();
+  const currentUserId = user?.id;
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [matchResult, setMatchResult] = useState<any>(null);
   const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
@@ -75,6 +79,30 @@ export default function CreatorsPage() {
     setMatchResult(result);
     setIsDialogOpen(false);
     refetch();
+  };
+
+  const handleDelete = async (creator: Creator) => {
+    if (!confirm('정말 이 크리에이터를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/creators?id=${creator.id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '크리에이터 삭제에 실패했습니다.');
+      }
+
+      // 성공 시 목록 새로고침
+      refetch();
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert(error instanceof Error ? error.message : '크리에이터 삭제에 실패했습니다.');
+    }
   };
 
   return (
@@ -376,6 +404,8 @@ export default function CreatorsPage() {
                 key={creator.id}
                 creator={creator}
                 onViewDetail={handleViewDetail}
+                onDelete={handleDelete}
+                currentUserId={currentUserId}
               />
             ))}
           </div>

@@ -7,6 +7,7 @@ import { ContentIdeaCard } from '@/components/content/ContentIdeaCard';
 import { ContentIdeaLoadingCard } from '@/components/content/ContentIdeaLoadingCard';
 import { ContentIdeaErrorCard } from '@/components/content/ContentIdeaErrorCard';
 import { useContentIdeas, type ContentIdea } from '@/hooks/useContentIdeas';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Dynamic imports for heavy components
 const ContentGenerationForm = dynamic(
@@ -20,6 +21,9 @@ const ContentIdeaDetailModal = dynamic(
 );
 
 export default function ContentPage() {
+  const { user } = useAuthStore();
+  const currentUserId = user?.id;
+
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
@@ -71,6 +75,30 @@ export default function ContentPage() {
   const handleCardClick = (idea: ContentIdea) => {
     setSelectedIdea(idea);
     setIsModalOpen(true);
+  };
+
+  const handleDelete = async (idea: ContentIdea) => {
+    if (!confirm('정말 이 콘텐츠 아이디어를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/content?id=${idea.id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '콘텐츠 아이디어 삭제에 실패했습니다.');
+      }
+
+      // 성공 시 목록 새로고침
+      refetch();
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert(error instanceof Error ? error.message : '콘텐츠 아이디어 삭제에 실패했습니다.');
+    }
   };
 
   // 생성된 아이디어와 기존 아이디어 합치기 (생성된 것이 우선)
@@ -206,6 +234,8 @@ export default function ContentPage() {
                   <ContentIdeaCard
                     idea={idea}
                     onClick={() => handleCardClick(idea)}
+                    onDelete={handleDelete}
+                    currentUserId={currentUserId}
                   />
                 </div>
               );
@@ -217,6 +247,8 @@ export default function ContentPage() {
                 <ContentIdeaCard
                   idea={idea}
                   onClick={() => handleCardClick(idea)}
+                  onDelete={handleDelete}
+                  currentUserId={currentUserId}
                 />
               </div>
             ))}

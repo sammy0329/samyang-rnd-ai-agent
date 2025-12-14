@@ -23,6 +23,7 @@ export interface Trend {
   analysis_data: Record<string, unknown> | null;
   collected_at: string;
   created_at: string;
+  created_by: string | null;
 }
 
 // Trend 생성 시 입력 데이터

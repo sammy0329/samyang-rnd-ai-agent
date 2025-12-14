@@ -40,6 +40,7 @@ interface ContentIdea {
   production_tips?: string[];
   common_mistakes?: string[];
   created_at: string;
+  created_by: string | null;
 }
 
 interface ContentIdeaDetailModalProps {

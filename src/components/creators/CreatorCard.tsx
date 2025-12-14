@@ -7,6 +7,8 @@ import type { Creator } from '@/types/creators';
 interface CreatorCardProps {
   creator: Creator;
   onViewDetail: (creator: Creator) => void;
+  onDelete?: (creator: Creator) => void;
+  currentUserId?: string;
 }
 
 // 플랫폼별 정보 (아이콘, 색상)
@@ -66,12 +68,41 @@ const getScoreBadgeColor = (score: number | null): string => {
   return 'bg-red-100 text-red-700';
 };
 
-export function CreatorCard({ creator, onViewDetail }: CreatorCardProps) {
+export function CreatorCard({ creator, onViewDetail, onDelete, currentUserId }: CreatorCardProps) {
   const platformInfo = getPlatformInfo(creator.platform);
   const brandFitScore = creator.brand_fit_score || 0;
 
+  // 삭제 버튼 표시: onDelete가 있으면 표시 (서버에서 권한 체크)
+  const canDelete = !!onDelete;
+
   return (
-    <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+    <Card className="relative overflow-hidden transition-shadow hover:shadow-lg">
+      {/* 삭제 버튼 - 우측 상단 */}
+      {canDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(creator);
+          }}
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
+          title="삭제"
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      )}
+
       <div className="p-6">
         {/* 헤더: 플랫폼 + 사용자명 */}
         <div className="mb-4 flex items-start justify-between">

@@ -26,7 +26,7 @@ const GetReportsSchema = z.object({
   endDate: z.string().optional(),
   limit: z.coerce.number().min(1).max(100).optional(),
   offset: z.coerce.number().min(0).optional(),
-  showAll: z.string().optional().transform((val) => val === 'true').default('false'),
+  showAll: z.string().optional().transform((val) => val === 'true').default(false),
 });
 
 /**

@@ -21,6 +21,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getContentIdeas } from '@/lib/db/queries/content';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { getServerSession } from '@/lib/auth/server';
+import { createAdminClient } from '@/lib/db/server';
 import type { ContentIdeaFilters } from '@/types/content';
 
 /**
@@ -113,6 +114,109 @@ export async function GET(request: NextRequest) {
       console.warn('[Content List API] Failed to track API usage:', usageError);
     }
 
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error occurred',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/content
+ * 콘텐츠 아이디어 삭제 (본인이 작성한 아이디어만)
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // 사용자 세션 확인
+    const session = await getServerSession();
+    const userId = session?.data?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized',
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 }
+      );
+    }
+
+    // 쿼리 파라미터에서 콘텐츠 아이디어 ID 가져오기
+    const searchParams = request.nextUrl.searchParams;
+    const contentId = searchParams.get('id');
+
+    if (!contentId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          message: '콘텐츠 아이디어 ID가 필요합니다.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Admin client로 콘텐츠 아이디어 조회 (소유권 확인)
+    const adminClient = createAdminClient();
+
+    const { data: content, error: fetchError } = await adminClient
+      .from('content_ideas')
+      .select('*')
+      .eq('id', contentId)
+      .single();
+
+    if (fetchError || !content) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Not found',
+          message: '콘텐츠 아이디어를 찾을 수 없습니다.',
+        },
+        { status: 404 }
+      );
+    }
+
+    // 소유권 확인
+    if (content.created_by !== userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Forbidden',
+          message: '본인이 작성한 콘텐츠 아이디어만 삭제할 수 있습니다.',
+        },
+        { status: 403 }
+      );
+    }
+
+    // 콘텐츠 아이디어 삭제
+    const { error: deleteError } = await adminClient
+      .from('content_ideas')
+      .delete()
+      .eq('id', contentId);
+
+    if (deleteError) {
+      console.error('[Content DELETE API] Delete error:', deleteError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to delete content idea',
+          message: deleteError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: '콘텐츠 아이디어가 삭제되었습니다.',
+    });
+  } catch (error) {
+    console.error('[Content DELETE API] Unexpected error:', error);
     return NextResponse.json(
       {
         success: false,

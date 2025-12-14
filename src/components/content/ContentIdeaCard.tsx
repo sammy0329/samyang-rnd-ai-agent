@@ -33,11 +33,14 @@ interface ContentIdea {
   hashtags?: string[];
   production_tips?: string[];
   created_at: string;
+  created_by: string | null;
 }
 
 interface ContentIdeaCardProps {
   idea: ContentIdea;
   onClick?: () => void;
+  onDelete?: (idea: ContentIdea) => void;
+  currentUserId?: string;
 }
 
 // 포맷 타입 한글 매핑
@@ -86,7 +89,7 @@ const COUNTRY_LABELS: Record<string, string> = {
   JP: '일본',
 };
 
-export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
+export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: ContentIdeaCardProps) {
   const formatType = idea.format_type || 'Unknown';
   const platform = idea.platform || 'youtube';
   const platformConfig = PLATFORM_CONFIG[platform] || PLATFORM_CONFIG.youtube;
@@ -101,15 +104,44 @@ export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
   const viralityPotential = performance?.virality_potential || 'medium';
   const viralityConfig = VIRALITY_LABELS[viralityPotential];
 
+  // 삭제 버튼 표시: onDelete가 있으면 표시 (서버에서 권한 체크)
+  const canDelete = !!onDelete;
+
   return (
     <Card
       className="group relative flex h-full min-h-[480px] flex-col overflow-hidden p-6 transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
       onClick={onClick}
     >
+      {/* 삭제 버튼 - 우측 상단 */}
+      {canDelete && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(idea);
+          }}
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm transition-all hover:bg-red-50 hover:text-red-600 hover:shadow-md"
+          title="삭제"
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      )}
+
       {/* 헤더 */}
       <div className="mb-4">
         <div className="mb-2 flex items-start justify-between">
-          <div className="flex-1">
+          <div className="flex-1 pr-8">
             <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
               {idea.title}
             </h3>

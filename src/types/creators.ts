@@ -23,6 +23,7 @@ export interface Creator {
   last_analyzed_at: string | null;
   created_at: string;
   updated_at: string;
+  created_by: string | null;
 }
 
 // Creator 생성 시 입력 데이터

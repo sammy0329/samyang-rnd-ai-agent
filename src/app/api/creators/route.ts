@@ -24,6 +24,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCreators } from '@/lib/db/queries/creators';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { getServerSession } from '@/lib/auth/server';
+import { createAdminClient } from '@/lib/db/server';
 import type { CreatorFilters } from '@/types/creators';
 
 /**
@@ -184,6 +185,109 @@ export async function GET(request: NextRequest) {
       console.warn('[Creators API] Failed to track API usage:', trackError);
     }
 
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/creators
+ * 크리에이터 삭제 (본인이 작성한 크리에이터만)
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // 사용자 세션 확인
+    const session = await getServerSession();
+    const userId = session?.data?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Unauthorized',
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 }
+      );
+    }
+
+    // 쿼리 파라미터에서 크리에이터 ID 가져오기
+    const searchParams = request.nextUrl.searchParams;
+    const creatorId = searchParams.get('id');
+
+    if (!creatorId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Validation failed',
+          message: '크리에이터 ID가 필요합니다.',
+        },
+        { status: 400 }
+      );
+    }
+
+    // Admin client로 크리에이터 조회 (소유권 확인)
+    const adminClient = createAdminClient();
+
+    const { data: creator, error: fetchError } = await adminClient
+      .from('creators')
+      .select('*')
+      .eq('id', creatorId)
+      .single();
+
+    if (fetchError || !creator) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Not found',
+          message: '크리에이터를 찾을 수 없습니다.',
+        },
+        { status: 404 }
+      );
+    }
+
+    // 소유권 확인
+    if (creator.created_by !== userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Forbidden',
+          message: '본인이 작성한 크리에이터만 삭제할 수 있습니다.',
+        },
+        { status: 403 }
+      );
+    }
+
+    // 크리에이터 삭제
+    const { error: deleteError } = await adminClient
+      .from('creators')
+      .delete()
+      .eq('id', creatorId);
+
+    if (deleteError) {
+      console.error('[Creators DELETE API] Delete error:', deleteError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to delete creator',
+          message: deleteError.message,
+        },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: '크리에이터가 삭제되었습니다.',
+    });
+  } catch (error) {
+    console.error('[Creators DELETE API] Unexpected error:', error);
     return NextResponse.json(
       {
         success: false,

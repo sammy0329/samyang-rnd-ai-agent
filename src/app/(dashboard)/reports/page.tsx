@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ReportCard } from '@/components/reports/ReportCard';
 import { useReports, useCreateReport, useDeleteReport, type Report } from '@/hooks/useReports';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Dynamic import for modal
 const ReportDetailModal = dynamic(
@@ -14,6 +15,9 @@ const ReportDetailModal = dynamic(
 );
 
 export default function ReportsPage() {
+  const { user } = useAuthStore();
+  const currentUserId = user?.id;
+
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reportType, setReportType] = useState<'daily_trend' | 'creator_match' | 'content_idea' | ''>('');
@@ -220,7 +224,8 @@ export default function ReportsPage() {
                 report={report}
                 onView={() => handleViewReport(report)}
                 onDownload={() => handleDownloadReport(report)}
-                onDelete={!showAll ? () => handleDeleteReport(report.id) : undefined}
+                onDelete={() => handleDeleteReport(report.id)}
+                currentUserId={currentUserId}
               />
             ))}
           </div>

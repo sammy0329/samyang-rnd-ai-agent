@@ -16,6 +16,7 @@ import { TrendCard } from '@/components/trends/TrendCard';
 import { TrendCardSkeletonGrid } from '@/components/trends/TrendCardSkeleton';
 import { useTrends } from '@/hooks/useTrends';
 import { Trend } from '@/types/trends';
+import { useAuthStore } from '@/store/useAuthStore';
 
 // Dynamic imports for heavy components
 const TrendAnalysisForm = dynamic(
@@ -29,6 +30,9 @@ const TrendDetailModal = dynamic(
 );
 
 export default function TrendsPage() {
+  const { user } = useAuthStore();
+  const currentUserId = user?.id;
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
@@ -101,6 +105,30 @@ export default function TrendsPage() {
   const handleGenerateIdea = (trend: Trend) => {
     console.log('Generate idea:', trend);
     // TODO: 아이디어 생성 다이얼로그 열기
+  };
+
+  const handleDelete = async (trend: Trend) => {
+    if (!confirm('정말 이 트렌드를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/trends?id=${trend.id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || '트렌드 삭제에 실패했습니다.');
+      }
+
+      // 성공 시 목록 새로고침
+      refetch();
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert(error instanceof Error ? error.message : '트렌드 삭제에 실패했습니다.');
+    }
   };
 
   const handleFilterChange = (field: string, value: string | boolean) => {
@@ -394,6 +422,8 @@ export default function TrendsPage() {
                 trend={trend}
                 onViewDetail={handleViewDetail}
                 onGenerateIdea={handleGenerateIdea}
+                onDelete={handleDelete}
+                currentUserId={currentUserId}
               />
             ))}
           </div>
