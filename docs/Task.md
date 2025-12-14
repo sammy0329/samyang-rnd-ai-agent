@@ -1284,33 +1284,41 @@ pnpm add @upstash/redis
 ### Epic 6.1: 콘텐츠 생성 API
 **담당**: Developer | **우선순위**: P0
 
-#### Task 6.1.1: 콘텐츠 아이디어 생성 API ⬜
-- [ ] `app/api/content/generate/route.ts` 생성
-- [ ] POST 요청 핸들러
-  - 요청 바디 검증
-    - 트렌드 ID (옵션)
-    - 브랜드 카테고리
-    - 톤앤매너
-    - 타깃 국가
-  - AI 콘텐츠 생성 호출
-  - 결과 DB 저장
-  - 응답 반환 (3개 아이디어)
-- [ ] 에러 핸들링
+#### Task 6.1.1: 콘텐츠 아이디어 생성 API ✅
+- [x] `lib/db/queries/content.ts` 생성 (DB 쿼리 함수)
+- [x] `app/api/content/generate/route.ts` 생성
+- [x] POST 요청 핸들러
+  - Zod 스키마로 요청 바디 검증
+    - brandCategory (buldak/samyang_ramen/jelly)
+    - tone (fun/kawaii/provocative/cool)
+    - targetCountry (KR/US/JP)
+    - trendId, trendKeyword, trendDescription (옵션)
+    - preferredPlatform (옵션)
+    - additionalRequirements (옵션)
+  - generateContentVariations로 AI 콘텐츠 3개 생성 (temperature 다르게)
+  - 성공한 아이디어들을 DB에 저장
+  - 응답 반환 (생성된 아이디어 배열 + 성공 개수)
+- [x] Rate Limiting (IP 기반, 5분에 5회)
+- [x] API 사용량 기록
+- [x] 에러 핸들링
 
 **예상 시간**: 4시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
 
 ---
 
-#### Task 6.1.2: 콘텐츠 아이디어 목록 API ⬜
-- [ ] `app/api/content/route.ts` 생성
-- [ ] GET 요청 핸들러
-  - 페이지네이션
-  - 필터링 (브랜드, 톤, 국가)
-  - 정렬 (최신순, 인기순)
+#### Task 6.1.2: 콘텐츠 아이디어 목록 API ✅
+- [x] `app/api/content/route.ts` 생성
+- [x] GET 요청 핸들러
+  - 페이지네이션 (limit/offset, 최대 100개)
+  - 필터링 (trend_id, brand_category, tone, target_country, myIdeas)
+  - 정렬 (generated_at, created_at, title)
+  - sortOrder (asc/desc)
+- [x] API 사용량 기록
+- [x] 에러 핸들링
 
 **예상 시간**: 2시간
-**완료 조건**: API 호출 성공
+**완료 조건**: API 호출 성공 ✅
 
 ---
 
