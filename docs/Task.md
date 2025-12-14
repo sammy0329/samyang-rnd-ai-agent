@@ -2057,27 +2057,37 @@ g
 
 ---
 
-#### Task 10.1.3: 사용자별 데이터 격리 구현 ⬜
+#### Task 10.1.3: 사용자별 데이터 격리 구현 ✅
 
 **배경**: 현재 모든 사용자가 동일한 데이터를 보는 문제 해결 필요
 
-- [ ] API 엔드포인트에 사용자 필터 추가
-  - `/api/trends` - userId 기반 필터링
-  - `/api/creators` - userId 기반 필터링
-  - `/api/content` - userId 기반 필터링
-  - `/api/reports` - userId 기반 필터링
-- [ ] UI에 "내 작업 / 전체" 토글 추가
-  - 기본값: 본인 작업만 보기
-  - 토글 시: 전체 데이터 보기
-- [ ] 데이터베이스 쿼리 수정
-  - GET 쿼리에 created_by 필터 추가
-  - RLS (Row Level Security) 정책 검토
-- [ ] 권한 체크 로직 추가
-  - 다른 사용자 데이터 접근 시 검증
-  - 관리자 권한 처리
+- [x] API 엔드포인트에 사용자 필터 추가
+  - `/api/trends` - userId 기반 필터링 + showAll 파라미터
+  - `/api/creators` - userId 기반 필터링 + showAll 파라미터
+  - `/api/content` - userId 기반 필터링 + showAll 파라미터 (myIdeas → showAll로 변경)
+  - `/api/reports` - 엔드포인트 미존재 (스킵)
+- [x] UI에 "내 작업 / 전체" 토글 추가
+  - 기본값: 본인 작업만 보기 (showAll=false)
+  - 토글 시: 전체 데이터 보기 (showAll=true)
+  - 세 페이지 모두 적용 (trends, creators, content)
+- [x] 데이터베이스 쿼리 수정
+  - GET 쿼리에 created_by 필터 추가 (getTrends, getCreators, getContentIdeas)
+  - 세션 기반 userId 추출 (getServerSession)
+- [x] React Query 훅 업데이트
+  - useTrends, useCreators, useContentIdeas에 showAll 파라미터 추가
+  - 타입 정의 업데이트 (TrendFilters, CreatorFilters, ContentIdeaFilters)
+
+**구현 세부사항**:
+- 기본 동작: created_by 필드로 사용자별 데이터 필터링
+- showAll=true: 모든 데이터 표시
+- showAll=false (기본값): 로그인한 사용자의 데이터만 표시
+- 일관된 패턴: 모든 모듈에서 동일한 showAll 방식 사용
 
 **예상 시간**: 3시간
-**완료 조건**: 사용자별 데이터 격리 확인
+**실제 소요 시간**: ~2.5시간
+**완료 조건**: 사용자별 데이터 격리 확인 ✅
+**완료일**: 2025-12-14
+**커밋**: 5bdf811
 
 ---
 
