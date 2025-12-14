@@ -14,6 +14,7 @@ import {
 import { useCreators } from '@/hooks/useCreators';
 import { CreatorCard } from '@/components/creators/CreatorCard';
 import { CreatorDetailModal } from '@/components/creators/CreatorDetailModal';
+import { CreatorMatchForm } from '@/components/creators/CreatorMatchForm';
 import type { Creator } from '@/types/creators';
 
 export default function CreatorsPage() {
@@ -56,6 +57,12 @@ export default function CreatorsPage() {
       ...prev,
       minBrandFitScore: checked ? 80 : undefined,
     }));
+  };
+
+  const handleMatchSuccess = (result: any) => {
+    setMatchResult(result);
+    setIsDialogOpen(false);
+    refetch();
   };
 
   return (
@@ -340,7 +347,7 @@ export default function CreatorsPage() {
 
       {/* 크리에이터 매칭 다이얼로그 */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>새 크리에이터 매칭</DialogTitle>
             <DialogDescription>
@@ -348,11 +355,10 @@ export default function CreatorsPage() {
               분석하여 인사이트를 제공합니다.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-sm text-gray-500">
-              크리에이터 매칭 폼 컴포넌트가 여기에 표시됩니다.
-            </p>
-          </div>
+          <CreatorMatchForm
+            onSuccess={handleMatchSuccess}
+            onCancel={() => setIsDialogOpen(false)}
+          />
         </DialogContent>
       </Dialog>
 

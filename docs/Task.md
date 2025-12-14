@@ -1135,19 +1135,21 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 5.1.2: 크리에이터 수동 등록 기능 ⬜
-- [ ] `components/creators/CreatorForm.tsx` 생성
-- [ ] 폼 필드
-  - 사용자명
-  - 플랫폼
-  - 프로필 URL
-  - 팔로워 수
-  - 콘텐츠 카테고리
-- [ ] 검증 로직
-- [ ] 제출 핸들러
+#### Task 5.1.2: 크리에이터 수동 등록 기능 ✅
+- [x] `components/creators/CreatorMatchForm.tsx` 생성
+- [x] 폼 필드 (React Hook Form + Zod 검증)
+  - 기본 정보: 사용자명, 플랫폼, 프로필 URL (필수)
+  - 통계 정보: 팔로워 수, 평균 조회수, 참여율 (선택)
+  - 크리에이터 정보: 콘텐츠 카테고리, 톤앤매너 (선택)
+  - 캠페인 정보: 캠페인 목표, 타겟 오디언스, 핵심 메시지 (선택)
+- [x] 검증 로직 (Zod schema)
+- [x] 제출 핸들러 (POST /api/creators/match 호출)
+- [x] 로딩/성공/에러 상태 처리
+- [x] /creators 페이지 다이얼로그에 통합
+- [x] 매칭 성공 시 자동 refetch
 
 **예상 시간**: 3시간
-**완료 조건**: 크리에이터 등록 성공
+**완료 조건**: 크리에이터 등록 성공 ✅
 
 ---
 
