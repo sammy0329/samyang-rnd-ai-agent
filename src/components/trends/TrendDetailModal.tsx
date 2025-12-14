@@ -95,10 +95,10 @@ export function TrendDetailModal({
             )}
             <div>
               <h3 className="mb-2 text-sm font-medium text-gray-500">
-                수집 시간
+                생성 시간
               </h3>
               <p className="text-base font-semibold">
-                {formatDateTime(trend.collected_at)}
+                {formatDateTime(trend.created_at)}
               </p>
             </div>
           </div>
