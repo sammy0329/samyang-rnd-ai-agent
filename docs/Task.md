@@ -1204,60 +1204,75 @@ pnpm add @upstash/redis
 ### Epic 5.3: 크리에이터 매칭 UI
 **담당**: Developer | **우선순위**: P0
 
-#### Task 5.3.1: 크리에이터 페이지 레이아웃 ⬜
-- [ ] `app/(dashboard)/creators/page.tsx` 생성
-- [ ] 헤더 섹션
-- [ ] 필터링 섹션
-  - 플랫폼 선택
-  - 적합도 점수 범위
-- [ ] 크리에이터 그리드
+#### Task 5.3.1: 크리에이터 페이지 레이아웃 ✅
+- [x] `app/(dashboard)/creators/page.tsx` 생성
+- [x] 헤더 섹션 (제목, 설명, "새 크리에이터 매칭" 버튼)
+- [x] 필터링 섹션
+  - 크리에이터명 검색
+  - 플랫폼 선택 (YouTube, TikTok, Instagram)
+  - 콘텐츠 카테고리 검색
+  - 최소 적합도 점수 입력
+  - 고적합도 필터 체크박스 (80점 이상)
+- [x] 크리에이터 그리드 (로딩/에러/빈 상태/데이터 상태)
+- [x] 정렬 기능 (적합도, 팔로워, 참여율, 최신순)
 
 **예상 시간**: 2시간
-**완료 조건**: 레이아웃 완성
+**완료 조건**: 레이아웃 완성 ✅
 
 ---
 
-#### Task 5.3.2: 크리에이터 카드 컴포넌트 ⬜
-- [ ] `components/creators/CreatorCard.tsx` 생성
-- [ ] 크리에이터 정보 표시
-  - 프로필 이미지 (옵션)
+#### Task 5.3.2: 크리에이터 카드 컴포넌트 ✅
+- [x] `components/creators/CreatorCard.tsx` 생성
+- [x] 크리에이터 정보 표시
   - 사용자명
-  - 플랫폼 아이콘
-  - 팔로워 수
-  - 평균 조회수
-  - 적합도 점수 (Progress bar)
-- [ ] 상세보기 버튼
+  - 플랫폼 아이콘 및 뱃지 (📹 YouTube, 🎵 TikTok, 📱 Instagram)
+  - 팔로워 수 (K/M 단위)
+  - 평균 조회수 (K/M 단위)
+  - 참여율 (백분율)
+  - 적합도 점수 (Progress bar + 색상 코딩)
+  - 톤앤매너
+  - 마지막 분석 시간
+- [x] 상세보기 버튼
+- [x] 프로필 방문 버튼
 
 **예상 시간**: 3시간
-**완료 조건**: 카드 렌더링 성공
+**완료 조건**: 카드 렌더링 성공 ✅
 
 ---
 
-#### Task 5.3.3: 크리에이터 상세 모달 ⬜
-- [ ] `components/creators/CreatorDetailModal.tsx` 생성
-- [ ] 전체 프로필 정보
-- [ ] 적합도 분석 결과
-  - 톤앤매너 평가
-  - 콘텐츠 카테고리 적합성
-  - 협업 이력
-  - 리스크 요인
-- [ ] 협업 아이디어 섹션
-- [ ] 닫기 버튼
+#### Task 5.3.3: 크리에이터 상세 모달 ✅
+- [x] `components/creators/CreatorDetailModal.tsx` 생성
+- [x] 전체 프로필 정보 (플랫폼, URL, 팔로워, 조회수, 참여율, 카테고리)
+- [x] 적합도 분석 결과
+  - 종합 점수 (Progress bar + 뱃지)
+  - 정량 평가 (팔로워/조회수/참여율 점수)
+  - 정성 평가 (카테고리/톤앤매너/오디언스 적합성)
+  - 톤앤매너 상세
+  - 강점 리스트
+  - 약점 리스트
+  - 오디언스 분석
+  - 콘텐츠 스타일 분석
+  - 추천 제품 (한글 번역 뱃지)
+- [x] 협업 전략 섹션 (추천 유형, 콘텐츠 제안, 예상 성과, 예산 권장사항)
+- [x] 리스크 평가 (레벨 뱃지, 리스크 요인, 완화 방안)
+- [x] 닫기 및 프로필 방문 버튼
 
 **예상 시간**: 3시간
-**완료 조건**: 모달 작동 확인
+**완료 조건**: 모달 작동 확인 ✅
 
 ---
 
-#### Task 5.3.4: 크리에이터 목록 & 필터링 ⬜
-- [ ] `components/creators/CreatorList.tsx` 생성
-- [ ] React Query로 데이터 Fetching
-- [ ] 필터링 로직
-- [ ] 정렬 로직
-- [ ] 페이지네이션
+#### Task 5.3.4: 크리에이터 목록 & 필터링 ✅
+- [x] `hooks/useCreators.ts` 생성 (React Query hook)
+- [x] React Query로 데이터 Fetching
+- [x] 필터링 로직 (username, platform, content_category, minBrandFitScore)
+- [x] 정렬 로직 (brand_fit_score, follower_count, engagement_rate, created_at)
+- [x] 페이지네이션 (limit/offset)
+- [x] creators 페이지에 통합
+- [x] 로딩/에러/빈 상태 처리
 
 **예상 시간**: 3시간
-**완료 조건**: 목록 표시 및 필터링 성공
+**완료 조건**: 목록 표시 및 필터링 성공 ✅
 
 ---
 
