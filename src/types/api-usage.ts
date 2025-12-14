@@ -64,3 +64,18 @@ export interface UsageStatsResponse {
   data: UsageStats | null;
   error: Error | null;
 }
+
+// Combined usage stats (user + system)
+export interface CombinedUsageStats {
+  user: UsageStats;
+  system: UsageStats;
+}
+
+export interface ApiUsageCombinedResponse {
+  success: boolean;
+  data: CombinedUsageStats;
+  period: {
+    startDate: string;
+    endDate: string;
+  };
+}

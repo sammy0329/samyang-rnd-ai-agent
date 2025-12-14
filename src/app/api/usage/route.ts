@@ -27,6 +27,38 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate') || undefined;
 
     // type에 따라 다른 데이터 반환
+    if (type === 'combined') {
+      // 사용자 + 시스템 통계 (동시에 가져오기)
+      const [userResult, systemResult] = await Promise.all([
+        getUserUsageStats(user.id, startDate, endDate),
+        getSystemUsageStats(startDate, endDate),
+      ]);
+
+      if (userResult.error || systemResult.error) {
+        return NextResponse.json(
+          {
+            error:
+              userResult.error?.message ||
+              systemResult.error?.message ||
+              'Failed to fetch usage stats',
+          },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          user: userResult.data,
+          system: systemResult.data,
+        },
+        period: {
+          startDate: startDate || 'all',
+          endDate: endDate || 'now',
+        },
+      });
+    }
+
     if (type === 'stats' || type === 'user') {
       // 사용자별 통계
       const { data, error } = await getUserUsageStats(
