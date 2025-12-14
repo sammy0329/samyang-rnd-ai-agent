@@ -2014,16 +2014,25 @@ pnpm add @upstash/redis
 
 **담당**: Developer | **우선순위**: P0
 
-#### Task 10.1.1: Vercel 프로젝트 설정 ⬜
+#### Task 10.1.1: Vercel 프로젝트 설정 ✅
 
-- [ ] Vercel 계정 생성
-- [ ] GitHub 연동
-- [ ] 프로젝트 임포트
-- [ ] 환경 변수 설정
-- [ ] 빌드 설정 확인
+- [x] Vercel 계정 생성
+- [x] GitHub 연동
+- [x] 프로젝트 임포트
+- [x] 환경 변수 설정
+  - Supabase 관련 변수 (URL, ANON_KEY, SERVICE_ROLE_KEY)
+  - AI/LLM 관련 변수 (ANTHROPIC_API_KEY, OPENAI_API_KEY)
+  - 외부 API (YOUTUBE_API_KEY, SERPAPI_API_KEY)
+  - Redis 캐싱 (UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)
+- [x] 빌드 설정 확인
+  - Build Command: `npm run build`
+  - Output Directory: Next.js default
+  - Install Command: `npm install`
 
 **예상 시간**: 1시간
-**완료 조건**: Vercel 프로젝트 생성 완료
+**실제 시간**: 1시간
+**완료 조건**: Vercel 프로젝트 생성 완료 ✅
+**완료일**: 2025-12-14
 
 ---
 
