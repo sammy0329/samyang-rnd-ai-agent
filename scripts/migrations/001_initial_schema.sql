@@ -45,6 +45,7 @@ CREATE TABLE trends (
   viral_score INT CHECK (viral_score >= 0 AND viral_score <= 100),
   samyang_relevance INT CHECK (samyang_relevance >= 0 AND samyang_relevance <= 100),
   analysis_data JSONB, -- LLM 분석 결과
+  created_by UUID REFERENCES users(id) ON DELETE SET NULL, -- 트렌드를 생성한 사용자 ID
   collected_at TIMESTAMP DEFAULT NOW(),
   created_at TIMESTAMP DEFAULT NOW()
 );
@@ -54,6 +55,7 @@ CREATE INDEX idx_trends_keyword ON trends(keyword);
 CREATE INDEX idx_trends_platform ON trends(platform);
 CREATE INDEX idx_trends_collected_at ON trends(collected_at DESC);
 CREATE INDEX idx_trends_viral_score ON trends(viral_score DESC);
+CREATE INDEX idx_trends_created_by ON trends(created_by);
 
 -- ===========================
 -- 3. creators 테이블
@@ -72,6 +74,7 @@ CREATE TABLE creators (
   collaboration_history JSONB,
   risk_factors JSONB,
   analysis_data JSONB,
+  created_by UUID REFERENCES users(id) ON DELETE SET NULL, -- 크리에이터를 추가한 사용자 ID
   last_analyzed_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -84,6 +87,7 @@ CREATE TRIGGER update_creators_updated_at BEFORE UPDATE
 CREATE INDEX idx_creators_platform ON creators(platform);
 CREATE INDEX idx_creators_brand_fit_score ON creators(brand_fit_score DESC);
 CREATE INDEX idx_creators_username_platform ON creators(username, platform);
+CREATE INDEX idx_creators_created_by ON creators(created_by);
 
 -- ===========================
 -- 4. content_ideas 테이블
