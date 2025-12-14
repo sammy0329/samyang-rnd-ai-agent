@@ -40,6 +40,7 @@ interface ContentIdeasFilters {
   targetCountry?: string;
   limit?: number;
   offset?: number;
+  showAll?: boolean;
 }
 
 interface ContentIdeasResponse {
@@ -64,6 +65,7 @@ async function fetchContentIdeas(
   if (filters.targetCountry) params.append('targetCountry', filters.targetCountry);
   if (filters.limit) params.append('limit', filters.limit.toString());
   if (filters.offset) params.append('offset', filters.offset.toString());
+  if (filters.showAll !== undefined) params.append('showAll', filters.showAll.toString());
 
   const response = await fetch(`/api/content?${params.toString()}`);
 

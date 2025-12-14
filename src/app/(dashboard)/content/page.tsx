@@ -26,10 +26,12 @@ export default function ContentPage() {
   const [showIdeas, setShowIdeas] = useState<boolean[]>([false, false, false]);
   const [selectedIdea, setSelectedIdea] = useState<ContentIdea | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false); // 전체 데이터 보기 (기본값: 내 작업만)
 
   // React Query로 기존 아이디어 목록 가져오기
   const { data: contentIdeasData, refetch } = useContentIdeas({
     limit: 50,
+    showAll,
   });
 
   const handleGenerationSuccess = (ideas: ContentIdea[]) => {
@@ -108,6 +110,29 @@ export default function ContentPage() {
               </span>
             )}
           </h2>
+          {/* 내 작업 / 전체 토글 */}
+          <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-1">
+            <button
+              className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                !showAll
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => setShowAll(false)}
+            >
+              내 작업
+            </button>
+            <button
+              className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                showAll
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => setShowAll(true)}
+            >
+              전체
+            </button>
+          </div>
         </div>
 
         {/* 빈 상태 - 아무 것도 없을 때만 */}

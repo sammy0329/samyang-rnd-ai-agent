@@ -13,6 +13,7 @@
  * - sortOrder?: 'asc' | 'desc' - 정렬 순서
  * - limit?: number (1-100) - 페이지당 개수
  * - offset?: number - 페이지 오프셋
+ * - showAll?: boolean - true이면 전체 데이터, false/없으면 본인 데이터만 (기본값: false)
  *
  * Response:
  * {
@@ -30,6 +31,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getTrends } from '@/lib/db/queries/trends';
 import { Platform, Country } from '@/types/trends';
+import { getServerSession } from '@/lib/auth/session';
 
 // 쿼리 파라미터 검증 스키마
 const TrendListQuerySchema = z.object({
@@ -88,13 +90,22 @@ const TrendListQuerySchema = z.object({
     .refine((val) => val >= 0, {
       message: 'offset must be >= 0',
     }),
+  showAll: z
+    .string()
+    .optional()
+    .transform((val) => val === 'true')
+    .default('false'),
 });
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // 1. 쿼리 파라미터 파싱
+    // 1. 세션 확인
+    const session = await getServerSession();
+    const userId = session?.user?.id;
+
+    // 2. 쿼리 파라미터 파싱
     const { searchParams } = new URL(request.url);
     const queryParams = {
       keyword: searchParams.get('keyword') || undefined,
@@ -106,6 +117,7 @@ export async function GET(request: NextRequest) {
       sortOrder: searchParams.get('sortOrder') || undefined,
       limit: searchParams.get('limit') || undefined,
       offset: searchParams.get('offset') || undefined,
+      showAll: searchParams.get('showAll') || undefined,
     };
 
     // 2. 쿼리 파라미터 검증
@@ -131,9 +143,10 @@ export async function GET(request: NextRequest) {
 
     const filters = validationResult.data;
 
-    console.log('[Trends List API] Query params:', filters);
+    console.log('[Trends List API] Query params:', filters, 'userId:', userId, 'showAll:', filters.showAll);
 
     // 3. DB에서 트렌드 조회
+    // showAll이 false이고 userId가 있으면 본인 데이터만 조회
     const result = await getTrends({
       keyword: filters.keyword,
       platform: filters.platform as Platform | undefined,
@@ -144,6 +157,7 @@ export async function GET(request: NextRequest) {
       sortOrder: filters.sortOrder,
       limit: filters.limit,
       offset: filters.offset,
+      userId: !filters.showAll && userId ? userId : undefined,
     });
 
     if (result.error) {

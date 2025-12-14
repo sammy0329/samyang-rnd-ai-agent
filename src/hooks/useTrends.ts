@@ -12,6 +12,7 @@ interface TrendsQueryParams {
   sortOrder?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
+  showAll?: boolean;
 }
 
 interface TrendsResponse {

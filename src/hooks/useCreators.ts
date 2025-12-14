@@ -13,6 +13,7 @@ interface CreatorsQueryParams {
   sortOrder?: 'asc' | 'desc';
   limit?: number;
   offset?: number;
+  showAll?: boolean;
 }
 
 interface CreatorsResponse {

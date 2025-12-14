@@ -23,6 +23,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCreators } from '@/lib/db/queries/creators';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
+import { getServerSession } from '@/lib/auth/session';
 import type { CreatorFilters } from '@/types/creators';
 
 /**
@@ -33,10 +34,17 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // 1. 쿼리 파라미터 파싱
+    // 1. 사용자 세션 가져오기
+    const session = await getServerSession();
+    const userId = session?.user?.id;
+
+    // 2. 쿼리 파라미터 파싱
     const searchParams = request.nextUrl.searchParams;
 
     const filters: CreatorFilters = {};
+
+    // showAll 파라미터 (기본값: false)
+    const showAll = searchParams.get('showAll') === 'true';
 
     // 텍스트 필터
     const username = searchParams.get('username');
@@ -103,9 +111,14 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // 사용자별 필터링 (showAll이 false이고 userId가 있으면 필터링)
+    if (!showAll && userId) {
+      filters.userId = userId;
+    }
+
     console.log('[Creators API] Fetching creators with filters:', filters);
 
-    // 2. DB 조회
+    // 3. DB 조회
     const result = await getCreators(filters);
 
     if (result.error) {
@@ -125,7 +138,7 @@ export async function GET(request: NextRequest) {
 
     console.log(`[Creators API] Found ${creators.length} creators (total: ${total})`);
 
-    // 3. API 사용량 기록
+    // 4. API 사용량 기록
     const duration = Date.now() - startTime;
     try {
       await createAPIUsage({
@@ -138,7 +151,7 @@ export async function GET(request: NextRequest) {
       console.warn('[Creators API] Failed to track API usage:', error);
     }
 
-    // 4. 성공 응답
+    // 5. 성공 응답
     return NextResponse.json({
       success: true,
       data: {

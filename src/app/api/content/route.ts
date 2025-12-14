@@ -46,12 +46,15 @@ export async function GET(request: NextRequest) {
       offset: Number(searchParams.get('offset')) || 0,
     };
 
-    // 3. 사용자 세션 확인 (옵션: 로그인 안 해도 목록 조회 가능하지만 필터 추가 가능)
+    // 3. 사용자 세션 확인
     const { data: session } = await getServerSession();
     const userId = session?.id || null;
 
-    // 내 아이디어만 보기 옵션
-    if (searchParams.get('myIdeas') === 'true' && userId) {
+    // showAll 파라미터 (기본값: false - 사용자별 데이터만 표시)
+    const showAll = searchParams.get('showAll') === 'true';
+
+    // 사용자별 필터링 (showAll이 false이고 userId가 있으면 필터링)
+    if (!showAll && userId) {
       filters.created_by = userId;
     }
 

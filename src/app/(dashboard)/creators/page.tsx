@@ -43,11 +43,13 @@ export default function CreatorsPage() {
     sortOrder: 'desc' as const,
     limit: 50,
   });
+  const [showAll, setShowAll] = useState(false); // 전체 데이터 보기 (기본값: 내 작업만)
 
   // React Query로 크리에이터 데이터 가져오기
   const { data, isLoading, error, refetch } = useCreators({
     ...filters,
     platform: filters.platform || undefined,
+    showAll,
   });
 
   const creators = data?.creators || [];
@@ -243,26 +245,51 @@ export default function CreatorsPage() {
           <h2 className="text-xl font-semibold text-gray-900">
             매칭 결과 <span className="text-gray-500">({totalCount}개)</span>
           </h2>
-          <div className="flex items-center gap-2">
-            <label htmlFor="sort" className="text-sm text-gray-600">
-              정렬:
-            </label>
-            <select
-              id="sort"
-              className="rounded-md border border-gray-300 px-3 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-              value={filters.sortBy}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  sortBy: e.target.value as any,
-                }))
-              }
-            >
-              <option value="brand_fit_score">적합도 점수순</option>
-              <option value="follower_count">팔로워순</option>
-              <option value="engagement_rate">참여율순</option>
-              <option value="created_at">최신순</option>
-            </select>
+          <div className="flex items-center gap-4">
+            {/* 내 작업 / 전체 토글 */}
+            <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-1">
+              <button
+                className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                  !showAll
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={() => setShowAll(false)}
+              >
+                내 작업
+              </button>
+              <button
+                className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                  showAll
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={() => setShowAll(true)}
+              >
+                전체
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <label htmlFor="sort" className="text-sm text-gray-600">
+                정렬:
+              </label>
+              <select
+                id="sort"
+                className="rounded-md border border-gray-300 px-3 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={filters.sortBy}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    sortBy: e.target.value as any,
+                  }))
+                }
+              >
+                <option value="brand_fit_score">적합도 점수순</option>
+                <option value="follower_count">팔로워순</option>
+                <option value="engagement_rate">참여율순</option>
+                <option value="created_at">최신순</option>
+              </select>
+            </div>
           </div>
         </div>
 

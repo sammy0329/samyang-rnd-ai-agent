@@ -45,6 +45,11 @@ export async function getCreators(filters: CreatorFilters = {}): Promise<Creator
       query = query.gte('brand_fit_score', filters.minBrandFitScore);
     }
 
+    // 사용자별 필터링
+    if (filters.userId) {
+      query = query.eq('created_by', filters.userId);
+    }
+
     // 정렬
     const sortBy = filters.sortBy || 'created_at';
     const sortOrder = filters.sortOrder || 'desc';

@@ -70,6 +70,7 @@ export interface CreatorFilters {
   offset?: number;
   sortBy?: 'follower_count' | 'engagement_rate' | 'brand_fit_score' | 'last_analyzed_at' | 'created_at';
   sortOrder?: 'asc' | 'desc';
+  userId?: string; // 사용자별 필터링
 }
 
 // API 응답 타입

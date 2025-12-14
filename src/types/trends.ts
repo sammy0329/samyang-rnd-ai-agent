@@ -64,6 +64,7 @@ export interface TrendFilters {
   offset?: number;
   sortBy?: 'collected_at' | 'viral_score' | 'samyang_relevance' | 'created_at';
   sortOrder?: 'asc' | 'desc';
+  userId?: string; // 사용자별 필터링
 }
 
 // API 응답 타입

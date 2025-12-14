@@ -47,6 +47,11 @@ export async function getTrends(filters: TrendFilters = {}): Promise<TrendsListR
       query = query.gte('samyang_relevance', filters.minSamyangRelevance);
     }
 
+    // 사용자별 필터링
+    if (filters.userId) {
+      query = query.eq('created_by', filters.userId);
+    }
+
     // 정렬
     const sortBy = filters.sortBy || 'collected_at';
     const sortOrder = filters.sortOrder || 'desc';
