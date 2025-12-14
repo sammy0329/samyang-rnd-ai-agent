@@ -23,6 +23,9 @@
 
 # 2단계: Row Level Security 정책 설정
 002_rls_policies.sql
+
+# 3단계: Auth Users 동기화 (⚠️ 필수 - 즉시 실행 필요)
+003_auth_users_sync.sql
 ```
 
 ## 마이그레이션 파일 설명
@@ -43,6 +46,18 @@
   - 사용자 권한별 접근 제어 정책
   - Admin 권한 사용자 특별 정책
   - 데이터 소유자 기반 접근 제어
+
+### 003_auth_users_sync.sql (⚠️ 필수 - 즉시 실행 필요)
+- **목적**: Supabase Auth와 public.users 테이블 동기화
+- **포함 내용**:
+  - users 테이블 재생성 (auth.users.id 참조)
+  - 신규 사용자 가입 시 자동 프로필 생성 트리거
+  - 기존 auth.users 데이터 자동 마이그레이션
+  - reports 테이블 외래키 재설정
+- **주의사항**:
+  - ⚠️ users 테이블을 DROP하고 재생성합니다
+  - ⚠️ 기존 데이터는 auth.users에서 자동으로 복원됩니다
+  - ✅ 로그인 오류 및 리포트 생성 오류 해결
 
 ## 보안 정책 개요
 

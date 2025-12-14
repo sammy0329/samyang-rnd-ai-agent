@@ -36,37 +36,60 @@ export async function getServerSession(): Promise<AuthResponse> {
   try {
     const supabase = await createServerSupabaseClient();
 
+    // getUser()를 사용하여 안전하게 사용자 정보 가져오기
     const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
+      data: { user: authUser },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (sessionError) {
-      throw sessionError;
+    if (authError) {
+      throw authError;
     }
 
-    if (!session?.user) {
+    if (!authUser) {
       return { data: null, error: null };
     }
 
     // Use admin client to bypass RLS for user profile lookup
     const adminClient = createAdminClient();
-    const { data: userData, error: dbError } = await adminClient
+    let userData = null;
+
+    const { data: existingUser, error: dbError } = await adminClient
       .from('users')
       .select('*')
-      .eq('id', session.user.id)
+      .eq('id', authUser.id)
       .single();
 
-    if (dbError) {
+    if (dbError && dbError.code === 'PGRST116') {
+      // 프로필이 없으면 자동 생성
+      const { data: newUser, error: createError } = await adminClient
+        .from('users')
+        .insert({
+          id: authUser.id,
+          email: authUser.email!,
+          name: authUser.user_metadata?.name || authUser.email!.split('@')[0],
+          role: 'user',
+        })
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('Failed to create user profile:', createError);
+      } else {
+        userData = newUser;
+      }
+    } else if (dbError) {
       console.error('Failed to fetch user profile:', dbError);
+    } else {
+      userData = existingUser;
     }
 
     const user: AuthUser = {
-      id: session.user.id,
-      email: session.user.email!,
-      name: userData?.name || session.user.user_metadata?.name,
+      id: authUser.id,
+      email: authUser.email!,
+      name: userData?.name || authUser.user_metadata?.name || authUser.email!.split('@')[0],
       role: userData?.role || 'user',
-      created_at: userData?.created_at || session.user.created_at,
+      created_at: userData?.created_at || authUser.created_at,
     };
 
     return { data: user, error: null };
