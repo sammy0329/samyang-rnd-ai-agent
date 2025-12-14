@@ -2152,18 +2152,19 @@ g
 
 ---
 
-#### Task 10.3.2: API 문서 작성 ⬜
+#### Task 10.3.2: API 문서 작성 ✅
 
-- [ ] `docs/API.md` 생성
-- [ ] 모든 엔드포인트 문서화
+- [x] `docs/API.md` 생성
+- [x] 모든 엔드포인트 문서화
   - 요청 형식
   - 응답 형식
   - 에러 코드
   - 예시
-- [ ] Postman Collection 생성 (옵션)
+- [x] Postman Collection 생성 (옵션)
 
 **예상 시간**: 4시간
 **완료 조건**: API 문서 완성
+**완료 일시**: 2025-12-15
 
 ---
 
@@ -2190,6 +2191,54 @@ g
 
 **예상 시간**: 3시간
 **완료 조건**: 프롬프트 문서 완성
+
+---
+
+#### Task 10.3.5: API 사용량 위젯 개선 ✅
+
+**설명**: 대시보드의 API 사용량 위젯을 개선하여 팀 전체 사용량과 개인 사용량을 시각적으로 비교할 수 있도록 구현
+
+**구현 내용**:
+
+- [x] 타입 정의 추가 (`src/types/api-usage.ts`)
+  - `CombinedUsageStats` 인터페이스 추가
+  - `ApiUsageCombinedResponse` 인터페이스 추가
+
+- [x] API 엔드포인트 확장 (`src/app/api/usage/route.ts`)
+  - `type=combined` 쿼리 파라미터 지원
+  - 사용자 통계와 시스템 통계를 병렬로 가져오기 (Promise.all)
+  - 통합된 응답 형식 반환
+
+- [x] React Query 훅 추가 (`src/hooks/useApiUsage.ts`)
+  - `useApiUsageCombined()` 훅 구현
+  - 기존 `useApiUsage()` 훅 유지 (하위 호환성)
+  - 5분 캐싱 적용
+
+- [x] 위젯 컴포넌트 리디자인 (`src/components/dashboard/ApiUsageWidget.tsx`)
+  - 진행률 바(Progress Bar) UI 구현
+  - 팀 전체 사용량 대비 개인 사용량 시각화
+  - 사용률에 따른 색상 코딩:
+    - < 25%: 녹색 (bg-green-500)
+    - 25-50%: 파란색 (bg-blue-500)
+    - 50-75%: 노란색 (bg-yellow-500)
+    - \> 75%: 주황색 (bg-orange-500)
+  - 3가지 핵심 지표 표시:
+    - 총 호출 횟수 (totalCalls)
+    - 총 토큰 사용량 (totalTokens)
+    - 총 비용 (totalCost)
+  - 로딩, 에러, 빈 데이터 상태 처리
+  - 접근성 개선 (ARIA labels, roles)
+
+**기술적 특징**:
+- Promise.all을 활용한 병렬 데이터 페칭으로 성능 최적화
+- 재사용 가능한 UsageMetric 컴포넌트 설계
+- 포매팅 헬퍼 함수 (formatNumber, formatCost, formatTokens)
+- 엣지 케이스 처리 (0 사용량, 사용량 초과 등)
+
+**예상 시간**: 2시간
+**실제 시간**: 1.5시간
+**완료 조건**: 팀/개인 사용량 비교 기능 구현 완료
+**완료 일시**: 2025-12-15
 
 ---
 
