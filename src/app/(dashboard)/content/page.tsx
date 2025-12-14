@@ -3,33 +3,43 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { ContentGenerationForm } from '@/components/content/ContentGenerationForm';
-
-interface ContentIdea {
-  id: string;
-  title: string;
-  brand_category: string;
-  tone: string;
-  hook_text: string;
-  scene_structure: Record<string, unknown>;
-  editing_format: string;
-  music_style: string;
-  props_needed: string[];
-  target_country: string;
-  expected_performance: Record<string, unknown>;
-  created_at: string;
-}
+import { ContentIdeaCard } from '@/components/content/ContentIdeaCard';
+import { ContentIdeaDetailModal } from '@/components/content/ContentIdeaDetailModal';
+import { useContentIdeas, type ContentIdea } from '@/hooks/useContentIdeas';
 
 export default function ContentPage() {
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedIdea, setSelectedIdea] = useState<ContentIdea | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // React Query로 기존 아이디어 목록 가져오기
+  const { data: contentIdeasData, refetch } = useContentIdeas({
+    limit: 50,
+  });
 
   const handleGenerationSuccess = (ideas: ContentIdea[]) => {
     setGeneratedIdeas(ideas);
+    // 새 아이디어 생성 후 목록 다시 가져오기
+    refetch();
   };
 
   const handleLoadingChange = (isLoading: boolean) => {
     setIsGenerating(isLoading);
   };
+
+  const handleCardClick = (idea: ContentIdea) => {
+    setSelectedIdea(idea);
+    setIsModalOpen(true);
+  };
+
+  // 생성된 아이디어와 기존 아이디어 합치기 (생성된 것이 우선)
+  const allIdeas = [
+    ...generatedIdeas,
+    ...(contentIdeasData?.data?.ideas || []).filter(
+      (idea) => !generatedIdeas.some((gen) => gen.id === idea.id)
+    ),
+  ];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -53,9 +63,9 @@ export default function ContentPage() {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
             생성된 아이디어
-            {generatedIdeas.length > 0 && (
+            {allIdeas.length > 0 && (
               <span className="ml-2 text-gray-500">
-                ({generatedIdeas.length}개)
+                ({allIdeas.length}개)
               </span>
             )}
           </h2>
@@ -71,7 +81,7 @@ export default function ContentPage() {
         )}
 
         {/* 빈 상태 */}
-        {!isGenerating && generatedIdeas.length === 0 && (
+        {!isGenerating && allIdeas.length === 0 && (
           <Card className="p-12 text-center">
             <div className="mx-auto max-w-md">
               <svg
@@ -98,20 +108,26 @@ export default function ContentPage() {
           </Card>
         )}
 
-        {/* 아이디어 카드 그리드 (추후 구현) */}
-        {!isGenerating && generatedIdeas.length > 0 && (
+        {/* 아이디어 카드 그리드 */}
+        {!isGenerating && allIdeas.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {generatedIdeas.map((idea, index) => (
-              <Card key={index} className="p-6">
-                <h3 className="text-lg font-semibold">{idea.title}</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  아이디어 카드 컴포넌트가 여기에 표시됩니다
-                </p>
-              </Card>
+            {allIdeas.map((idea) => (
+              <ContentIdeaCard
+                key={idea.id}
+                idea={idea}
+                onClick={() => handleCardClick(idea)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      {/* 상세 모달 */}
+      <ContentIdeaDetailModal
+        idea={selectedIdea}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+      />
     </div>
   );
 }

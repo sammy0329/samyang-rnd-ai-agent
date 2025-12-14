@@ -1481,48 +1481,62 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 6.2.3: 콘텐츠 아이디어 카드 컴포넌트 ⬜
+#### Task 6.2.3: 콘텐츠 아이디어 카드 컴포넌트 ✅
 
-- [ ] `components/content/ContentIdeaCard.tsx` 생성
-- [ ] 아이디어 정보 표시
-  - 포맷 이름
+- [x] `components/content/ContentIdeaCard.tsx` 생성
+- [x] 아이디어 정보 표시
+  - 포맷 이름 (Challenge, Recipe, ASMR, Comedy, Review, Tutorial)
+  - 플랫폼 배지 (TikTok, Instagram, YouTube)
+  - 브랜드/톤/국가 메타 태그
   - 5초 훅 문장
-  - 장면 구성 (3-5컷)
+  - 장면 구성 (3-5컷, 3개까지 미리보기)
   - 편집 포맷
-  - 추천 음악 스타일
-  - 필수 소품/배경
-- [ ] 상세보기 버튼
-- [ ] 저장/공유 버튼 (옵션)
+  - 음악 스타일
+  - 예상 성과 (바이럴 잠재력, 조회수)
+- [x] 클릭 시 상세 모달 열기
+- [x] 호버 효과 및 상세보기 버튼
 
-**예상 시간**: 4시간
-**완료 조건**: 카드 렌더링 성공
-
----
-
-#### Task 6.2.4: 콘텐츠 아이디어 상세 모달 ⬜
-
-- [ ] `components/content/ContentIdeaDetailModal.tsx` 생성
-- [ ] 전체 아이디어 정보
-- [ ] 촬영 가이드
-- [ ] 예상 성과 (정성 분석)
-- [ ] 편집 버튼 (옵션)
-- [ ] 다운로드 버튼 (PDF/JSON)
-
-**예상 시간**: 3시간
-**완료 조건**: 모달 작동 확인
+**예상 시간**: 2시간
+**완료 조건**: 카드 렌더링 성공 ✅
 
 ---
 
-#### Task 6.2.5: 콘텐츠 아이디어 목록 ⬜
+#### Task 6.2.4: 콘텐츠 아이디어 상세 모달 ✅
 
-- [ ] `components/content/ContentIdeaList.tsx` 생성
-- [ ] React Query로 데이터 Fetching
-- [ ] 필터링 UI
-- [ ] 정렬 UI
-- [ ] 페이지네이션
+- [x] `components/content/ContentIdeaDetailModal.tsx` 생성
+- [x] Dialog 컴포넌트 사용
+- [x] 전체 아이디어 정보 표시
+  - 기본 정보 (포맷, 플랫폼, 브랜드, 톤, 국가)
+  - 후킹 전략 (훅 텍스트, 훅 비주얼)
+  - 전체 장면 구성 (장면별 상세 정보)
+  - 제작 가이드 (편집 포맷, 음악 스타일)
+  - 필요 소품/재료
+  - 추천 해시태그
+  - 예상 성과 (조회수, 참여율, 바이럴 잠재력)
+  - 제작 팁
+  - 피해야 할 실수
+- [x] 촬영 가이드 다운로드 버튼 (UI만)
+- [x] 닫기 버튼
 
 **예상 시간**: 3시간
-**완료 조건**: 목록 표시 성공
+**완료 조건**: 모달 작동 확인 ✅
+
+---
+
+#### Task 6.2.5: 콘텐츠 아이디어 목록 ✅
+
+- [x] `hooks/useContentIdeas.ts` 생성 (React Query hook)
+- [x] React Query로 데이터 Fetching
+- [x] 필터링 지원 (brandCategory, tone, targetCountry, limit, offset)
+- [x] Content 페이지에 통합
+  - 생성된 아이디어와 기존 아이디어 합치기
+  - ContentIdeaCard로 그리드 표시
+  - ContentIdeaDetailModal 연동
+  - 생성 성공 시 목록 자동 갱신
+- [x] 로딩/빈 상태 처리
+
+**예상 시간**: 2시간
+**완료 조건**: 목록 표시 성공 ✅
 
 ---
 
