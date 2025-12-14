@@ -41,11 +41,13 @@ interface ContentIdea {
 
 interface ContentGenerationFormProps {
   onSuccess: (ideas: ContentIdea[]) => void;
+  onError?: (error: string) => void;
   onLoadingChange?: (isLoading: boolean) => void;
 }
 
 export function ContentGenerationForm({
   onSuccess,
+  onError,
   onLoadingChange,
 }: ContentGenerationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -88,7 +90,9 @@ export function ContentGenerationForm({
       }
     } catch (err) {
       console.error('Content generation error:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      onError?.(errorMessage);
     } finally {
       setIsSubmitting(false);
       onLoadingChange?.(false);

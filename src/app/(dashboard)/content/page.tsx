@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { ContentGenerationForm } from '@/components/content/ContentGenerationForm';
 import { ContentIdeaCard } from '@/components/content/ContentIdeaCard';
+import { ContentIdeaLoadingCard } from '@/components/content/ContentIdeaLoadingCard';
+import { ContentIdeaErrorCard } from '@/components/content/ContentIdeaErrorCard';
 import { ContentIdeaDetailModal } from '@/components/content/ContentIdeaDetailModal';
 import { useContentIdeas, type ContentIdea } from '@/hooks/useContentIdeas';
 
 export default function ContentPage() {
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [showIdeas, setShowIdeas] = useState<boolean[]>([false, false, false]);
   const [selectedIdea, setSelectedIdea] = useState<ContentIdea | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -20,12 +24,36 @@ export default function ContentPage() {
 
   const handleGenerationSuccess = (ideas: ContentIdea[]) => {
     setGeneratedIdeas(ideas);
+    setGenerationError(null);
+
+    // 순차적으로 아이디어 카드 표시 (stagger 효과)
+    ideas.forEach((_, index) => {
+      setTimeout(() => {
+        setShowIdeas(prev => {
+          const newShow = [...prev];
+          newShow[index] = true;
+          return newShow;
+        });
+      }, index * 200); // 200ms 간격으로 순차 표시
+    });
+
     // 새 아이디어 생성 후 목록 다시 가져오기
     refetch();
   };
 
+  const handleGenerationError = (error: string) => {
+    setGenerationError(error);
+    setGeneratedIdeas([]);
+    setShowIdeas([false, false, false]);
+  };
+
   const handleLoadingChange = (isLoading: boolean) => {
     setIsGenerating(isLoading);
+    if (isLoading) {
+      // 로딩 시작할 때 기존 표시 상태 초기화
+      setShowIdeas([false, false, false]);
+      setGenerationError(null);
+    }
   };
 
   const handleCardClick = (idea: ContentIdea) => {
@@ -55,6 +83,7 @@ export default function ContentPage() {
       {/* 생성 폼 섹션 */}
       <ContentGenerationForm
         onSuccess={handleGenerationSuccess}
+        onError={handleGenerationError}
         onLoadingChange={handleLoadingChange}
       />
 
@@ -71,17 +100,8 @@ export default function ContentPage() {
           </h2>
         </div>
 
-        {/* 로딩 상태 */}
-        {isGenerating && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(3)].map((_, i) => (
-              <Card key={i} className="h-96 animate-pulse bg-gray-100" />
-            ))}
-          </div>
-        )}
-
-        {/* 빈 상태 */}
-        {!isGenerating && allIdeas.length === 0 && (
+        {/* 빈 상태 - 아무 것도 없을 때만 */}
+        {!isGenerating && !generationError && allIdeas.length === 0 && (
           <Card className="p-12 text-center">
             <div className="mx-auto max-w-md">
               <svg
@@ -108,15 +128,62 @@ export default function ContentPage() {
           </Card>
         )}
 
-        {/* 아이디어 카드 그리드 */}
-        {!isGenerating && allIdeas.length > 0 && (
+        {/* 아이디어 카드 그리드 - 로딩/에러/완료 모두 표시 */}
+        {(isGenerating || generationError || allIdeas.length > 0) && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {allIdeas.map((idea) => (
-              <ContentIdeaCard
-                key={idea.id}
-                idea={idea}
-                onClick={() => handleCardClick(idea)}
-              />
+            {/* 로딩 중이면 3개의 로딩 카드 또는 에러 카드 표시 */}
+            {isGenerating && (
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <ContentIdeaLoadingCard key={`loading-${i}`} index={i} />
+                ))}
+              </>
+            )}
+
+            {/* 에러 상태 - 로딩 중이 아닐 때만 */}
+            {!isGenerating && generationError && (
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <ContentIdeaErrorCard
+                    key={`error-${i}`}
+                    errorMessage={generationError}
+                    onRetry={() => window.location.reload()}
+                  />
+                ))}
+              </>
+            )}
+
+            {/* 기존 아이디어 카드들 - 로딩 중이 아니고 에러가 없을 때 */}
+            {!isGenerating && !generationError && allIdeas.map((idea, index) => {
+              // 최근 생성된 3개는 순차적 애니메이션 적용
+              const isNewlyGenerated = index < 3 && generatedIdeas.length > 0;
+              const shouldShow = !isNewlyGenerated || showIdeas[index];
+
+              return (
+                <div
+                  key={idea.id}
+                  className={`transition-all duration-500 ${
+                    shouldShow
+                      ? 'translate-y-0 opacity-100'
+                      : 'translate-y-4 opacity-0'
+                  }`}
+                >
+                  <ContentIdeaCard
+                    idea={idea}
+                    onClick={() => handleCardClick(idea)}
+                  />
+                </div>
+              );
+            })}
+
+            {/* 로딩 중이면서 기존 아이디어가 있는 경우 함께 표시 */}
+            {isGenerating && allIdeas.length > 0 && allIdeas.map((idea) => (
+              <div key={idea.id} className="opacity-60">
+                <ContentIdeaCard
+                  idea={idea}
+                  onClick={() => handleCardClick(idea)}
+                />
+              </div>
             ))}
           </div>
         )}

@@ -103,7 +103,7 @@ export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
 
   return (
     <Card
-      className="group relative overflow-hidden p-6 transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
+      className="group relative flex h-full min-h-[480px] flex-col overflow-hidden p-6 transition-all hover:shadow-lg hover:scale-[1.02] cursor-pointer"
       onClick={onClick}
     >
       {/* 헤더 */}
@@ -146,26 +146,26 @@ export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
 
       {/* 장면 구성 */}
       {scenes.length > 0 && (
-        <div className="mb-4">
+        <div className="mb-4 flex-shrink-0">
           <h4 className="mb-2 text-sm font-medium text-gray-700">
             장면 구성 ({scenes.length}컷)
           </h4>
           <div className="space-y-2">
-            {scenes.slice(0, 3).map((scene, index) => (
+            {scenes.slice(0, 2).map((scene, index) => (
               <div key={index} className="flex items-start gap-2 text-sm">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-800">
                   {index + 1}
                 </span>
                 <div className="flex-1">
-                  <p className="text-gray-900">
+                  <p className="line-clamp-2 text-gray-900">
                     {scene.description}
                     {scene.duration && <span className="ml-1 text-gray-500">({scene.duration})</span>}
                   </p>
                 </div>
               </div>
             ))}
-            {scenes.length > 3 && (
-              <p className="text-xs text-gray-500">+{scenes.length - 3}개 더 보기</p>
+            {scenes.length > 2 && (
+              <p className="text-xs text-gray-500">+{scenes.length - 2}개 더 보기</p>
             )}
           </div>
         </div>
@@ -183,8 +183,11 @@ export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
         </div>
       </div>
 
+      {/* Spacer to push footer to bottom */}
+      <div className="flex-grow" />
+
       {/* 예상 성과 */}
-      <div className="border-t pt-4">
+      <div className="border-t pt-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div className="text-sm">
             <span className="font-medium text-gray-700">바이럴 잠재력: </span>
@@ -194,7 +197,7 @@ export function ContentIdeaCard({ idea, onClick }: ContentIdeaCardProps) {
           </div>
           <div className="text-sm text-gray-600">
             {performance?.estimated_views && (
-              <span>예상 조회수: {performance.estimated_views}</span>
+              <span className="truncate">조회수: {performance.estimated_views}</span>
             )}
           </div>
         </div>
