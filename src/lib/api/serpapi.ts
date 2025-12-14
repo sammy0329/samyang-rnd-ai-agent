@@ -249,17 +249,23 @@ export async function searchShortVideos(
  * TikTok 비디오만 검색
  * @param keyword 검색 키워드
  * @param maxResults 최대 결과 수
+ * @param country 국가 코드 (ISO 3166-1 alpha-2, 예: KR, US, JP)
+ * @param language 언어 코드 (ISO 639-1, 예: ko, en, ja)
  * @returns TikTok 비디오 목록
  */
 export async function searchTikTokVideos(
   keyword: string,
-  maxResults: number = DEFAULT_MAX_RESULTS
+  maxResults: number = DEFAULT_MAX_RESULTS,
+  country?: 'KR' | 'US' | 'JP',
+  language?: string
 ): Promise<SimplifiedSerpAPIVideo[]> {
   // 더 많은 결과를 가져온 후 필터링
   const videos = await searchShortVideos({
     keyword,
     maxResults: maxResults * 3, // 필터링 후 충분한 결과를 보장하기 위해 3배로 검색
     device: 'mobile',
+    country: country,
+    language: language,
   });
 
   // TikTok만 필터링
@@ -273,17 +279,23 @@ export async function searchTikTokVideos(
  * Instagram Reels만 검색
  * @param keyword 검색 키워드
  * @param maxResults 최대 결과 수
+ * @param country 국가 코드 (ISO 3166-1 alpha-2, 예: KR, US, JP)
+ * @param language 언어 코드 (ISO 639-1, 예: ko, en, ja)
  * @returns Instagram Reels 목록
  */
 export async function searchInstagramReels(
   keyword: string,
-  maxResults: number = DEFAULT_MAX_RESULTS
+  maxResults: number = DEFAULT_MAX_RESULTS,
+  country?: 'KR' | 'US' | 'JP',
+  language?: string
 ): Promise<SimplifiedSerpAPIVideo[]> {
   // 더 많은 결과를 가져온 후 필터링
   const videos = await searchShortVideos({
     keyword,
     maxResults: maxResults * 3,
     device: 'mobile',
+    country: country,
+    language: language,
   });
 
   // Instagram만 필터링

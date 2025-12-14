@@ -43,6 +43,8 @@ export interface TrendCollectionOptions {
   includeYouTube?: boolean; // YouTube 포함 여부 (기본값: true)
   includeTikTok?: boolean; // TikTok 포함 여부 (기본값: true)
   includeInstagram?: boolean; // Instagram 포함 여부 (기본값: true)
+  country?: 'KR' | 'US' | 'JP'; // 국가 필터 (ISO 3166-1 alpha-2)
+  language?: string; // 언어 코드 (ISO 639-1, 예: ko, en, ja) - 선택적 오버라이드 (기본값: country에서 자동 매핑)
   dateFilter?: {
     // 날짜 필터 (YouTube만 지원)
     publishedAfter?: string; // ISO 8601

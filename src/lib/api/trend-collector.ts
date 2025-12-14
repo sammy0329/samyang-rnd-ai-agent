@@ -29,11 +29,23 @@ import {
 const DEFAULT_MAX_RESULTS = 10;
 
 /**
+ * 국가 코드를 언어 코드로 매핑
+ * @param country 국가 코드 (KR, US, JP)
+ * @returns 언어 코드 (ko, en, ja) 또는 undefined
+ */
+function getLanguageCode(country?: 'KR' | 'US' | 'JP'): string | undefined {
+  const languageMap: Record<'KR' | 'US' | 'JP', string> = {
+    KR: 'ko', // 한국어
+    US: 'en', // 영어
+    JP: 'ja', // 일본어
+  };
+  return country ? languageMap[country] : undefined;
+}
+
+/**
  * YouTube 비디오를 정규화된 형식으로 변환
  */
-function normalizeYouTubeVideo(
-  video: SimplifiedYouTubeVideo
-): NormalizedTrendVideo {
+function normalizeYouTubeVideo(video: SimplifiedYouTubeVideo): NormalizedTrendVideo {
   return {
     id: video.id,
     title: video.title,
@@ -57,9 +69,7 @@ function normalizeYouTubeVideo(
 /**
  * SerpAPI 비디오를 정규화된 형식으로 변환
  */
-function normalizeSerpAPIVideo(
-  video: SimplifiedSerpAPIVideo
-): NormalizedTrendVideo {
+function normalizeSerpAPIVideo(video: SimplifiedSerpAPIVideo): NormalizedTrendVideo {
   return {
     id: video.id,
     title: video.title,
@@ -81,8 +91,7 @@ function deduplicateVideos(
   videos: NormalizedTrendVideo[],
   options: DeduplicationOptions = {}
 ): NormalizedTrendVideo[] {
-  const { byUrl = true, byTitle = false, titleSimilarityThreshold = 0.9 } =
-    options;
+  const { byUrl = true, byTitle = false, titleSimilarityThreshold = 0.9 } = options;
 
   if (!byUrl && !byTitle) {
     return videos; // 중복 제거 안 함
@@ -111,10 +120,7 @@ function deduplicateVideos(
         const existingTitle = existingVideo.title.toLowerCase().trim();
 
         // 간단한 유사도 계산 (Jaccard similarity)
-        const similarity = calculateTitleSimilarity(
-          normalizedTitle,
-          existingTitle
-        );
+        const similarity = calculateTitleSimilarity(normalizedTitle, existingTitle);
 
         if (similarity >= titleSimilarityThreshold) {
           isDuplicate = true;
@@ -138,9 +144,7 @@ function calculateTitleSimilarity(title1: string, title2: string): number {
   const words1 = new Set(title1.split(/\s+/));
   const words2 = new Set(title2.split(/\s+/));
 
-  const intersection = new Set(
-    [...words1].filter((word) => words2.has(word))
-  );
+  const intersection = new Set([...words1].filter((word) => words2.has(word)));
   const union = new Set([...words1, ...words2]);
 
   return union.size === 0 ? 0 : intersection.size / union.size;
@@ -159,8 +163,13 @@ export async function collectTrends(
     includeYouTube = true,
     includeTikTok = true,
     includeInstagram = true,
+    country,
+    language, // 명시적 언어 설정 (우선순위 높음)
     dateFilter,
   } = options;
+
+  // 언어 코드 결정: 명시적 language > country 기반 자동 매핑
+  const languageCode = language || getLanguageCode(country);
 
   const allVideos: NormalizedTrendVideo[] = [];
   const errors: Array<{
@@ -191,7 +200,9 @@ export async function collectTrends(
   // YouTube 데이터 수집
   if (shouldCollectPlatform('YouTube')) {
     try {
-      console.log(`[TrendCollector] Collecting YouTube data for: ${keyword}`);
+      console.log(
+        `[TrendCollector] Collecting YouTube data for: ${keyword}${country ? ` (country: ${country}, language: ${languageCode || 'auto'})` : ''}`
+      );
 
       let youtubeVideos: SimplifiedYouTubeVideo[];
 
@@ -204,10 +215,12 @@ export async function collectTrends(
           videoDuration: 'short',
           publishedAfter: dateFilter.publishedAfter,
           publishedBefore: dateFilter.publishedBefore,
+          regionCode: country,
+          relevanceLanguage: languageCode,
         });
       } else {
         // 날짜 필터 없으면 searchShorts 사용
-        youtubeVideos = await searchYouTubeShorts(keyword, maxResults);
+        youtubeVideos = await searchYouTubeShorts(keyword, maxResults, country, languageCode);
       }
 
       const normalized = youtubeVideos.map(normalizeYouTubeVideo);
@@ -227,9 +240,12 @@ export async function collectTrends(
   // TikTok 데이터 수집 (SerpAPI 사용)
   if (shouldCollectPlatform('TikTok')) {
     try {
-      console.log(`[TrendCollector] Collecting TikTok data for: ${keyword}`);
+      console.log(
+        `[TrendCollector] Collecting TikTok data for: ${keyword}${country ? ` (country: ${country}, language: ${languageCode || 'auto'})` : ''}`
+      );
 
-      const tiktokVideos = await searchTikTokVideos(keyword, maxResults);
+      const tiktokVideos = await searchTikTokVideos(keyword, maxResults, country, languageCode);
+
       const normalized = tiktokVideos.map(normalizeSerpAPIVideo);
       allVideos.push(...normalized);
 
@@ -247,15 +263,21 @@ export async function collectTrends(
   // Instagram 데이터 수집 (SerpAPI 사용)
   if (shouldCollectPlatform('Instagram')) {
     try {
-      console.log(`[TrendCollector] Collecting Instagram data for: ${keyword}`);
+      console.log(
+        `[TrendCollector] Collecting Instagram data for: ${keyword}${country ? ` (country: ${country}, language: ${languageCode || 'auto'})` : ''}`
+      );
 
-      const instagramVideos = await searchInstagramReels(keyword, maxResults);
+      const instagramVideos = await searchInstagramReels(
+        keyword,
+        maxResults,
+        country,
+        languageCode
+      );
+
       const normalized = instagramVideos.map(normalizeSerpAPIVideo);
       allVideos.push(...normalized);
 
-      console.log(
-        `[TrendCollector] Collected ${normalized.length} Instagram videos`
-      );
+      console.log(`[TrendCollector] Collected ${normalized.length} Instagram videos`);
     } catch (error) {
       console.error('[TrendCollector] Instagram collection error:', error);
       errors.push({

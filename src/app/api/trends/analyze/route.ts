@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Trend Analyze API] Starting analysis for: ${keyword} on ${platform}`);
 
-    // 2. 트렌드 데이터 수집 (YouTube만 지원)
+    // 2. 트렌드 데이터 수집
     let collectionResult;
 
     if (platform === 'youtube') {
@@ -98,9 +98,10 @@ export async function POST(request: NextRequest) {
         keyword,
         maxResults: 10,
         platforms: ['YouTube'],
+        country,
       });
 
-      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from YouTube`);
+      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from YouTube${country ? ` (country: ${country})` : ''}`);
     } else {
       // TikTok/Instagram은 현재 제한적 지원
       console.warn(`[Trend Analyze API] ${platform} collection has limited support`);
@@ -108,9 +109,10 @@ export async function POST(request: NextRequest) {
         keyword,
         maxResults: 10,
         platforms: platform === 'tiktok' ? ['TikTok'] : ['Instagram'],
+        country,
       });
 
-      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from ${platform}`);
+      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from ${platform}${country ? ` (country: ${country})` : ''}`);
     }
 
     // 수집된 데이터가 없으면 에러

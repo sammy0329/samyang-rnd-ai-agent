@@ -297,11 +297,15 @@ export async function getVideoById(
  * 숏폼 동영상만 검색 (60초 이하)
  * @param keyword 검색 키워드
  * @param maxResults 최대 결과 수
+ * @param country 국가 코드 (ISO 3166-1 alpha-2, 예: KR, US, JP)
+ * @param language 언어 코드 (ISO 639-1, 예: ko, en, ja)
  * @returns 숏폼 비디오 목록
  */
 export async function searchShorts(
   keyword: string,
-  maxResults: number = DEFAULT_MAX_RESULTS
+  maxResults: number = DEFAULT_MAX_RESULTS,
+  country?: 'KR' | 'US' | 'JP',
+  language?: string
 ): Promise<SimplifiedYouTubeVideo[]> {
   // YouTube API는 정확한 Shorts 필터가 없으므로 duration: short (< 4분) 사용
   const videos = await searchVideos({
@@ -309,6 +313,8 @@ export async function searchShorts(
     maxResults: maxResults * 2, // 필터링 후 충분한 결과를 보장하기 위해 2배로 검색
     videoDuration: 'short',
     order: 'viewCount', // 조회수 순으로 정렬
+    regionCode: country,
+    relevanceLanguage: language,
   });
 
   // 60초 이하의 동영상만 필터링
@@ -325,11 +331,15 @@ export async function searchShorts(
  * 인기 트렌드 숏폼 검색 (최근 7일, 높은 조회수)
  * @param keyword 검색 키워드
  * @param maxResults 최대 결과 수
+ * @param country 국가 코드 (ISO 3166-1 alpha-2, 예: KR, US, JP)
+ * @param language 언어 코드 (ISO 639-1, 예: ko, en, ja)
  * @returns 트렌드 숏폼 비디오 목록
  */
 export async function searchTrendingShorts(
   keyword: string,
-  maxResults: number = DEFAULT_MAX_RESULTS
+  maxResults: number = DEFAULT_MAX_RESULTS,
+  country?: 'KR' | 'US' | 'JP',
+  language?: string
 ): Promise<SimplifiedYouTubeVideo[]> {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -340,6 +350,8 @@ export async function searchTrendingShorts(
     videoDuration: 'short',
     order: 'viewCount',
     publishedAfter: sevenDaysAgo.toISOString(),
+    regionCode: country,
+    relevanceLanguage: language,
   });
 
   // 60초 이하의 동영상만 필터링
