@@ -175,6 +175,7 @@ export async function createTrend(input: CreateTrendInput): Promise<TrendRespons
           viral_score: input.viral_score,
           samyang_relevance: input.samyang_relevance,
           analysis_data: input.analysis_data,
+          created_by: input.created_by,
           created_at: koreaTime,
           collected_at: koreaTime, // 수집 시간도 한국 시간대로 설정
         },

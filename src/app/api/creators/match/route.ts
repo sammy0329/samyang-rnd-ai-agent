@@ -31,6 +31,7 @@ import { matchCreator } from '@/lib/ai/agents/creator-matcher';
 import { createCreator, updateCreator, getCreators } from '@/lib/db/queries/creators';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { rateLimitByIP } from '@/lib/rate-limit';
+import { getServerSession } from '@/lib/auth/server';
 
 // 요청 바디 검증 스키마
 const MatchCreatorRequestSchema = z.object({
@@ -94,7 +95,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. 요청 바디 파싱 및 검증
+    // 1. 사용자 세션 가져오기
+    const session = await getServerSession();
+    const userId = session?.user?.id;
+
+    // 2. 요청 바디 파싱 및 검증
     const body = await request.json();
     const validationResult = MatchCreatorRequestSchema.safeParse(body);
 
@@ -126,7 +131,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Creator Match API] Starting analysis for: ${username} on ${platform}`);
 
-    // 2. AI 매칭 분석 수행
+    // 3. AI 매칭 분석 수행
     console.log(`[Creator Match API] Analyzing creator with AI...`);
 
     const matchingInput = {
@@ -160,7 +165,7 @@ export async function POST(request: NextRequest) {
     const matching = matchingResult.data;
     console.log(`[Creator Match API] Matching complete. Total score: ${matching.total_fit_score}`);
 
-    // 3. DB에 저장 또는 업데이트
+    // 4. DB에 저장 또는 업데이트
     console.log(`[Creator Match API] Saving to database...`);
 
     // 기존 크리에이터 확인
@@ -236,6 +241,7 @@ export async function POST(request: NextRequest) {
           content_style_analysis: matching.content_style_analysis,
           recommended_products: matching.recommended_products,
         },
+        created_by: userId,
       });
 
       if (createResult.error || !createResult.data) {
@@ -255,7 +261,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Creator Match API] Saved to DB with ID: ${savedCreator.id}`);
 
-    // 4. API 사용량 기록
+    // 5. API 사용량 기록
     const duration = Date.now() - startTime;
     try {
       await createAPIUsage({
@@ -269,7 +275,7 @@ export async function POST(request: NextRequest) {
       console.warn('[Creator Match API] Failed to track API usage:', error);
     }
 
-    // 5. 성공 응답
+    // 6. 성공 응답
     return NextResponse.json(
       {
         success: true,

@@ -24,6 +24,7 @@ import { createTrend } from '@/lib/db/queries/trends';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { rateLimitByIP } from '@/lib/rate-limit';
 import { logger } from '@/lib/logger';
+import { getServerSession } from '@/lib/auth/server';
 
 // 요청 바디 검증 스키마
 const AnalyzeTrendRequestSchema = z.object({
@@ -72,7 +73,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. 요청 바디 파싱 및 검증
+    // 1. 사용자 세션 가져오기
+    const session = await getServerSession();
+    const userId = session?.user?.id;
+
+    // 2. 요청 바디 파싱 및 검증
     const body = await request.json();
     const validationResult = AnalyzeTrendRequestSchema.safeParse(body);
 
@@ -199,6 +204,7 @@ export async function POST(request: NextRequest) {
           viewCount: v.viewCount,
         })),
       },
+      created_by: userId, // 트렌드를 생성한 사용자 ID
     });
 
     if (createResult.error || !createResult.data) {

@@ -39,6 +39,7 @@ export interface CreateCreatorInput {
   collaboration_history?: Record<string, unknown>;
   risk_factors?: Record<string, unknown>;
   analysis_data?: Record<string, unknown>;
+  created_by?: string; // 생성한 사용자 ID
 }
 
 // Creator 업데이트 시 입력 데이터

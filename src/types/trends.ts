@@ -37,6 +37,7 @@ export interface CreateTrendInput {
   viral_score?: number;
   samyang_relevance?: number;
   analysis_data?: Record<string, unknown>;
+  created_by?: string; // 생성한 사용자 ID
 }
 
 // Trend 업데이트 시 입력 데이터

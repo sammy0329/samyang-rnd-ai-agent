@@ -145,6 +145,7 @@ export async function createCreator(input: CreateCreatorInput): Promise<CreatorR
           collaboration_history: input.collaboration_history,
           risk_factors: input.risk_factors,
           analysis_data: input.analysis_data,
+          created_by: input.created_by,
         },
       ])
       .select()
