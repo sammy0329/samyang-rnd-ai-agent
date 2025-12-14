@@ -57,6 +57,12 @@ export function DashboardNav({ user }: DashboardNavProps) {
               >
                 콘텐츠 아이디어
               </Link>
+              <Link
+                href="/reports"
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              >
+                리포트
+              </Link>
             </div>
           </div>
 
