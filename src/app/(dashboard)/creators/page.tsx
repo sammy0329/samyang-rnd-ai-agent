@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -13,9 +14,18 @@ import {
 } from '@/components/ui/dialog';
 import { useCreators } from '@/hooks/useCreators';
 import { CreatorCard } from '@/components/creators/CreatorCard';
-import { CreatorDetailModal } from '@/components/creators/CreatorDetailModal';
-import { CreatorMatchForm } from '@/components/creators/CreatorMatchForm';
 import type { Creator } from '@/types/creators';
+
+// Dynamic imports for heavy components
+const CreatorDetailModal = dynamic(
+  () => import('@/components/creators/CreatorDetailModal').then((mod) => ({ default: mod.CreatorDetailModal })),
+  { ssr: false }
+);
+
+const CreatorMatchForm = dynamic(
+  () => import('@/components/creators/CreatorMatchForm').then((mod) => ({ default: mod.CreatorMatchForm })),
+  { ssr: false }
+);
 
 export default function CreatorsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

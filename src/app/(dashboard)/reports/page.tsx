@@ -1,11 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ReportCard } from '@/components/reports/ReportCard';
-import { ReportDetailModal } from '@/components/reports/ReportDetailModal';
 import { useReports, useCreateReport, type Report } from '@/hooks/useReports';
+
+// Dynamic import for modal
+const ReportDetailModal = dynamic(
+  () => import('@/components/reports/ReportDetailModal').then((mod) => ({ default: mod.ReportDetailModal })),
+  { ssr: false }
+);
 
 export default function ReportsPage() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);

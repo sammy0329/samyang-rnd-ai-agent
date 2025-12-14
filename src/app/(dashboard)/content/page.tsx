@@ -1,13 +1,23 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
-import { ContentGenerationForm } from '@/components/content/ContentGenerationForm';
 import { ContentIdeaCard } from '@/components/content/ContentIdeaCard';
 import { ContentIdeaLoadingCard } from '@/components/content/ContentIdeaLoadingCard';
 import { ContentIdeaErrorCard } from '@/components/content/ContentIdeaErrorCard';
-import { ContentIdeaDetailModal } from '@/components/content/ContentIdeaDetailModal';
 import { useContentIdeas, type ContentIdea } from '@/hooks/useContentIdeas';
+
+// Dynamic imports for heavy components
+const ContentGenerationForm = dynamic(
+  () => import('@/components/content/ContentGenerationForm').then((mod) => ({ default: mod.ContentGenerationForm })),
+  { ssr: false }
+);
+
+const ContentIdeaDetailModal = dynamic(
+  () => import('@/components/content/ContentIdeaDetailModal').then((mod) => ({ default: mod.ContentIdeaDetailModal })),
+  { ssr: false }
+);
 
 export default function ContentPage() {
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);

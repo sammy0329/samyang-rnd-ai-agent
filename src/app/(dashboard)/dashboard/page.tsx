@@ -1,12 +1,30 @@
 'use client';
 
-import { TodayTrendsWidget } from '@/components/dashboard/TodayTrendsWidget';
-import { RecentIdeasWidget } from '@/components/dashboard/RecentIdeasWidget';
-import { RecommendedCreatorsWidget } from '@/components/dashboard/RecommendedCreatorsWidget';
-import { ApiUsageWidget } from '@/components/dashboard/ApiUsageWidget';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Lightbulb, Users, FileText } from 'lucide-react';
 import Link from 'next/link';
+
+// Dynamic imports for dashboard widgets
+const TodayTrendsWidget = dynamic(
+  () => import('@/components/dashboard/TodayTrendsWidget').then((mod) => ({ default: mod.TodayTrendsWidget })),
+  { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
+);
+
+const RecentIdeasWidget = dynamic(
+  () => import('@/components/dashboard/RecentIdeasWidget').then((mod) => ({ default: mod.RecentIdeasWidget })),
+  { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
+);
+
+const RecommendedCreatorsWidget = dynamic(
+  () => import('@/components/dashboard/RecommendedCreatorsWidget').then((mod) => ({ default: mod.RecommendedCreatorsWidget })),
+  { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
+);
+
+const ApiUsageWidget = dynamic(
+  () => import('@/components/dashboard/ApiUsageWidget').then((mod) => ({ default: mod.ApiUsageWidget })),
+  { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
+);
 
 export default function DashboardPage() {
   return (

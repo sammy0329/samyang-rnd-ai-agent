@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -11,12 +12,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { TrendAnalysisForm } from '@/components/trends/TrendAnalysisForm';
 import { TrendCard } from '@/components/trends/TrendCard';
-import { TrendDetailModal } from '@/components/trends/TrendDetailModal';
 import { TrendCardSkeletonGrid } from '@/components/trends/TrendCardSkeleton';
 import { useTrends } from '@/hooks/useTrends';
 import { Trend } from '@/types/trends';
+
+// Dynamic imports for heavy components
+const TrendAnalysisForm = dynamic(
+  () => import('@/components/trends/TrendAnalysisForm').then((mod) => ({ default: mod.TrendAnalysisForm })),
+  { ssr: false }
+);
+
+const TrendDetailModal = dynamic(
+  () => import('@/components/trends/TrendDetailModal').then((mod) => ({ default: mod.TrendDetailModal })),
+  { ssr: false }
+);
 
 export default function TrendsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

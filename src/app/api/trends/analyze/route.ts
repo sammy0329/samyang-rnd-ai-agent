@@ -23,6 +23,7 @@ import { analyzeTrend } from '@/lib/ai/agents/trend-analyzer';
 import { createTrend } from '@/lib/db/queries/trends';
 import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { rateLimitByIP } from '@/lib/rate-limit';
+import { logger } from '@/lib/logger';
 
 // 요청 바디 검증 스키마
 const AnalyzeTrendRequestSchema = z.object({
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
 
     const { keyword, platform, country, additionalContext } = validationResult.data;
 
-    console.log(`[Trend Analyze API] Starting analysis for: ${keyword} on ${platform}`);
+    logger.apiRequest('POST', '/api/trends/analyze', { keyword, platform, country });
 
     // 2. 트렌드 데이터 수집
     let collectionResult;
@@ -101,10 +102,14 @@ export async function POST(request: NextRequest) {
         country,
       });
 
-      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from YouTube${country ? ` (country: ${country})` : ''}`);
+      logger.info('Trend data collected', {
+        platform: 'YouTube',
+        country,
+        totalVideos: collectionResult.totalVideos
+      });
     } else {
       // TikTok/Instagram은 현재 제한적 지원
-      console.warn(`[Trend Analyze API] ${platform} collection has limited support`);
+      logger.warn(`Platform ${platform} has limited collection support`);
       collectionResult = await collectTrends({
         keyword,
         maxResults: 10,
@@ -112,7 +117,11 @@ export async function POST(request: NextRequest) {
         country,
       });
 
-      console.log(`[Trend Analyze API] Collected ${collectionResult.totalVideos} videos from ${platform}${country ? ` (country: ${country})` : ''}`);
+      logger.info('Trend data collected', {
+        platform,
+        country,
+        totalVideos: collectionResult.totalVideos
+      });
     }
 
     // 수집된 데이터가 없으면 에러
@@ -131,7 +140,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. AI 분석 수행
-    console.log(`[Trend Analyze API] Analyzing trend with AI...`);
+    const endTimer = logger.startTimer('AI trend analysis');
 
     const analysisInput = {
       keyword,
@@ -141,9 +150,10 @@ export async function POST(request: NextRequest) {
     };
 
     const analysisResult = await analyzeTrend(analysisInput);
+    endTimer();
 
     if (analysisResult.error || !analysisResult.data) {
-      console.error('[Trend Analyze API] AI analysis error:', analysisResult.error);
+      logger.error('AI analysis failed', analysisResult.error);
       return NextResponse.json(
         {
           success: false,
@@ -155,10 +165,13 @@ export async function POST(request: NextRequest) {
     }
 
     const analysis = analysisResult.data;
-    console.log(`[Trend Analyze API] Analysis complete. Viral score: ${analysis.viral_score}, Samyang relevance: ${analysis.samyang_relevance}`);
+    logger.info('AI analysis complete', {
+      viral_score: analysis.viral_score,
+      samyang_relevance: analysis.samyang_relevance,
+      format_type: analysis.format_type
+    });
 
     // 4. DB에 저장
-    console.log(`[Trend Analyze API] Saving to database...`);
 
     // Platform 타입 매핑 (DB 스키마에 맞게 변환)
     const dbPlatform = platform === 'youtube' ? 'shorts' : platform === 'instagram' ? 'reels' : 'tiktok';
@@ -189,7 +202,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (createResult.error || !createResult.data) {
-      console.error('[Trend Analyze API] Database save error:', createResult.error);
+      logger.error('Database save error', createResult.error);
       return NextResponse.json(
         {
           success: false,
@@ -201,7 +214,7 @@ export async function POST(request: NextRequest) {
     }
 
     const savedTrend = createResult.data;
-    console.log(`[Trend Analyze API] Saved to DB with ID: ${savedTrend.id}`);
+    logger.dbQuery('INSERT', 'trends', undefined, { id: savedTrend.id });
 
     // 5. API 사용량 기록
     const duration = Date.now() - startTime;
@@ -214,10 +227,12 @@ export async function POST(request: NextRequest) {
       });
     } catch (error) {
       // API 사용량 기록 실패는 무시 (메인 플로우에 영향 없음)
-      console.warn('[Trend Analyze API] Failed to track API usage:', error);
+      logger.warn('Failed to track API usage', { error: error instanceof Error ? error.message : String(error) });
     }
 
     // 6. 성공 응답
+    logger.apiResponse('POST', '/api/trends/analyze', 200, duration);
+
     return NextResponse.json(
       {
         success: true,
@@ -260,10 +275,11 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error('[Trend Analyze API] Unexpected error:', error);
+    const duration = Date.now() - startTime;
+    logger.error('Unexpected error in trend analysis', error);
+    logger.apiResponse('POST', '/api/trends/analyze', 500, duration);
 
     // API 사용량 기록 (에러 케이스)
-    const duration = Date.now() - startTime;
     try {
       await createAPIUsage({
         endpoint: '/api/trends/analyze',
@@ -272,7 +288,7 @@ export async function POST(request: NextRequest) {
         response_time_ms: duration,
       });
     } catch (trackError) {
-      console.warn('[Trend Analyze API] Failed to track API usage:', trackError);
+      logger.warn('Failed to track API usage', { error: trackError instanceof Error ? trackError.message : String(trackError) });
     }
 
     return NextResponse.json(
