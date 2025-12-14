@@ -4,7 +4,7 @@
  * 서버 컴포넌트와 API Routes에서 사용하는 인증 함수들
  */
 
-import { createServerSupabaseClient } from '@/lib/db/server';
+import { createServerSupabaseClient, createAdminClient } from '@/lib/db/server';
 
 // ===========================
 // Types
@@ -49,7 +49,9 @@ export async function getServerSession(): Promise<AuthResponse> {
       return { data: null, error: null };
     }
 
-    const { data: userData, error: dbError } = await supabase
+    // Use admin client to bypass RLS for user profile lookup
+    const adminClient = createAdminClient();
+    const { data: userData, error: dbError } = await adminClient
       .from('users')
       .select('*')
       .eq('id', session.user.id)
