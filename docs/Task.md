@@ -5,6 +5,7 @@
 ---
 
 ## 목차
+
 - [프로젝트 개요](#프로젝트-개요)
 - [Phase 1: 프로젝트 초기 설정](#phase-1-프로젝트-초기-설정)
 - [Phase 2: 데이터베이스 & 인증](#phase-2-데이터베이스--인증)
@@ -22,11 +23,13 @@
 ## 프로젝트 개요
 
 ### 전체 일정
+
 - **총 기간**: 6주 (약 42일)
 - **목표**: popow.ai에서 실행 가능한 AI 에이전트 프로토타입 완성
 - **체크포인트**: 각 Phase 종료 시 데모 가능한 상태 유지
 
 ### 진행 상태 표기
+
 - ⬜ 미시작
 - 🔄 진행중
 - ✅ 완료
@@ -36,12 +39,15 @@
 ---
 
 ## Phase 1: 프로젝트 초기 설정
+
 **기간**: 3일 | **목표**: 개발 환경 구축 및 프로젝트 기반 마련
 
 ### Epic 1.1: 개발 환경 설정
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 1.1.1: Node.js 프로젝트 초기화 ✅
+
 - [x] Node.js v20.x 설치 확인 (v20.19.5)
 - [x] pnpm 설치 (`npm install -g pnpm`) - v10.25.0
 - [x] Git 저장소 초기화
@@ -54,6 +60,7 @@
 ---
 
 #### Task 1.1.2: Next.js 프로젝트 생성 ✅
+
 ```bash
 pnpm create next-app@latest . --typescript --tailwind --app --import-alias "@/*"
 ```
@@ -70,6 +77,7 @@ pnpm create next-app@latest . --typescript --tailwind --app --import-alias "@/*"
 ---
 
 #### Task 1.1.3: ESLint & Prettier 설정 ✅
+
 - [x] ESLint 설정 (Next.js 기본 포함)
 - [x] Prettier 3.7.4 설치 및 설정 (`.prettierrc`)
 - [x] `prettier-plugin-tailwindcss` 0.7.2 설치
@@ -83,6 +91,7 @@ pnpm create next-app@latest . --typescript --tailwind --app --import-alias "@/*"
 ---
 
 #### Task 1.1.4: 프로젝트 디렉토리 구조 생성 ✅
+
 ```bash
 mkdir -p src/{app,components,lib,types,hooks}
 mkdir -p src/lib/{ai,db,api,auth,cache,utils}
@@ -92,7 +101,7 @@ mkdir -p scripts/migrations tests/{unit,integration,e2e}
 ```
 
 - [x] 디렉토리 구조 생성
-- [x] TypeScript path alias 설정 (`tsconfig.json`) - 이미 설정됨 (@/*)
+- [x] TypeScript path alias 설정 (`tsconfig.json`) - 이미 설정됨 (@/\*)
 - [ ] 각 디렉토리에 README.md 추가 (선택사항)
 
 **예상 시간**: 30분
@@ -101,9 +110,11 @@ mkdir -p scripts/migrations tests/{unit,integration,e2e}
 ---
 
 ### Epic 1.2: 의존성 패키지 설치
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 1.2.1: UI 라이브러리 설치 ✅
+
 ```bash
 pnpm dlx shadcn@latest init
 pnpm dlx shadcn@latest add button card input dialog select tabs
@@ -121,6 +132,7 @@ pnpm dlx shadcn@latest add button card input dialog select tabs
 ---
 
 #### Task 1.2.2: 상태 관리 & 데이터 Fetching 설치 ✅
+
 ```bash
 pnpm add zustand @tanstack/react-query axios
 ```
@@ -139,6 +151,7 @@ pnpm add zustand @tanstack/react-query axios
 ---
 
 #### Task 1.2.3: 폼 & 검증 라이브러리 설치 ✅
+
 ```bash
 pnpm add react-hook-form zod @hookform/resolvers date-fns
 ```
@@ -159,12 +172,15 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ---
 
 ### Epic 1.3: 환경 변수 & 설정
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 1.3.1: 환경 변수 파일 생성 ✅
+
 - [x] `.env.local` 파일 생성
 - [x] `.env.example` 파일 생성
 - [x] 필요한 환경 변수 정의:
+
   ```env
   # Supabase
   NEXT_PUBLIC_SUPABASE_URL=
@@ -185,6 +201,7 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
   YOUTUBE_API_KEY=
   SERPAPI_KEY=
   ```
+
 - [x] `docs/study.md`를 `.gitignore`에 추가
 
 **예상 시간**: 30분
@@ -193,6 +210,7 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ---
 
 #### Task 1.3.2: Next.js 설정 파일 구성 ✅
+
 - [x] `next.config.ts` 설정
   - 이미지 도메인 허용 (Supabase, TikTok, Instagram, YouTube)
   - 환경 변수 검증
@@ -209,12 +227,15 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ---
 
 ## Phase 2: 데이터베이스 & 인증
+
 **기간**: 4일 | **목표**: Supabase 연동 및 사용자 인증 구현
 
 ### Epic 2.1: Supabase 프로젝트 설정
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 2.1.1: Supabase 프로젝트 생성 ✅
+
 - [x] Supabase 계정 생성 (https://supabase.com)
 - [x] 새 프로젝트 생성 (samyang-rnd-ai-agent)
 - [x] 리전 선택 (Northeast Asia - Seoul)
@@ -230,6 +251,7 @@ pnpm add react-hook-form zod @hookform/resolvers date-fns
 ---
 
 #### Task 2.1.2: Supabase 클라이언트 설정 ✅
+
 ```bash
 pnpm add @supabase/supabase-js @supabase/ssr
 ```
@@ -247,6 +269,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.1.3: 데이터베이스 스키마 생성 ✅
+
 - [x] SQL 마이그레이션 파일 작성 (`scripts/migrations/001_initial_schema.sql`)
 - [x] UUID 확장 활성화
 - [x] `users` 테이블 생성
@@ -266,6 +289,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.1.4: Row Level Security (RLS) 설정 ✅
+
 - [x] RLS 정책 SQL 파일 작성 (`scripts/migrations/002_rls_policies.sql`)
 - [x] 모든 테이블 RLS 활성화
 - [x] `users` 테이블 RLS 정책
@@ -297,9 +321,11 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 ### Epic 2.2: 사용자 인증 구현
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 2.2.1: Auth 헬퍼 함수 작성 ✅
+
 - [x] `lib/auth/supabase.ts` 생성
 - [x] 회원가입 함수 (signUp)
 - [x] 로그인 함수 (signIn)
@@ -314,6 +340,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.2.2: 로그인/회원가입 UI 구현 ✅
+
 - [x] `app/(auth)/layout.tsx` 생성 (Auth 레이아웃)
 - [x] `app/(auth)/login/page.tsx` 생성
 - [x] `app/(auth)/signup/page.tsx` 생성
@@ -334,6 +361,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.2.3: 인증 미들웨어 구현 ✅
+
 - [x] `middleware.ts` 생성
 - [x] Supabase 세션 관리 및 쿠키 처리
 - [x] 보호된 라우트 설정 (/dashboard, /trends, /creators, /content)
@@ -349,6 +377,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.2.4: 대시보드 구현 ✅
+
 - [x] `app/(dashboard)/layout.tsx` 생성 (인증 확인)
 - [x] `app/(dashboard)/dashboard/page.tsx` 생성
 - [x] DashboardNav 컴포넌트 (네비게이션 바)
@@ -364,6 +393,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.2.5: Supabase OTP 이메일 인증 구현 ✅
+
 - [x] Supabase 내장 OTP 기능 사용
 - [x] `sendSignUpOtp()` 함수 추가 (`lib/auth/client.ts`)
   - Supabase가 자동으로 6자리 코드 생성 및 이메일 전송
@@ -388,6 +418,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 **완료 조건**: OTP 이메일 인증 성공 ✅
 
 **개선 사항**:
+
 - 별도 이메일 서비스(SendGrid, AWS SES) 연동 불필요
 - 커스텀 데이터베이스 테이블 불필요
 - Supabase의 검증된 보안 시스템 사용
@@ -396,6 +427,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.2.6: 사용자 프로필 페이지 ✅
+
 - [x] `app/(dashboard)/profile/page.tsx` 생성
 - [x] 프로필 조회 컴포넌트 (`ProfileInfoSection`)
   - 사용자 정보 표시 (이름, 이메일, 역할, 가입일)
@@ -426,9 +458,11 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 ### Epic 2.3: 데이터베이스 쿼리 함수
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 2.3.1: Trends 쿼리 함수 작성 ✅
+
 - [x] `lib/db/queries/trends.ts` 생성
 - [x] `getTrends()` - 트렌드 목록 조회
   - 필터링 (keyword, platform, country, viral_score, samyang_relevance)
@@ -456,6 +490,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.3.2: Creators 쿼리 함수 작성 ✅
+
 - [x] `lib/db/queries/creators.ts` 생성
 - [x] `getCreators()` - 크리에이터 목록 조회
   - 필터링 (username, platform, content_category, follower_count, engagement_rate, brand_fit_score)
@@ -483,6 +518,7 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 #### Task 2.3.3: Content Ideas 쿼리 함수 작성 ✅
+
 - [x] `lib/db/queries/content-ideas.ts` 생성
 - [x] `getContentIdeas()` - 아이디어 목록 조회
   - 필터링 (trend_id, brand_category, tone, target_country, created_by)
@@ -509,12 +545,15 @@ pnpm add @supabase/supabase-js @supabase/ssr
 ---
 
 ## Phase 3: AI/LLM 통합
+
 **기간**: 5일 | **목표**: OpenAI 및 Claude API 연동
 
 ### Epic 3.1: LLM Provider 설정
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 3.1.1: Vercel AI SDK 설치 및 설정 ✅
+
 ```bash
 pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ```
@@ -542,6 +581,7 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ---
 
 #### Task 3.1.2: 프롬프트 템플릿 시스템 구축 ✅
+
 - [x] `prompts/system/trend-analyzer.md` 작성
   - 삼양 브랜드 정보 (불닭, 삼양라면, 젤리)
   - 트렌드 분석 기준 (플랫폼별 특성, 분석 요소)
@@ -573,6 +613,7 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ---
 
 #### Task 3.1.3: Few-shot 예시 데이터 작성 ✅
+
 - [x] `prompts/examples/few-shot-examples.json` 생성
 - [x] 트렌드 분석 예시 3개
   - 예시 1: 미국 TikTok 불닭 챌린지 (바이럴 92점, 연관성 95점)
@@ -594,9 +635,11 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ---
 
 ### Epic 3.2: AI 유틸리티 함수
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 3.2.1: LLM 호출 래퍼 함수 작성 ✅
+
 - [x] `lib/ai/utils.ts` 고도화
 - [x] `generateAIText()` 래퍼 함수
   - 에러 핸들링 (try-catch)
@@ -627,6 +670,7 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ---
 
 #### Task 3.2.2: 토큰 카운팅 & 비용 추적 ✅
+
 - [x] 토큰 카운터 함수 (`lib/ai/token-counter.ts`)
   - calculateCost() - 토큰 사용량으로 비용 계산
   - estimateCost() - 사전 비용 추정
@@ -667,6 +711,7 @@ pnpm add ai @ai-sdk/openai @ai-sdk/anthropic
 ---
 
 #### Task 3.2.3: LLM 응답 캐싱 구현 ✅
+
 ```bash
 pnpm add @upstash/redis
 ```
@@ -699,6 +744,7 @@ pnpm add @upstash/redis
 **완료 조건**: Redis 캐싱 작동 확인 ✅
 
 **구현 내용**:
+
 - 동일한 메시지 + 설정으로 AI 호출 시 캐시된 응답 반환
 - 캐시 키는 메시지 내용, provider, model, temperature로 생성
 - 캐시 조회/저장 실패 시에도 정상 작동 (비필수 기능)
@@ -707,9 +753,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 3.3: AI Agent 코어 로직
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 3.3.1: 트렌드 분석 AI 함수 ✅
+
 - [x] `lib/ai/agents/trend-analyzer.ts` 생성
 - [x] `analyzeTrend()` 함수 구현
   - 입력: keyword, platform, country, additionalContext
@@ -733,6 +781,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 3.3.2: 크리에이터 매칭 AI 함수 ✅
+
 - [x] `lib/ai/agents/creator-matcher.ts` 생성
 - [x] `matchCreator()` 함수 구현
   - 입력: 크리에이터 정보 (username, platform, metrics), 캠페인 정보
@@ -757,6 +806,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 3.3.3: 콘텐츠 아이디어 생성 AI 함수 ✅
+
 - [x] `lib/ai/agents/content-generator.ts` 생성
 - [x] `generateContentIdea()` 함수 구현
   - 입력: 트렌드 정보, 브랜드 정보 (category, tone, country), 플랫폼 선호도
@@ -784,12 +834,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 4: 트렌드 분석 기능
+
 **기간**: 5일 | **목표**: 트렌드 수집 및 분석 전체 플로우 구현
 
 ### Epic 4.1: 외부 API 통합
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 4.1.1: YouTube Data API 클라이언트 ✅
+
 - [x] YouTube API 키 발급
 - [x] `lib/api/youtube.ts` 생성
 - [x] `searchVideos()` 함수
@@ -808,6 +861,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.1.2: SerpAPI 클라이언트 (TikTok/Instagram 대체) ✅
+
 - [x] SerpAPI 키 발급
 - [x] `lib/api/serpapi.ts` 생성
 - [x] TikTok 검색 함수
@@ -823,6 +877,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.1.3: 트렌드 데이터 수집 스크립트 ✅
+
 - [x] `lib/api/trend-collector.ts` 생성
 - [x] `collectTrends()` 함수
   - 여러 플랫폼에서 데이터 수집
@@ -841,17 +896,21 @@ pnpm add @upstash/redis
 ### 📌 Epic 4.1 완료 후 향후 개선 사항
 
 #### 1. TikTok/Instagram 전용 API 연동 필요
+
 **현재 상황:**
+
 - SerpAPI는 Google Videos API를 사용하여 TikTok/Instagram 검색
 - Google은 자사 플랫폼(YouTube)을 우선 노출하므로 TikTok/Instagram 결과 거의 없음
 - 테스트 결과: TikTok/Instagram 검색 시 대부분 0개 반환
 
 **권장 해결 방안:**
+
 - **TikTok**: TikTok Research API (공식, 연구/학술 목적) 또는 Apify/ScrapFly 등 스크래핑 서비스
 - **Instagram**: Instagram Graph API (공식, 제한적) 또는 Apify/ScrapFly 등 스크래핑 서비스
 - **현재 구조**: `src/lib/api/trend-collector.ts`의 플랫폼별 수집 함수만 교체하면 바로 작동 가능
 
 **관련 문서:**
+
 - [docs/TroubleShooting.md - SerpAPI TikTok/Instagram 제약](./TroubleShooting.md#serpapi---tiktokinstagram-검색-결과-0개-문제)
 - [docs/SERPAPI_SETUP.md - 제약 사항](./SERPAPI_SETUP.md#제약-사항)
 
@@ -860,26 +919,32 @@ pnpm add @upstash/redis
 ---
 
 #### 2. 현재 구현 상태 요약
+
 **정상 작동:**
+
 - ✅ YouTube 트렌드 수집: YouTube Data API v3 사용
 - ✅ 멀티 플랫폼 데이터 정규화 프레임워크
 - ✅ URL/제목 기반 중복 제거
 - ✅ 플랫폼별 에러 핸들링
 
 **제한적 작동:**
+
 - ⚠️ TikTok 트렌드 수집: SerpAPI 사용 → 거의 0개 반환
 - ⚠️ Instagram 트렌드 수집: SerpAPI 사용 → 거의 0개 반환
 
 **다음 단계 시 유의사항:**
+
 - Epic 4.2 진행 시 YouTube 데이터만 사용하여 트렌드 분석 가능
 - TikTok/Instagram은 별도 API 연동 후 추가 구현 권장
 
 ---
 
 ### Epic 4.2: 트렌드 분석 API
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 4.2.1: 트렌드 분석 API 엔드포인트 ✅
+
 - [x] `app/api/trends/analyze/route.ts` 생성
 - [x] POST 요청 핸들러
   - 요청 바디 검증 (Zod)
@@ -895,6 +960,7 @@ pnpm add @upstash/redis
 **완료 조건**: API 호출 성공 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - POST /api/trends/analyze 엔드포인트
 - Zod 스키마 검증 (keyword, platform, country)
 - 트렌드 데이터 수집 (trend-collector 연동)
@@ -905,6 +971,7 @@ pnpm add @upstash/redis
 - 테스트 스크립트: scripts/test-trend-analyze-api.ts
 
 **주요 해결 이슈**:
+
 1. RLS 정책 우회: createTrend, createAPIUsage에서 createAdminClient() 사용
 2. AI 스키마 정렬: prompts/system/trend-analyzer.md를 Zod 스키마와 일치하도록 수정
 3. Provider 초기화: API 키 없을 때 모듈 로드 시점 에러 방지 (optional 처리)
@@ -912,6 +979,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.2.2: 트렌드 목록 조회 API ✅
+
 - [x] `app/api/trends/route.ts` 생성
 - [x] GET 요청 핸들러
   - 쿼리 파라미터 파싱 (페이지네이션, 필터링)
@@ -924,6 +992,7 @@ pnpm add @upstash/redis
 **완료 조건**: API 호출 성공 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - GET /api/trends 엔드포인트
 - Zod 스키마 검증 (keyword, platform, country, minViralScore, minSamyangRelevance, sortBy, sortOrder, limit, offset)
 - 정렬 옵션: collected_at, viral_score, samyang_relevance, created_at (asc/desc)
@@ -932,11 +1001,13 @@ pnpm add @upstash/redis
 - 테스트 스크립트: scripts/test-trends-list-api.ts
 
 **주요 해결 이슈**:
+
 1. Zod 에러 핸들링: error.errors → error.issues로 수정 (Zod 공식 API)
 
 ---
 
 #### Task 4.2.3: 일일 트렌드 리포트 API ✅
+
 - [x] `app/api/trends/daily/route.ts` 생성
 - [x] GET 요청 핸들러
   - 오늘 수집된 트렌드 조회
@@ -948,6 +1019,7 @@ pnpm add @upstash/redis
 **완료 조건**: API 호출 성공 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - GET /api/trends/daily 엔드포인트
 - 오늘(00:00~23:59) 수집된 트렌드 필터링 (collected_at 기준)
 - 바이럴 점수 + 삼양 연관성 합산하여 Top 5 선정
@@ -958,9 +1030,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 4.3: 트렌드 분석 UI
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 4.3.1: 트렌드 분석 페이지 레이아웃 ✅
+
 - [x] `app/(dashboard)/trends/page.tsx` 생성
 - [x] 헤더 섹션
   - 페이지 제목
@@ -975,6 +1049,7 @@ pnpm add @upstash/redis
 **완료 조건**: 레이아웃 완성 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - app/(dashboard)/trends/page.tsx 생성
 - 헤더: 제목, 설명, "새 분석 시작" 버튼
 - 필터링: 키워드 입력, 플랫폼 선택 (YouTube/TikTok/Instagram), 국가 선택 (KR/US/JP)
@@ -987,6 +1062,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.3.2: 트렌드 분석 폼 컴포넌트 ✅
+
 - [x] `components/trends/TrendAnalysisForm.tsx` 생성
 - [x] React Hook Form 연동
 - [x] Zod 스키마 검증
@@ -1001,6 +1077,7 @@ pnpm add @upstash/redis
 **완료 조건**: 폼 제출 성공 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - components/trends/TrendAnalysisForm.tsx 생성
 - React Hook Form + @hookform/resolvers 연동
 - Zod 스키마 검증 (API 스키마와 동일)
@@ -1021,6 +1098,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.3.3: 트렌드 카드 컴포넌트 ✅
+
 - [x] `components/trends/TrendCard.tsx` 생성
 - [x] 트렌드 정보 표시
   - 키워드
@@ -1035,6 +1113,7 @@ pnpm add @upstash/redis
 **완료 조건**: 카드 렌더링 성공 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - components/trends/TrendCard component 생성
 - 플랫폼별 아이콘 및 배지:
   - YouTube Shorts: 📹 (빨간색)
@@ -1059,6 +1138,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.3.4: 트렌드 상세 모달 ✅
+
 - [x] `components/trends/TrendDetailModal.tsx` 생성
 - [x] Dialog 컴포넌트 사용
 - [x] 트렌드 전체 정보 표시
@@ -1073,6 +1153,7 @@ pnpm add @upstash/redis
 **완료 조건**: 모달 작동 확인 ✅
 **완료 일시**: 2025-12-13
 **구현 내용**:
+
 - components/trends/TrendDetailModal.tsx 생성
 - shadcn/ui Dialog 컴포넌트 사용
 - 기본 정보 섹션:
@@ -1101,6 +1182,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 4.3.5: 트렌드 목록 & 페이지네이션 ✅
+
 - [x] `hooks/useTrends.ts` 생성 (React Query hook)
 - [x] React Query로 데이터 Fetching
 - [x] 페이지네이션 (limit/offset)
@@ -1122,6 +1204,7 @@ pnpm add @upstash/redis
 **완료 조건**: 목록 표시 성공 ✅
 **완료 일시**: 2025-01-XX
 **구현 내용**:
+
 - 필터 상태를 useState로 관리
 - 검색 버튼 클릭 또는 Enter 키 입력 시 필터 적용
 - React Query의 queryKey에 필터 포함하여 자동 재조회
@@ -1132,12 +1215,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 5: 크리에이터 매칭 기능
+
 **기간**: 4일 | **목표**: 크리에이터 프로필 분석 및 매칭
 
 ### Epic 5.1: 크리에이터 데이터 수집
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 5.1.1: 크리에이터 프로필 크롤링 (선택 사항) ⬜
+
 - [ ] `lib/api/creator-scraper.ts` 생성
 - [ ] 프로필 URL 파싱
 - [ ] 공개 정보 추출
@@ -1152,6 +1238,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.1.2: 크리에이터 수동 등록 기능 ✅
+
 - [x] `components/creators/CreatorMatchForm.tsx` 생성
 - [x] 폼 필드 (React Hook Form + Zod 검증)
   - 기본 정보: 사용자명, 플랫폼, 프로필 URL (필수)
@@ -1170,9 +1257,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 5.2: 크리에이터 매칭 API
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 5.2.1: 크리에이터 매칭 API 엔드포인트 ✅
+
 - [x] `app/api/creators/match/route.ts` 생성
 - [x] POST 요청 핸들러
   - 요청 바디 검증 (Zod 스키마)
@@ -1190,6 +1279,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.2.2: 크리에이터 목록 조회 API ✅
+
 - [x] `app/api/creators/route.ts` 생성
 - [x] GET 요청 핸들러
   - 페이지네이션 (limit/offset)
@@ -1204,6 +1294,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.2.3: 크리에이터 프로필 분석 API ✅
+
 - [x] `app/api/creators/[id]/route.ts` 생성
 - [x] GET 요청 핸들러
   - 크리에이터 ID로 조회 (getCreatorById)
@@ -1220,9 +1311,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 5.3: 크리에이터 매칭 UI
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 5.3.1: 크리에이터 페이지 레이아웃 ✅
+
 - [x] `app/(dashboard)/creators/page.tsx` 생성
 - [x] 헤더 섹션 (제목, 설명, "새 크리에이터 매칭" 버튼)
 - [x] 필터링 섹션
@@ -1240,6 +1333,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.3.2: 크리에이터 카드 컴포넌트 ✅
+
 - [x] `components/creators/CreatorCard.tsx` 생성
 - [x] 크리에이터 정보 표시
   - 사용자명
@@ -1259,6 +1353,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.3.3: 크리에이터 상세 모달 ✅
+
 - [x] `components/creators/CreatorDetailModal.tsx` 생성
 - [x] 전체 프로필 정보 (플랫폼, URL, 팔로워, 조회수, 참여율, 카테고리)
 - [x] 적합도 분석 결과
@@ -1281,6 +1376,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 5.3.4: 크리에이터 목록 & 필터링 ✅
+
 - [x] `hooks/useCreators.ts` 생성 (React Query hook)
 - [x] React Query로 데이터 Fetching
 - [x] 필터링 로직 (username, platform, content_category, minBrandFitScore)
@@ -1295,12 +1391,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 6: 콘텐츠 아이디어 생성
+
 **기간**: 4일 | **목표**: AI 기반 숏폼 콘텐츠 아이디어 자동 생성
 
 ### Epic 6.1: 콘텐츠 생성 API
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 6.1.1: 콘텐츠 아이디어 생성 API ✅
+
 - [x] `lib/db/queries/content.ts` 생성 (DB 쿼리 함수)
 - [x] `app/api/content/generate/route.ts` 생성
 - [x] POST 요청 핸들러
@@ -1324,6 +1423,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 6.1.2: 콘텐츠 아이디어 목록 API ✅
+
 - [x] `app/api/content/route.ts` 생성
 - [x] GET 요청 핸들러
   - 페이지네이션 (limit/offset, 최대 100개)
@@ -1339,9 +1439,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 6.2: 콘텐츠 아이디어 UI
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 6.2.1: 콘텐츠 생성 페이지 레이아웃 ✅
+
 - [x] `app/(dashboard)/content/page.tsx` 생성
 - [x] 헤더 섹션 (제목, 설명)
 - [x] 생성 폼 섹션
@@ -1360,23 +1462,27 @@ pnpm add @upstash/redis
 
 ---
 
-#### Task 6.2.2: 콘텐츠 생성 폼 컴포넌트 ⬜
-- [ ] `components/content/ContentGenerationForm.tsx` 생성
-- [ ] 폼 필드
+#### Task 6.2.2: 콘텐츠 생성 폼 컴포넌트 ✅
+
+- [x] `components/content/ContentGenerationForm.tsx` 생성
+- [x] 폼 필드
   - 브랜드 카테고리 선택 (불닭/삼양라면/젤리)
   - 톤앤매너 선택 (재미/카와이/도발적/쿨톤)
   - 타깃 국가 선택
-  - 트렌드 선택 (옵션)
-- [ ] 검증 로직
-- [ ] 제출 핸들러
-- [ ] 로딩 상태
+  - 선호 플랫폼 선택 (옵션)
+  - 추가 요구사항 입력 (옵션)
+- [x] React Hook Form + Zod 검증 로직
+- [x] API 제출 핸들러 (`POST /api/content/generate`)
+- [x] 로딩 상태 및 에러 처리
+- [x] Content 페이지에 통합
 
 **예상 시간**: 3시간
-**완료 조건**: 폼 제출 성공
+**완료 조건**: 폼 제출 성공 ✅
 
 ---
 
 #### Task 6.2.3: 콘텐츠 아이디어 카드 컴포넌트 ⬜
+
 - [ ] `components/content/ContentIdeaCard.tsx` 생성
 - [ ] 아이디어 정보 표시
   - 포맷 이름
@@ -1394,6 +1500,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 6.2.4: 콘텐츠 아이디어 상세 모달 ⬜
+
 - [ ] `components/content/ContentIdeaDetailModal.tsx` 생성
 - [ ] 전체 아이디어 정보
 - [ ] 촬영 가이드
@@ -1407,6 +1514,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 6.2.5: 콘텐츠 아이디어 목록 ⬜
+
 - [ ] `components/content/ContentIdeaList.tsx` 생성
 - [ ] React Query로 데이터 Fetching
 - [ ] 필터링 UI
@@ -1419,12 +1527,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 7: 리포트 생성
+
 **기간**: 3일 | **목표**: 데일리 리포트 및 리포트 내보내기
 
 ### Epic 7.1: 리포트 생성 로직
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 7.1.1: 데일리 트렌드 리포트 생성 ⬜
+
 - [ ] `lib/reports/daily-trend-report.ts` 생성
 - [ ] `generateDailyTrendReport()` 함수
   - 오늘 수집된 트렌드 조회
@@ -1439,6 +1550,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.1.2: 크리에이터 매칭 리포트 생성 ⬜
+
 - [ ] `lib/reports/creator-match-report.ts` 생성
 - [ ] `generateCreatorMatchReport()` 함수
   - 매칭된 크리에이터 조회
@@ -1452,6 +1564,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.1.3: 콘텐츠 아이디어 리포트 생성 ⬜
+
 - [ ] `lib/reports/content-idea-report.ts` 생성
 - [ ] `generateContentIdeaReport()` 함수
   - 생성된 아이디어 조회
@@ -1464,9 +1577,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 7.2: 리포트 API
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 7.2.1: 리포트 생성 API ⬜
+
 - [ ] `app/api/reports/route.ts` 생성
 - [ ] POST 요청 핸들러
   - 리포트 타입 선택
@@ -1480,6 +1595,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.2.2: 리포트 조회 API ⬜
+
 - [ ] GET 요청 핸들러
   - 리포트 목록 조회
   - 필터링 (타입, 날짜)
@@ -1491,6 +1607,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.2.3: 리포트 내보내기 API ⬜
+
 - [ ] `app/api/reports/export/route.ts` 생성
 - [ ] POST 요청 핸들러
   - 리포트 ID
@@ -1504,9 +1621,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 7.3: 리포트 UI
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 7.3.1: 리포트 페이지 레이아웃 ⬜
+
 - [ ] `app/(dashboard)/reports/page.tsx` 생성
 - [ ] 헤더 섹션
   - 리포트 생성 버튼
@@ -1519,6 +1638,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.3.2: 리포트 카드 컴포넌트 ⬜
+
 - [ ] `components/reports/ReportCard.tsx` 생성
 - [ ] 리포트 정보 표시
   - 타입
@@ -1533,6 +1653,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 7.3.3: 리포트 상세 페이지 ⬜
+
 - [ ] `app/(dashboard)/reports/[id]/page.tsx` 생성
 - [ ] 리포트 전체 내용 표시
 - [ ] 내보내기 버튼
@@ -1544,12 +1665,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 8: UI/UX 개선
+
 **기간**: 4일 | **목표**: 사용자 경험 향상
 
 ### Epic 8.1: 대시보드 구현
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 8.1.1: 대시보드 레이아웃 ⬜
+
 - [ ] `app/(dashboard)/page.tsx` 개선
 - [ ] 네비게이션 바 (Sidebar)
   - 트렌드 링크
@@ -1568,6 +1692,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 8.1.2: 대시보드 위젯 구현 ⬜
+
 - [ ] 오늘의 트렌드 요약 위젯
 - [ ] 최근 생성된 아이디어 위젯
 - [ ] 추천 크리에이터 위젯
@@ -1579,9 +1704,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 8.2: 반응형 디자인
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 8.2.1: 모바일 레이아웃 최적화 ⬜
+
 - [ ] Tailwind 반응형 클래스 적용
 - [ ] 사이드바 → 햄버거 메뉴
 - [ ] 그리드 → 단일 컬럼
@@ -1593,6 +1720,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 8.2.2: 태블릿 레이아웃 최적화 ⬜
+
 - [ ] 2컬럼 그리드 적용
 - [ ] 사이드바 축소/확장
 - [ ] 태블릿 테스트
@@ -1603,9 +1731,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 8.3: 로딩 & 에러 상태
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 8.3.1: 로딩 스켈레톤 구현 ⬜
+
 - [ ] `components/shared/Skeleton.tsx` 생성
 - [ ] 트렌드 카드 스켈레톤
 - [ ] 크리에이터 카드 스켈레톤
@@ -1618,6 +1748,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 8.3.2: 에러 바운더리 구현 ⬜
+
 - [ ] `components/shared/ErrorBoundary.tsx` 생성
 - [ ] 전역 에러 바운더리 (`app/error.tsx`)
 - [ ] 페이지별 에러 바운더리
@@ -1629,6 +1760,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 8.3.3: 빈 상태 컴포넌트 ⬜
+
 - [ ] `components/shared/EmptyState.tsx` 생성
 - [ ] 트렌드 없음 상태
 - [ ] 크리에이터 없음 상태
@@ -1641,9 +1773,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 8.4: 애니메이션 & 인터랙션
+
 **담당**: Developer | **우선순위**: P2
 
 #### Task 8.4.1: Framer Motion 적용 ⬜
+
 - [ ] 페이지 전환 애니메이션
 - [ ] 카드 호버 효과
 - [ ] 모달 열림/닫힘 애니메이션
@@ -1655,6 +1789,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 8.4.2: 인터랙티브 요소 개선 ⬜
+
 - [ ] 버튼 호버 효과
 - [ ] 폼 필드 포커스 효과
 - [ ] 툴팁 추가
@@ -1666,12 +1801,15 @@ pnpm add @upstash/redis
 ---
 
 ## Phase 9: 최적화 & 성능
+
 **기간**: 4일 | **목표**: 성능 최적화 및 보안 강화
 
 ### Epic 9.1: 성능 최적화
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 9.1.1: 이미지 최적화 ⬜
+
 - [ ] Next.js Image 컴포넌트 사용
 - [ ] 이미지 lazy loading
 - [ ] WebP 포맷 전환
@@ -1683,6 +1821,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 9.1.2: 코드 스플리팅 & Lazy Loading ⬜
+
 - [ ] Dynamic import 적용
 - [ ] 라우트별 코드 스플리팅
 - [ ] 컴포넌트 lazy loading
@@ -1694,6 +1833,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 9.1.3: 데이터베이스 쿼리 최적화 ⬜
+
 - [ ] 인덱스 추가 확인
 - [ ] N+1 쿼리 문제 해결
 - [ ] 쿼리 결과 캐싱
@@ -1705,6 +1845,7 @@ pnpm add @upstash/redis
 ---
 
 #### Task 9.1.4: LLM 응답 최적화 ⬜
+
 - [ ] 프롬프트 토큰 수 최소화
 - [ ] 캐싱 확대 적용
 - [ ] GPT-4 Mini 부분 적용
@@ -1716,9 +1857,11 @@ pnpm add @upstash/redis
 ---
 
 ### Epic 9.2: 보안 강화
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 9.2.1: Rate Limiting 구현 ⬜
+
 ```bash
 pnpm add @upstash/ratelimit
 ```
@@ -1737,6 +1880,7 @@ pnpm add @upstash/ratelimit
 ---
 
 #### Task 9.2.2: 입력 검증 & Sanitization ⬜
+
 - [ ] 모든 API 입력 Zod 검증
 - [ ] XSS 방어 (DOMPurify)
 - [ ] SQL Injection 방어 (Parameterized queries)
@@ -1748,6 +1892,7 @@ pnpm add @upstash/ratelimit
 ---
 
 #### Task 9.2.3: 환경 변수 보안 ⬜
+
 - [ ] 시크릿 변수 서버 사이드만 사용
 - [ ] API 키 노출 방지
 - [ ] .env 파일 .gitignore 확인
@@ -1759,9 +1904,11 @@ pnpm add @upstash/ratelimit
 ---
 
 ### Epic 9.3: 모니터링 & 로깅
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 9.3.1: Sentry 에러 추적 설정 ⬜
+
 ```bash
 pnpm add @sentry/nextjs
 ```
@@ -1778,6 +1925,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 9.3.2: Vercel Analytics 설정 ⬜
+
 - [ ] Vercel Analytics 활성화
 - [ ] Web Vitals 추적
 - [ ] 사용자 행동 이벤트 추가
@@ -1789,6 +1937,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 9.3.3: 커스텀 로깅 시스템 ⬜
+
 - [ ] `lib/logger.ts` 생성
 - [ ] API 요청 로깅
 - [ ] LLM 호출 로깅
@@ -1801,12 +1950,15 @@ pnpm add @sentry/nextjs
 ---
 
 ## Phase 10: 배포 & 문서화
+
 **기간**: 5일 | **목표**: 프로덕션 배포 및 포트폴리오 준비
 
 ### Epic 10.1: 배포 준비
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 10.1.1: Vercel 프로젝트 설정 ⬜
+
 - [ ] Vercel 계정 생성
 - [ ] GitHub 연동
 - [ ] 프로젝트 임포트
@@ -1819,6 +1971,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.1.2: 프로덕션 빌드 테스트 ⬜
+
 - [ ] `pnpm build` 실행
 - [ ] 빌드 에러 수정
 - [ ] `pnpm start`로 프로덕션 모드 테스트
@@ -1831,6 +1984,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.1.3: 도메인 설정 (옵션) ⬜
+
 - [ ] 도메인 구매
 - [ ] Vercel 도메인 연결
 - [ ] DNS 설정
@@ -1842,9 +1996,11 @@ pnpm add @sentry/nextjs
 ---
 
 ### Epic 10.2: CI/CD 파이프라인
+
 **담당**: Developer | **우선순위**: P1
 
 #### Task 10.2.1: GitHub Actions 워크플로우 설정 ⬜
+
 - [ ] `.github/workflows/deploy.yml` 생성
 - [ ] Lint & Type check 단계
 - [ ] Build 단계
@@ -1857,6 +2013,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.2.2: 테스트 자동화 (옵션) ⬜
+
 - [ ] Vitest 설정
 - [ ] 단위 테스트 작성
 - [ ] GitHub Actions에 테스트 단계 추가
@@ -1868,9 +2025,11 @@ pnpm add @sentry/nextjs
 ---
 
 ### Epic 10.3: 문서화
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 10.3.1: README.md 작성 ⬜
+
 - [ ] 프로젝트 소개
 - [ ] 주요 기능
 - [ ] 기술 스택
@@ -1886,6 +2045,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.3.2: API 문서 작성 ⬜
+
 - [ ] `docs/API.md` 생성
 - [ ] 모든 엔드포인트 문서화
   - 요청 형식
@@ -1900,6 +2060,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.3.3: 아키텍처 문서 작성 ⬜
+
 - [ ] `docs/Architecture.md` 생성
 - [ ] 시스템 아키텍처 다이어그램
 - [ ] 데이터 플로우 다이어그램
@@ -1912,6 +2073,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.3.4: 프롬프트 엔지니어링 문서 ⬜
+
 - [ ] `docs/PromptEngineering.md` 생성
 - [ ] 각 Agent의 프롬프트 전략 설명
 - [ ] Few-shot 예시 설명
@@ -1924,9 +2086,11 @@ pnpm add @sentry/nextjs
 ---
 
 ### Epic 10.4: 포트폴리오 준비
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 10.4.1: 데모 데이터 준비 ⬜
+
 - [ ] 샘플 트렌드 데이터 생성
 - [ ] 샘플 크리에이터 데이터 생성
 - [ ] 샘플 콘텐츠 아이디어 생성
@@ -1939,6 +2103,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.4.2: 스크린샷 & 데모 영상 제작 ⬜
+
 - [ ] 주요 화면 스크린샷 촬영
   - 대시보드
   - 트렌드 분석
@@ -1954,6 +2119,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.4.3: 포트폴리오 문서 작성 ⬜
+
 - [ ] `docs/Portfolio.md` 생성
 - [ ] 프로젝트 배경 & 동기
 - [ ] 문제 정의
@@ -1969,6 +2135,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.4.4: popow.ai 제출 준비 ⬜
+
 - [ ] popow.ai Agent 구현 (별도)
 - [ ] Agent 설명 작성
 - [ ] 사용 가이드 작성
@@ -1981,9 +2148,11 @@ pnpm add @sentry/nextjs
 ---
 
 ### Epic 10.5: 최종 점검
+
 **담당**: Developer | **우선순위**: P0
 
 #### Task 10.5.1: 전체 기능 테스트 ⬜
+
 - [ ] 사용자 인증 플로우 테스트
 - [ ] 트렌드 분석 E2E 테스트
 - [ ] 크리에이터 매칭 E2E 테스트
@@ -1998,6 +2167,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.5.2: 성능 최종 점검 ⬜
+
 - [ ] Lighthouse 성능 점수 확인 (>90)
 - [ ] Core Web Vitals 확인
 - [ ] 페이지 로딩 속도 확인 (<3초)
@@ -2010,6 +2180,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.5.3: 보안 최종 점검 ⬜
+
 - [ ] 환경 변수 노출 확인
 - [ ] API 엔드포인트 인증 확인
 - [ ] Rate limiting 작동 확인
@@ -2022,6 +2193,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.5.4: 비용 모니터링 설정 ⬜
+
 - [ ] OpenAI API 사용량 대시보드 확인
 - [ ] Supabase 사용량 확인
 - [ ] Vercel 사용량 확인
@@ -2034,6 +2206,7 @@ pnpm add @sentry/nextjs
 ---
 
 #### Task 10.5.5: 프로젝트 마무리 ⬜
+
 - [ ] 코드 정리 (주석, unused imports)
 - [ ] 최종 커밋 & 푸시
 - [ ] GitHub 릴리즈 태그 생성 (v1.0.0)
@@ -2048,6 +2221,7 @@ pnpm add @sentry/nextjs
 ## 부록: 참고 자료
 
 ### 학습 자료
+
 - [Next.js 공식 문서](https://nextjs.org/docs)
 - [Vercel AI SDK 문서](https://sdk.vercel.ai/docs)
 - [Supabase 문서](https://supabase.com/docs)
@@ -2056,6 +2230,7 @@ pnpm add @sentry/nextjs
 - [Anthropic Claude 문서](https://docs.anthropic.com/)
 
 ### 유용한 도구
+
 - [Excalidraw](https://excalidraw.com/) - 다이어그램 그리기
 - [Figma](https://www.figma.com/) - UI 디자인
 - [Postman](https://www.postman.com/) - API 테스트
@@ -2066,6 +2241,7 @@ pnpm add @sentry/nextjs
 ## 진행 상황 트래킹
 
 ### 완료율
+
 - Phase 1: ⬜ 0%
 - Phase 2: ⬜ 0%
 - Phase 3: ⬜ 0%
@@ -2082,6 +2258,7 @@ pnpm add @sentry/nextjs
 ---
 
 ## 다음 액션
+
 1. ✅ Phase 1, Epic 1.1, Task 1.1.1 시작: Node.js 프로젝트 초기화
 2. 체크리스트 하나씩 완료하며 진행
 3. 각 Epic 완료 시 데모 가능 상태 확인

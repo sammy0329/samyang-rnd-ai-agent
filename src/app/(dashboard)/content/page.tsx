@@ -1,12 +1,35 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { ContentGenerationForm } from '@/components/content/ContentGenerationForm';
+
+interface ContentIdea {
+  id: string;
+  title: string;
+  brand_category: string;
+  tone: string;
+  hook_text: string;
+  scene_structure: Record<string, unknown>;
+  editing_format: string;
+  music_style: string;
+  props_needed: string[];
+  target_country: string;
+  expected_performance: Record<string, unknown>;
+  created_at: string;
+}
 
 export default function ContentPage() {
-  const [generatedIdeas, setGeneratedIdeas] = useState<any[]>([]);
+  const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerationSuccess = (ideas: ContentIdea[]) => {
+    setGeneratedIdeas(ideas);
+  };
+
+  const handleLoadingChange = (isLoading: boolean) => {
+    setIsGenerating(isLoading);
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -20,81 +43,10 @@ export default function ContentPage() {
       </div>
 
       {/* 생성 폼 섹션 */}
-      <Card className="mb-8 p-6">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">
-          콘텐츠 아이디어 생성
-        </h2>
-        <div className="space-y-6">
-          {/* 브랜드 카테고리 선택 */}
-          <div>
-            <label
-              htmlFor="brandCategory"
-              className="mb-2 block text-sm font-medium text-gray-700"
-            >
-              브랜드 카테고리 <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="brandCategory"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <option value="">선택하세요</option>
-              <option value="buldak">불닭볶음면</option>
-              <option value="samyang_ramen">삼양라면</option>
-              <option value="jelly">젤리</option>
-            </select>
-          </div>
-
-          {/* 톤앤매너 선택 */}
-          <div>
-            <label
-              htmlFor="tone"
-              className="mb-2 block text-sm font-medium text-gray-700"
-            >
-              톤앤매너 <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="tone"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <option value="">선택하세요</option>
-              <option value="fun">재미/유머</option>
-              <option value="kawaii">카와이/귀여움</option>
-              <option value="provocative">도발적/자극적</option>
-              <option value="cool">쿨/세련됨</option>
-            </select>
-          </div>
-
-          {/* 타깃 국가 선택 */}
-          <div>
-            <label
-              htmlFor="targetCountry"
-              className="mb-2 block text-sm font-medium text-gray-700"
-            >
-              타깃 국가 <span className="text-red-500">*</span>
-            </label>
-            <select
-              id="targetCountry"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <option value="">선택하세요</option>
-              <option value="KR">한국</option>
-              <option value="US">미국</option>
-              <option value="JP">일본</option>
-            </select>
-          </div>
-
-          {/* 생성 버튼 */}
-          <div className="flex justify-end">
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700"
-              disabled={isGenerating}
-            >
-              {isGenerating ? '생성 중...' : '아이디어 생성 (3개)'}
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <ContentGenerationForm
+        onSuccess={handleGenerationSuccess}
+        onLoadingChange={handleLoadingChange}
+      />
 
       {/* 결과 표시 섹션 */}
       <div>
