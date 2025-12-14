@@ -24,10 +24,45 @@ export default function TrendsPage() {
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
+  // 필터 상태 관리
+  const [filters, setFilters] = useState({
+    keyword: '',
+    platform: '',
+    country: '',
+    minViralScore: false,
+  });
+  const [sortBy, setSortBy] = useState<'created_at' | 'viral_score' | 'samyang_relevance'>('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+
+  // 플랫폼 값 매핑 (UI -> API)
+  const mapPlatformToAPI = (platform: string): string | undefined => {
+    if (!platform) return undefined;
+    const mapping: Record<string, string> = {
+      youtube: 'shorts',
+      tiktok: 'tiktok',
+      instagram: 'reels',
+    };
+    return mapping[platform];
+  };
+
+  // 정렬 값 매핑 (UI -> API)
+  const mapSortToAPI = (sort: string): 'created_at' | 'viral_score' | 'samyang_relevance' => {
+    const mapping: Record<string, 'created_at' | 'viral_score' | 'samyang_relevance'> = {
+      latest: 'created_at',
+      viral: 'viral_score',
+      relevance: 'samyang_relevance',
+    };
+    return mapping[sort] || 'created_at';
+  };
+
   // React Query로 트렌드 목록 가져오기
   const { data, isLoading, error, refetch } = useTrends({
-    sortBy: 'created_at',
-    sortOrder: 'desc',
+    keyword: filters.keyword || undefined,
+    platform: mapPlatformToAPI(filters.platform),
+    country: (filters.country as 'KR' | 'US' | 'JP' | undefined) || undefined,
+    minViralScore: filters.minViralScore ? 80 : undefined,
+    sortBy,
+    sortOrder,
     limit: 50,
   });
 
@@ -54,6 +89,30 @@ export default function TrendsPage() {
   const handleGenerateIdea = (trend: Trend) => {
     console.log('Generate idea:', trend);
     // TODO: 아이디어 생성 다이얼로그 열기
+  };
+
+  const handleFilterChange = (field: string, value: string | boolean) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleSearch = () => {
+    // 필터가 변경되면 useTrends가 자동으로 재조회됨 (queryKey에 filters 포함)
+    refetch();
+  };
+
+  const handleSortChange = (value: string) => {
+    if (value.includes('-')) {
+      const [sort, order] = value.split('-');
+      setSortBy(mapSortToAPI(sort));
+      setSortOrder((order as 'asc' | 'desc') || 'desc');
+    } else {
+      // 단일 값인 경우 (하위 호환성)
+      setSortBy(mapSortToAPI(value));
+      setSortOrder('desc');
+    }
   };
 
   return (
@@ -119,6 +178,13 @@ export default function TrendsPage() {
               type="text"
               placeholder="예: 불닭볶음면"
               className="w-full"
+              value={filters.keyword}
+              onChange={(e) => handleFilterChange('keyword', e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                }
+              }}
             />
           </div>
 
@@ -133,6 +199,8 @@ export default function TrendsPage() {
             <select
               id="platform"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={filters.platform}
+              onChange={(e) => handleFilterChange('platform', e.target.value)}
             >
               <option value="">전체</option>
               <option value="youtube">YouTube Shorts</option>
@@ -152,6 +220,8 @@ export default function TrendsPage() {
             <select
               id="country"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={filters.country}
+              onChange={(e) => handleFilterChange('country', e.target.value)}
             >
               <option value="">전체</option>
               <option value="KR">한국</option>
@@ -167,13 +237,17 @@ export default function TrendsPage() {
               <input
                 type="checkbox"
                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                checked={filters.minViralScore}
+                onChange={(e) => handleFilterChange('minViralScore', e.target.checked)}
               />
               <span className="ml-2 text-sm text-gray-700">
                 고품질만 보기 (바이럴 80+)
               </span>
             </label>
           </div>
-          <Button variant="outline">검색</Button>
+          <Button variant="outline" onClick={handleSearch}>
+            검색
+          </Button>
         </div>
       </Card>
 
@@ -190,10 +264,14 @@ export default function TrendsPage() {
             <select
               id="sort"
               className="rounded-md border border-gray-300 px-3 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              value={`${sortBy === 'created_at' ? 'latest' : sortBy === 'viral_score' ? 'viral' : 'relevance'}-${sortOrder}`}
+              onChange={(e) => handleSortChange(e.target.value)}
             >
-              <option value="latest">최신순</option>
-              <option value="viral">바이럴 점수순</option>
-              <option value="relevance">삼양 연관성순</option>
+              <option value="latest-desc">최신순</option>
+              <option value="viral-desc">바이럴 점수순 (높은순)</option>
+              <option value="viral-asc">바이럴 점수순 (낮은순)</option>
+              <option value="relevance-desc">삼양 연관성순 (높은순)</option>
+              <option value="relevance-asc">삼양 연관성순 (낮은순)</option>
             </select>
           </div>
         </div>

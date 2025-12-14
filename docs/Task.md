@@ -1109,9 +1109,25 @@ pnpm add @upstash/redis
 - [x] 에러 상태 처리 (retry 버튼 포함)
 - [x] trends/page.tsx에 통합
 - [x] 자동 refetch (분석 성공 시)
+- [x] 필터링 및 검색 기능 연결
+  - 필터 상태 관리 (keyword, platform, country, minViralScore)
+  - 검색 버튼 클릭 핸들러 추가
+  - Enter 키로 검색 가능
+  - useTrends 훅에 필터 파라미터 전달
+  - 플랫폼 값 매핑 (youtube → shorts, instagram → reels)
+  - 정렬 기능 연결 (최신순, 바이럴 점수순, 삼양 연관성순, 오름차순/내림차순)
+  - 고품질 필터 (바이럴 80+)
 
 **예상 시간**: 3시간
 **완료 조건**: 목록 표시 성공 ✅
+**완료 일시**: 2025-01-XX
+**구현 내용**:
+- 필터 상태를 useState로 관리
+- 검색 버튼 클릭 또는 Enter 키 입력 시 필터 적용
+- React Query의 queryKey에 필터 포함하여 자동 재조회
+- 플랫폼 값 매핑 함수 (mapPlatformToAPI)
+- 정렬 값 매핑 함수 (mapSortToAPI)
+- 필터 변경 시 useTrends 자동 재조회
 
 ---
 
