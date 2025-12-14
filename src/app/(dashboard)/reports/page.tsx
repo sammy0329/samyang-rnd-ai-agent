@@ -17,8 +17,9 @@ export default function ReportsPage() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reportType, setReportType] = useState<'daily_trend' | 'creator_match' | 'content_idea' | ''>('');
+  const [showAll, setShowAll] = useState(false); // 전체 데이터 보기 (기본값: 내 작업만)
 
-  const { data: reportsData, isLoading, refetch } = useReports({ limit: 50 });
+  const { data: reportsData, isLoading, refetch } = useReports({ limit: 50, showAll });
   const createReportMutation = useCreateReport();
 
   const handleCreateReport = async (type: 'daily_trend' | 'creator_match' | 'content_idea') => {
@@ -134,6 +135,29 @@ export default function ReportsPage() {
               <span className="ml-2 text-gray-500">({reports.length}개)</span>
             )}
           </h2>
+          {/* 내 작업 / 전체 토글 */}
+          <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-1">
+            <button
+              className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                !showAll
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => setShowAll(false)}
+            >
+              내 작업
+            </button>
+            <button
+              className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+                showAll
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              onClick={() => setShowAll(true)}
+            >
+              전체
+            </button>
+          </div>
         </div>
 
         {/* 로딩 상태 */}

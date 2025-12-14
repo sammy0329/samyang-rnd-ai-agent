@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
 import { TrendingUp, Lightbulb, Users, FileText } from 'lucide-react';
@@ -27,14 +28,41 @@ const ApiUsageWidget = dynamic(
 );
 
 export default function DashboardPage() {
+  const [showAll, setShowAll] = useState(true); // 대시보드는 기본적으로 전체 데이터 표시
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* 헤더 */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">대시보드</h1>
-        <p className="mt-2 text-gray-600">
-          Samyang AI Agent의 주요 지표와 최근 활동을 확인하세요
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">대시보드</h1>
+          <p className="mt-2 text-gray-600">
+            Samyang AI Agent의 주요 지표와 최근 활동을 확인하세요
+          </p>
+        </div>
+        {/* 내 작업 / 전체 토글 */}
+        <div className="flex items-center gap-2 rounded-md border border-gray-300 bg-white p-1">
+          <button
+            className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+              !showAll
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setShowAll(false)}
+          >
+            내 작업
+          </button>
+          <button
+            className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
+              showAll
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setShowAll(true)}
+          >
+            전체
+          </button>
+        </div>
       </div>
 
       {/* 퀵 액션 카드 - 반응형 그리드 */}
@@ -108,13 +136,13 @@ export default function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* 왼쪽 컬럼 */}
         <div className="space-y-6">
-          <TodayTrendsWidget />
-          <RecommendedCreatorsWidget />
+          <TodayTrendsWidget showAll={showAll} />
+          <RecommendedCreatorsWidget showAll={showAll} />
         </div>
 
         {/* 오른쪽 컬럼 */}
         <div className="space-y-6">
-          <RecentIdeasWidget />
+          <RecentIdeasWidget showAll={showAll} />
           <ApiUsageWidget />
         </div>
       </div>

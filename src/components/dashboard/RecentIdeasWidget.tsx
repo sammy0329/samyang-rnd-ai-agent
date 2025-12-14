@@ -5,10 +5,14 @@ import { useContentIdeas } from '@/hooks/useContentIdeas';
 import Link from 'next/link';
 import { Lightbulb } from 'lucide-react';
 
-export function RecentIdeasWidget() {
+interface RecentIdeasWidgetProps {
+  showAll?: boolean;
+}
+
+export function RecentIdeasWidget({ showAll = true }: RecentIdeasWidgetProps) {
   const { data, isLoading } = useContentIdeas({
     limit: 3,
-    showAll: true, // 대시보드에서는 전체 데이터 표시
+    showAll,
   });
 
   const ideas = data?.data?.ideas || [];

@@ -5,12 +5,16 @@ import { useCreators } from '@/hooks/useCreators';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
 
-export function RecommendedCreatorsWidget() {
+interface RecommendedCreatorsWidgetProps {
+  showAll?: boolean;
+}
+
+export function RecommendedCreatorsWidget({ showAll = true }: RecommendedCreatorsWidgetProps) {
   const { data, isLoading } = useCreators({
     limit: 3,
     sortBy: 'brand_fit_score',
     sortOrder: 'desc',
-    showAll: true, // 대시보드에서는 전체 데이터 표시
+    showAll,
   });
 
   const creators = data?.creators || [];

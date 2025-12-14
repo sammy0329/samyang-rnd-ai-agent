@@ -5,12 +5,16 @@ import { useTrends } from '@/hooks/useTrends';
 import Link from 'next/link';
 import { TrendingUp, ExternalLink } from 'lucide-react';
 
-export function TodayTrendsWidget() {
+interface TodayTrendsWidgetProps {
+  showAll?: boolean;
+}
+
+export function TodayTrendsWidget({ showAll = true }: TodayTrendsWidgetProps) {
   const { data, isLoading } = useTrends({
     limit: 5,
     sortBy: 'viral_score',
     sortOrder: 'desc',
-    showAll: true, // 대시보드에서는 전체 데이터 표시
+    showAll,
   });
 
   const trends = data?.trends || [];

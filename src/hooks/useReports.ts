@@ -16,6 +16,7 @@ interface ReportsFilters {
   endDate?: string;
   limit?: number;
   offset?: number;
+  showAll?: boolean;
 }
 
 interface ReportsResponse {
@@ -38,6 +39,7 @@ async function fetchReports(filters: ReportsFilters): Promise<ReportsResponse> {
   if (filters.endDate) params.append('endDate', filters.endDate);
   if (filters.limit) params.append('limit', filters.limit.toString());
   if (filters.offset) params.append('offset', filters.offset.toString());
+  if (filters.showAll !== undefined) params.append('showAll', filters.showAll.toString());
 
   const response = await fetch(`/api/reports?${params.toString()}`);
 
