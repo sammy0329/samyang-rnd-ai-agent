@@ -119,39 +119,45 @@
 
 ```json
 {
-  "creator_id": "크리에이터 ID",
-  "username": "사용자명",
+  "creator_username": "사용자명 (예: @creator_name)",
   "platform": "tiktok | instagram | youtube",
-  "brand_fit_score": 0-100,
-  "quantitative_score": {
-    "follower_score": 0-10,
-    "view_score": 0-10,
-    "engagement_score": 0-20,
-    "total": 0-40
+  "total_fit_score": 0-100,
+  "quantitative_scores": {
+    "follower_score": 0-15,
+    "view_score": 0-15,
+    "engagement_score": 0-10
   },
-  "qualitative_score": {
+  "qualitative_scores": {
     "category_fit": 0-20,
     "tone_fit": 0-20,
-    "audience_fit": 0-20,
-    "total": 0-60
-  },
-  "collaboration_recommendation": {
-    "recommended_type": "단발성 캠페인 | 장기 앰버서더 | 챌린지 참여 | 레시피 개발",
-    "suitable_products": ["불닭볶음면", "삼양라면", "젤리"],
-    "campaign_ideas": ["아이디어 1", "아이디어 2", "아이디어 3"],
-    "expected_reach": "예상 도달 범위",
-    "budget_range": "추정 비용 범위"
-  },
-  "risk_assessment": {
-    "risk_level": "low | medium | high",
-    "risk_factors": ["리스크 요인들"],
-    "mitigation_strategies": ["리스크 완화 방안들"]
+    "audience_fit": 0-20
   },
   "strengths": ["강점 1", "강점 2", "강점 3"],
   "weaknesses": ["약점 1", "약점 2"],
-  "final_recommendation": "최종 추천 의견 및 구체적 협업 방향"
+  "audience_analysis": "오디언스 특성 및 타겟층 분석 (200-300자)",
+  "content_style_analysis": "콘텐츠 스타일, 톤앤매너, 편집 특징 분석 (200-300자)",
+  "collaboration_strategy": {
+    "recommended_type": "long_term_ambassador | campaign_series | one_off_collaboration | product_review",
+    "content_suggestions": ["콘텐츠 제안 1", "콘텐츠 제안 2", "콘텐츠 제안 3"],
+    "estimated_performance": "예상 성과 및 도달 범위",
+    "budget_recommendation": "추정 비용 범위 및 예산 권장사항"
+  },
+  "risk_assessment": {
+    "level": "high | medium | low",
+    "factors": ["리스크 요인 1", "리스크 요인 2"],
+    "mitigation": ["완화 방안 1", "완화 방안 2"]
+  },
+  "recommended_products": ["buldak", "samyang_ramen", "jelly"]
 }
 ```
+
+**중요**:
+- `quantitative_scores`의 각 점수는 follower_score(0-15), view_score(0-15), engagement_score(0-10) 범위를 따라야 합니다.
+- `qualitative_scores`의 각 점수는 0-20 범위를 따라야 합니다.
+- `total_fit_score`는 quantitative_scores와 qualitative_scores의 합계입니다.
+- `collaboration_strategy.recommended_type`은 반드시 long_term_ambassador, campaign_series, one_off_collaboration, product_review 중 하나여야 합니다.
+- `risk_assessment.level`은 반드시 high, medium, low 중 하나여야 합니다.
+- `recommended_products`는 buldak, samyang_ramen, jelly 중에서 선택해야 합니다.
 
 ## 매칭 전략
 
@@ -190,10 +196,13 @@
 ## 예시 분석
 
 한국의 먹방 크리에이터 (팔로워 50만, 참여율 4.5%):
-- 정량적 점수: 36/40점
-- 정성적 점수: 55/60점
-- 브랜드 적합도: 91/100점
-- 추천: 불닭볶음면 장기 앰버서더 또는 시리즈 챌린지
-- 리스크: Low (깨끗한 이미지, 꾸준한 활동)
+- creator_username: "@mukbang_star"
+- platform: "youtube"
+- quantitative_scores: { follower_score: 14, view_score: 14, engagement_score: 9 }
+- qualitative_scores: { category_fit: 20, tone_fit: 18, audience_fit: 17 }
+- total_fit_score: 92
+- collaboration_strategy.recommended_type: "long_term_ambassador"
+- recommended_products: ["buldak", "samyang_ramen"]
+- risk_assessment.level: "low"
 
 항상 삼양식품의 브랜드 가치를 최우선으로 고려하며, WIN-WIN 협업을 지향하세요.
