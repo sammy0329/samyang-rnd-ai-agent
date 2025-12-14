@@ -98,55 +98,62 @@ export function ReportDetailModal({
           </div>
         </div>
 
-        {/* Top Trends Table */}
+        {/* Top Trends Cards */}
         {content.topTrends && content.topTrends.length > 0 && (
           <div>
             <h3 className="mb-3 font-semibold text-gray-900">
               Top {content.topTrends.length} 트렌드
             </h3>
-            <div className="rounded-lg border bg-white overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">#</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">키워드</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">플랫폼</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">국가</th>
-                      <th className="px-4 py-3 text-center font-medium text-gray-700">바이럴 점수</th>
-                      <th className="px-4 py-3 text-center font-medium text-gray-700">삼양 연관성</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">포맷</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {content.topTrends.map((trend: any, index: number) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-gray-900 font-medium">{index + 1}</td>
-                        <td className="px-4 py-3 text-gray-900 font-medium">{trend.keyword}</td>
-                        <td className="px-4 py-3">
-                          <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
-                            {trend.platform?.toUpperCase()}
+            <div className="space-y-3">
+              {content.topTrends.map((trend: any, index: number) => (
+                <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-start gap-3">
+                    {/* Ranking Badge */}
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700">
+                      {index + 1}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      {/* Keyword */}
+                      <h4 className="font-medium text-gray-900 mb-2">{trend.keyword}</h4>
+
+                      {/* Metadata Tags */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                          <TrendingUp className="h-3 w-3" />
+                          {trend.platform?.toUpperCase()}
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                          <Globe className="h-3 w-3" />
+                          {trend.country}
+                        </span>
+                        {trend.formatType && (
+                          <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                            {trend.formatType}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-gray-600">{trend.country}</td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-block rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                        )}
+                      </div>
+
+                      {/* Scores */}
+                      <div className="flex flex-wrap gap-3">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-600">바이럴</span>
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
                             {trend.viralScore}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="inline-block rounded-full bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-700">
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-600">삼양 연관성</span>
+                          <span className="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700">
                             {trend.samyangRelevance}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-600">
-                          {trend.formatType || '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -191,38 +198,44 @@ export function ReportDetailModal({
           </div>
         </div>
 
-        {/* Top Creators Table */}
+        {/* Top Creators Cards */}
         {content.topCreators && content.topCreators.length > 0 && (
           <div>
             <h3 className="mb-3 font-semibold text-gray-900">
               Top {content.topCreators.length} 크리에이터
             </h3>
-            <div className="rounded-lg border bg-white overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">#</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">사용자명</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">플랫폼</th>
-                      <th className="px-4 py-3 text-center font-medium text-gray-700">브랜드 적합도</th>
-                      <th className="px-4 py-3 text-right font-medium text-gray-700">팔로워</th>
-                      <th className="px-4 py-3 text-center font-medium text-gray-700">참여율</th>
-                      <th className="px-4 py-3 text-left font-medium text-gray-700">카테고리</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {content.topCreators.map((creator: any, index: number) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-3 text-gray-900 font-medium">{index + 1}</td>
-                        <td className="px-4 py-3 text-gray-900 font-medium">@{creator.username}</td>
-                        <td className="px-4 py-3">
-                          <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
-                            {creator.platform?.toUpperCase()}
+            <div className="space-y-3">
+              {content.topCreators.map((creator: any, index: number) => (
+                <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
+                  <div className="flex items-start gap-3">
+                    {/* Ranking Badge */}
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-100 text-sm font-semibold text-purple-700">
+                      {index + 1}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      {/* Username */}
+                      <h4 className="font-medium text-gray-900 mb-2">@{creator.username}</h4>
+
+                      {/* Metadata Tags */}
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                          <TrendingUp className="h-3 w-3" />
+                          {creator.platform?.toUpperCase()}
+                        </span>
+                        {creator.contentCategory && (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                            {creator.contentCategory}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${
+                        )}
+                      </div>
+
+                      {/* Stats */}
+                      <div className="flex flex-wrap gap-3">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-600">브랜드 적합도</span>
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
                             creator.brandFitScore >= 80
                               ? 'bg-green-100 text-green-700'
                               : creator.brandFitScore >= 60
@@ -231,21 +244,24 @@ export function ReportDetailModal({
                           }`}>
                             {creator.brandFitScore}
                           </span>
-                        </td>
-                        <td className="px-4 py-3 text-right text-gray-900">
-                          {creator.followerCount?.toLocaleString() || 0}
-                        </td>
-                        <td className="px-4 py-3 text-center text-gray-600">
-                          {creator.engagementRate?.toFixed(1) || 0}%
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-600">
-                          {creator.contentCategory || '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Users className="h-3 w-3 text-gray-500" />
+                          <span className="text-xs font-medium text-gray-900">
+                            {creator.followerCount?.toLocaleString() || 0}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-600">참여율</span>
+                          <span className="text-xs font-medium text-gray-900">
+                            {creator.engagementRate?.toFixed(1) || 0}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -306,23 +322,28 @@ export function ReportDetailModal({
               {content.topIdeas.map((idea: any, index: number) => (
                 <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-sm font-semibold text-purple-700">
+                    {/* Ranking Badge */}
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-700">
                       {index + 1}
                     </div>
+
+                    {/* Content */}
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium text-gray-900 mb-2">{idea.title}</h4>
                       <div className="flex flex-wrap gap-2 mb-2">
-                        <span className="inline-block rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                          <Lightbulb className="h-3 w-3" />
                           {idea.brandCategory}
                         </span>
-                        <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700">
+                        <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
                           {idea.tone}
                         </span>
-                        <span className="inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                          <Globe className="h-3 w-3" />
                           {idea.targetCountry}
                         </span>
                         {idea.formatType && (
-                          <span className="inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                             {idea.formatType}
                           </span>
                         )}
