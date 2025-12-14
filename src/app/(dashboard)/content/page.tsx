@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
@@ -21,6 +21,20 @@ const ContentIdeaDetailModal = dynamic(
   { ssr: false }
 );
 
+interface TrendContext {
+  id: string;
+  keyword: string;
+  platform: string;
+  country?: string;
+  format_type?: string;
+  hook_pattern?: string | null;
+  visual_pattern?: string | null;
+  music_pattern?: string | null;
+  viral_score?: number | null;
+  samyang_relevance?: number | null;
+  analysis_data?: Record<string, unknown> | null;
+}
+
 export default function ContentPage() {
   const { user } = useAuthStore();
   const currentUserId = user?.id;
@@ -33,12 +47,28 @@ export default function ContentPage() {
   const [selectedIdea, setSelectedIdea] = useState<ContentIdea | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAll, setShowAll] = useState(false); // 전체 데이터 보기 (기본값: 내 작업만)
+  const [trendContext, setTrendContext] = useState<TrendContext | null>(null);
 
   // React Query로 기존 아이디어 목록 가져오기
   const { data: contentIdeasData, refetch } = useContentIdeas({
     limit: 50,
     showAll,
   });
+
+  // 트렌드 컨텍스트 로드
+  useEffect(() => {
+    const stored = sessionStorage.getItem('trendContext');
+    if (stored) {
+      try {
+        const data = JSON.parse(stored);
+        setTrendContext(data);
+        // 사용 후 삭제
+        sessionStorage.removeItem('trendContext');
+      } catch (error) {
+        console.error('Failed to parse trend context:', error);
+      }
+    }
+  }, []);
 
   const handleGenerationSuccess = (ideas: ContentIdea[]) => {
     setGeneratedIdeas(ideas);
@@ -127,6 +157,7 @@ export default function ContentPage() {
         onSuccess={handleGenerationSuccess}
         onError={handleGenerationError}
         onLoadingChange={handleLoadingChange}
+        trendContext={trendContext}
       />
 
       {/* 결과 표시 섹션 */}

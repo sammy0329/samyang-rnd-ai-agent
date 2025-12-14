@@ -12,9 +12,27 @@
  *   brandCategory: 'buldak' | 'samyang_ramen' | 'jelly';
  *   tone: 'fun' | 'kawaii' | 'provocative' | 'cool';
  *   targetCountry: 'KR' | 'US' | 'JP';
+ *
+ *   // 옵션 1: 트렌드 컨텍스트 전체 데이터 전달 (권장)
+ *   trendContext?: {
+ *     id: string;
+ *     keyword: string;
+ *     platform: string;
+ *     country?: string;
+ *     format_type?: string;
+ *     hook_pattern?: string | null;
+ *     visual_pattern?: string | null;
+ *     music_pattern?: string | null;
+ *     viral_score?: number | null;
+ *     samyang_relevance?: number | null;
+ *     analysis_data?: Record<string, unknown> | null;
+ *   };
+ *
+ *   // 옵션 2: 하위 호환성 (기존 방식)
  *   trendId?: string;
  *   trendKeyword?: string;
  *   trendDescription?: string;
+ *
  *   preferredPlatform?: 'tiktok' | 'instagram' | 'youtube';
  *   additionalRequirements?: string;
  * }
@@ -28,6 +46,21 @@ import { createAPIUsage } from '@/lib/db/queries/api-usage';
 import { rateLimitByIP } from '@/lib/rate-limit';
 import { getServerSession } from '@/lib/auth/server';
 
+// 트렌드 컨텍스트 스키마
+const TrendContextSchema = z.object({
+  id: z.string(),
+  keyword: z.string(),
+  platform: z.string(),
+  country: z.string().optional(),
+  format_type: z.string().optional(),
+  hook_pattern: z.string().nullable().optional(),
+  visual_pattern: z.string().nullable().optional(),
+  music_pattern: z.string().nullable().optional(),
+  viral_score: z.number().nullable().optional(),
+  samyang_relevance: z.number().nullable().optional(),
+  analysis_data: z.record(z.string(), z.unknown()).nullable().optional(),
+});
+
 // 요청 바디 검증 스키마
 const GenerateContentRequestSchema = z.object({
   brandCategory: z.enum(['buldak', 'samyang_ramen', 'jelly'], {
@@ -39,6 +72,9 @@ const GenerateContentRequestSchema = z.object({
   targetCountry: z.enum(['KR', 'US', 'JP'], {
     message: 'Target country must be KR, US, or JP',
   }),
+  // 트렌드 컨텍스트 (전체 트렌드 분석 데이터)
+  trendContext: TrendContextSchema.optional(),
+  // 하위 호환성을 위해 유지
   trendId: z.string().uuid().optional(),
   trendKeyword: z.string().max(100).optional(),
   trendDescription: z.string().max(1000).optional(),
@@ -111,6 +147,9 @@ export async function POST(request: NextRequest) {
         brandCategory: requestData.brandCategory,
         tone: requestData.tone,
         targetCountry: requestData.targetCountry,
+        // 트렌드 컨텍스트가 있으면 전체 데이터 전달
+        trendContext: requestData.trendContext,
+        // 하위 호환성을 위해 유지
         trendKeyword: requestData.trendKeyword,
         trendDescription: requestData.trendDescription,
         preferredPlatform: requestData.preferredPlatform,
@@ -139,7 +178,8 @@ export async function POST(request: NextRequest) {
         const contentData = variation.data;
 
         const saveResult = await createContentIdea({
-          trend_id: requestData.trendId,
+          // 트렌드 컨텍스트가 있으면 해당 ID 사용, 아니면 기존 trendId 사용
+          trend_id: requestData.trendContext?.id || requestData.trendId,
           title: contentData.title,
           brand_category: contentData.brand_category,
           tone: contentData.tone,

@@ -442,6 +442,189 @@ export default function TrendsPage() {
 
 ---
 
+## UX/UI 설계 결정
+
+### 트렌드 기반 콘텐츠 아이디어 생성 - 데이터 전달 방식 결정
+
+**배경:**
+트렌드 분석 카드에 "아이디어 생성" 버튼이 있었지만 기능이 구현되지 않았습니다.
+트렌드 분석 결과를 활용하여 콘텐츠 아이디어를 생성하는 기능이 필요했습니다.
+
+**고려된 접근 방식:**
+
+#### 방식 1: 폼 필드 자동 채우기 (초기 구현)
+```typescript
+// trends/page.tsx
+const handleGenerateIdea = (trend: Trend) => {
+  sessionStorage.setItem('prefillTrend', JSON.stringify({
+    country: trend.country,
+    platform: trend.platform,
+    keyword: trend.keyword,
+  }));
+  router.push('/content');
+};
+
+// content/page.tsx - 폼 필드에 값 미리 채우기
+useForm({
+  defaultValues: {
+    targetCountry: prefillData?.country,
+    preferredPlatform: prefillData?.platform,
+  }
+});
+```
+
+**문제점:**
+- 사용자가 이미 채워진 필드를 다시 확인하고 수동으로 변경해야 함
+- 트렌드 분석의 풍부한 데이터(후킹 패턴, 비주얼 패턴, 음악 패턴 등)를 활용하지 못함
+- UX가 번거로움: "트렌드 데이터를 반영한다"는 것이 단순히 필드 2개를 채우는 것으로 제한됨
+
+#### 방식 2: 트렌드 컨텍스트 전체 전달 (최종 구현) ✅
+
+```typescript
+// trends/page.tsx - 전체 트렌드 객체 저장
+const handleGenerateIdea = (trend: Trend) => {
+  sessionStorage.setItem('trendContext', JSON.stringify(trend));
+  router.push('/content');
+};
+
+// content/page.tsx - trendContext 로드 및 전달
+const [trendContext, setTrendContext] = useState<TrendContext | null>(null);
+
+useEffect(() => {
+  const stored = sessionStorage.getItem('trendContext');
+  if (stored) {
+    setTrendContext(JSON.parse(stored));
+    sessionStorage.removeItem('trendContext');
+  }
+}, []);
+
+// ContentGenerationForm에 전달
+<ContentGenerationForm
+  trendContext={trendContext}
+  onSuccess={...}
+/>
+
+// ContentGenerationForm.tsx - API 요청에 포함
+const requestData = trendContext
+  ? { ...data, trendContext }
+  : data;
+
+await fetch('/api/content/generate', {
+  body: JSON.stringify(requestData),
+});
+```
+
+**선택 이유:**
+
+1. **더 나은 UX**
+   - 사용자는 브랜드와 톤앤매너만 선택하면 됨
+   - "트렌드 분석 결과를 반영하여 콘텐츠를 생성합니다" 안내 메시지로 명확한 피드백
+   - 폼 필드를 수동으로 수정할 필요 없음
+
+2. **AI에게 더 풍부한 컨텍스트 제공**
+   ```typescript
+   // trendContext에 포함되는 데이터:
+   {
+     id: string;
+     keyword: string;
+     platform: string;
+     country?: string;
+     format_type?: string;           // 콘텐츠 포맷 (Challenge, Recipe, ...)
+     hook_pattern?: string;           // 후킹 패턴 분석 결과
+     visual_pattern?: string;         // 비주얼 패턴 분석 결과
+     music_pattern?: string;          // 음악 패턴 분석 결과
+     viral_score?: number;            // 바이럴 점수 (0-100)
+     samyang_relevance?: number;      // 삼양 연관성 (0-100)
+     analysis_data?: Record<string, unknown>; // 상세 분석 데이터
+   }
+   ```
+
+3. **AI 프롬프트 개선**
+   ```typescript
+   // src/lib/ai/agents/content-generator.ts
+   if (input.trendContext) {
+     trendInfo = `
+   **트렌드 분석 정보**:
+   - 트렌드 키워드: ${input.trendContext.keyword}
+   - 플랫폼: ${input.trendContext.platform}
+   - 후킹 패턴: ${input.trendContext.hook_pattern}
+   - 비주얼 패턴: ${input.trendContext.visual_pattern}
+   - 음악 패턴: ${input.trendContext.music_pattern}
+   - 바이럴 점수: ${input.trendContext.viral_score}/100
+   - 삼양 연관성: ${input.trendContext.samyang_relevance}/100
+
+   위 트렌드 분석 결과를 반영하여, 특히 후킹 패턴, 비주얼 패턴, 음악 패턴을 활용한 콘텐츠를 제안해주세요.
+     `;
+   }
+   ```
+
+**기술 구현:**
+
+1. **API 스키마 업데이트**
+   ```typescript
+   // src/app/api/content/generate/route.ts
+   const TrendContextSchema = z.object({
+     id: z.string(),
+     keyword: z.string(),
+     platform: z.string(),
+     // ... 모든 트렌드 필드
+   });
+
+   const GenerateContentRequestSchema = z.object({
+     brandCategory: z.enum([...]),
+     tone: z.enum([...]),
+     targetCountry: z.enum([...]),
+     trendContext: TrendContextSchema.optional(), // 전체 컨텍스트
+     // 하위 호환성을 위해 기존 필드 유지
+     trendKeyword: z.string().optional(),
+     trendDescription: z.string().optional(),
+   });
+   ```
+
+2. **하위 호환성 유지**
+   - 기존 `trendKeyword`, `trendDescription` 필드는 그대로 유지
+   - `trendContext`가 있으면 우선 사용, 없으면 기존 방식 사용
+   - 기존 코드가 영향받지 않도록 보장
+
+**사용자 플로우:**
+
+1. 사용자가 트렌드 분석 카드에서 "아이디어 생성" 버튼 클릭
+2. 콘텐츠 생성 페이지로 이동하면 파란색 안내 박스 표시:
+   ```
+   트렌드 기반 아이디어 생성
+   "{keyword}" 트렌드 분석 결과를 반영하여 콘텐츠 아이디어를 생성해드립니다.
+   브랜드와 톤앤매너를 선택하고 생성 버튼을 눌러주세요.
+   ```
+3. 사용자는 브랜드 카테고리와 톤앤매너만 선택
+4. "아이디어 생성 (3개)" 버튼 클릭
+5. AI가 트렌드 분석 결과를 모두 활용하여 콘텐츠 아이디어 생성
+
+**적용 파일:**
+- `src/app/(dashboard)/trends/page.tsx` - handleGenerateIdea 함수
+- `src/app/(dashboard)/content/page.tsx` - trendContext 상태 관리
+- `src/components/content/ContentGenerationForm.tsx` - trendContext prop 및 API 요청
+- `src/app/api/content/generate/route.ts` - trendContext 스키마 및 처리
+- `src/lib/ai/agents/content-generator.ts` - 트렌드 컨텍스트를 활용한 프롬프트 생성
+
+**베스트 프랙티스:**
+1. **sessionStorage 사용**
+   - 페이지 간 임시 데이터 전달에 적합
+   - 사용 후 즉시 삭제하여 메모리 관리
+
+2. **풍부한 컨텍스트 전달**
+   - 폼 필드 자동 채우기보다 AI에게 전체 컨텍스트 제공
+   - 사용자는 핵심 선택만 하고, 나머지는 AI가 자동 처리
+
+3. **하위 호환성 유지**
+   - 새 기능 추가 시 기존 코드 영향 최소화
+   - 점진적 마이그레이션 가능
+
+**완료 일시:** 2025-12-15
+**담당자:** AI Agent
+**상태:** ✅ 구현 완료
+
+---
+
 ## 다음 단계
 
 이 문서는 프로젝트 진행 중 발견되는 이슈들을 계속 추가할 예정입니다.

@@ -429,15 +429,12 @@ export function CreatorDetailModal({
         </div>
 
         {/* 액션 버튼 */}
-        <div className="flex gap-3 border-t pt-4">
-          <Button variant="outline" className="flex-1" onClick={onClose}>
-            닫기
-          </Button>
+        <div className="border-t pt-4">
           <a
             href={creator.profile_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1"
+            className="block"
           >
             <Button className="w-full bg-blue-600 hover:bg-blue-700">
               프로필 방문

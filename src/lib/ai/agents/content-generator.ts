@@ -62,9 +62,27 @@ export const ContentIdeaSchema = z.object({
 
 export type ContentIdea = z.infer<typeof ContentIdeaSchema>;
 
+// 트렌드 컨텍스트 인터페이스
+export interface TrendContext {
+  id: string;
+  keyword: string;
+  platform: string;
+  country?: string;
+  format_type?: string;
+  hook_pattern?: string | null;
+  visual_pattern?: string | null;
+  music_pattern?: string | null;
+  viral_score?: number | null;
+  samyang_relevance?: number | null;
+  analysis_data?: Record<string, unknown> | null;
+}
+
 // 콘텐츠 생성 입력 인터페이스
 export interface GenerateContentIdeaInput {
-  // 트렌드 정보
+  // 트렌드 정보 (전체 컨텍스트)
+  trendContext?: TrendContext;
+
+  // 하위 호환성을 위한 기존 필드
   trendKeyword?: string;
   trendDescription?: string;
 
@@ -100,6 +118,33 @@ export async function generateContentIdea(
     // 시스템 프롬프트 로드
     const systemPrompt = await loadPrompt('content-generator');
 
+    // 트렌드 정보 구성 (trendContext가 있으면 상세 정보 포함)
+    let trendInfo = '';
+    if (input.trendContext) {
+      trendInfo = `
+**트렌드 분석 정보**:
+- 트렌드 키워드: ${input.trendContext.keyword}
+- 플랫폼: ${input.trendContext.platform}
+${input.trendContext.country ? `- 국가: ${input.trendContext.country}` : ''}
+${input.trendContext.format_type ? `- 콘텐츠 포맷: ${input.trendContext.format_type}` : ''}
+${input.trendContext.hook_pattern ? `- 후킹 패턴: ${input.trendContext.hook_pattern}` : ''}
+${input.trendContext.visual_pattern ? `- 비주얼 패턴: ${input.trendContext.visual_pattern}` : ''}
+${input.trendContext.music_pattern ? `- 음악 패턴: ${input.trendContext.music_pattern}` : ''}
+${input.trendContext.viral_score ? `- 바이럴 점수: ${input.trendContext.viral_score}/100` : ''}
+${input.trendContext.samyang_relevance ? `- 삼양 연관성: ${input.trendContext.samyang_relevance}/100` : ''}
+${input.trendContext.analysis_data ? `- 상세 분석: ${JSON.stringify(input.trendContext.analysis_data, null, 2)}` : ''}
+
+위 트렌드 분석 결과를 반영하여, 특히 후킹 패턴, 비주얼 패턴, 음악 패턴을 활용한 콘텐츠를 제안해주세요.
+`.trim();
+    } else if (input.trendKeyword || input.trendDescription) {
+      // 하위 호환성: 기존 방식
+      trendInfo = `
+**트렌드 정보**:
+${input.trendKeyword ? `- 트렌드 키워드: ${input.trendKeyword}` : ''}
+${input.trendDescription ? `- 트렌드 설명: ${input.trendDescription}` : ''}
+`.trim();
+    }
+
     // 사용자 프롬프트 구성
     const userPrompt = `
 다음 조건에 맞는 숏폼 콘텐츠 아이디어를 생성해주세요:
@@ -110,9 +155,7 @@ export async function generateContentIdea(
 - 타겟 국가: ${input.targetCountry}
 ${input.preferredPlatform ? `- 선호 플랫폼: ${input.preferredPlatform}` : ''}
 
-**트렌드 정보**:
-${input.trendKeyword ? `- 트렌드 키워드: ${input.trendKeyword}` : ''}
-${input.trendDescription ? `- 트렌드 설명: ${input.trendDescription}` : ''}
+${trendInfo}
 
 ${input.additionalRequirements ? `**추가 요구사항**:\n${input.additionalRequirements}` : ''}
 

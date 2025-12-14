@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +35,7 @@ export default function TrendsPage() {
   const { user } = useAuthStore();
   const currentUserId = user?.id;
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
@@ -105,8 +107,11 @@ export default function TrendsPage() {
   };
 
   const handleGenerateIdea = (trend: Trend) => {
-    console.log('Generate idea:', trend);
-    // TODO: 아이디어 생성 다이얼로그 열기
+    // 트렌드 전체 데이터를 sessionStorage에 저장
+    sessionStorage.setItem('trendContext', JSON.stringify(trend));
+
+    // 콘텐츠 생성 페이지로 이동
+    router.push('/content');
   };
 
   const handleDelete = async (trend: Trend) => {

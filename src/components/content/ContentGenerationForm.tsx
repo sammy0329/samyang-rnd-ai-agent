@@ -40,16 +40,32 @@ interface ContentIdea {
   created_by: string | null;
 }
 
+interface TrendContext {
+  id: string;
+  keyword: string;
+  platform: string;
+  country?: string;
+  format_type?: string;
+  hook_pattern?: string | null;
+  visual_pattern?: string | null;
+  music_pattern?: string | null;
+  viral_score?: number | null;
+  samyang_relevance?: number | null;
+  analysis_data?: Record<string, unknown> | null;
+}
+
 interface ContentGenerationFormProps {
   onSuccess: (ideas: ContentIdea[]) => void;
   onError?: (error: string) => void;
   onLoadingChange?: (isLoading: boolean) => void;
+  trendContext?: TrendContext | null;
 }
 
 export function ContentGenerationForm({
   onSuccess,
   onError,
   onLoadingChange,
+  trendContext,
 }: ContentGenerationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -69,12 +85,17 @@ export function ContentGenerationForm({
     onLoadingChange?.(true);
 
     try {
+      // 트렌드 컨텍스트가 있으면 함께 전달
+      const requestData = trendContext
+        ? { ...data, trendContext }
+        : data;
+
       const response = await fetch('/api/content/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(requestData),
       });
 
       const result = await response.json();
@@ -105,6 +126,37 @@ export function ContentGenerationForm({
       <h2 className="mb-4 text-lg font-semibold text-gray-900">
         콘텐츠 아이디어 생성
       </h2>
+
+      {/* 트렌드 기반 생성 안내 */}
+      {trendContext && (
+        <div className="mb-4 rounded-md bg-blue-50 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 text-blue-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-blue-800">
+                트렌드 기반 아이디어 생성
+              </p>
+              <p className="mt-1 text-sm text-blue-700">
+                "{trendContext.keyword}" 트렌드 분석 결과를 반영하여 콘텐츠 아이디어를 생성해드립니다.
+                <br />
+                브랜드와 톤앤매너를 선택하고 생성 버튼을 눌러주세요.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* 브랜드 카테고리 선택 */}
