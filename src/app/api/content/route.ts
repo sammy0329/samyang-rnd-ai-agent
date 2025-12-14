@@ -47,8 +47,8 @@ export async function GET(request: NextRequest) {
     };
 
     // 3. 사용자 세션 확인
-    const { data: session } = await getServerSession();
-    const userId = session?.id || null;
+    const session = await getServerSession();
+    const userId = session?.data?.id || null;
 
     // showAll 파라미터 (기본값: false - 사용자별 데이터만 표시)
     const showAll = searchParams.get('showAll') === 'true';
