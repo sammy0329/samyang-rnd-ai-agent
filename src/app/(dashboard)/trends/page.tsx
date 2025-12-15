@@ -89,9 +89,9 @@ export default function TrendsPage() {
   const trends = data?.trends || [];
   const totalCount = data?.total || 0;
 
-  const handleAnalysisSuccess = (data: Trend) => {
+  const handleAnalysisSuccess = (data: Record<string, unknown>) => {
     console.log('Analysis success:', data);
-    setAnalysisResult(data);
+    setAnalysisResult(data as unknown as Trend);
     setIsDialogOpen(false);
     // 트렌드 목록 새로고침
     refetch();

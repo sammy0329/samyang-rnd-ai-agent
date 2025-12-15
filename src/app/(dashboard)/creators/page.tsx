@@ -45,7 +45,7 @@ export default function CreatorsPage() {
     platform: '' as '' | 'youtube' | 'tiktok' | 'instagram',
     content_category: '',
     minBrandFitScore: undefined as number | undefined,
-    sortBy: 'brand_fit_score' as const,
+    sortBy: 'brand_fit_score' as 'brand_fit_score' | 'follower_count' | 'engagement_rate' | 'created_at',
     sortOrder: 'desc' as const,
     limit: 50,
   });
@@ -77,8 +77,8 @@ export default function CreatorsPage() {
     }));
   };
 
-  const handleMatchSuccess = (result: Creator) => {
-    setMatchResult(result);
+  const handleMatchSuccess = (result: Record<string, unknown>) => {
+    setMatchResult(result as unknown as Creator);
     setIsDialogOpen(false);
     refetch();
   };

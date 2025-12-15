@@ -192,7 +192,7 @@ export function CreatorDetailModal({
                   <h4 className="mb-3 font-medium text-gray-900">📊 정량 평가</h4>
                   <div className="space-y-2">
                     {Object.entries(
-                      (creator.analysis_data as AnalysisData).quantitative_scores
+                      (creator.analysis_data as AnalysisData).quantitative_scores!
                     ).map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">
@@ -217,7 +217,7 @@ export function CreatorDetailModal({
                   <h4 className="mb-3 font-medium text-gray-900">✨ 정성 평가</h4>
                   <div className="space-y-2">
                     {Object.entries(
-                      (creator.analysis_data as AnalysisData).qualitative_scores
+                      (creator.analysis_data as AnalysisData).qualitative_scores!
                     ).map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">
@@ -242,7 +242,7 @@ export function CreatorDetailModal({
                   <div className="rounded-lg border bg-green-50 p-4">
                     <h4 className="mb-2 font-medium text-green-900">💪 강점</h4>
                     <ul className="space-y-1">
-                      {(creator.analysis_data as AnalysisData).strengths.map(
+                      {(creator.analysis_data as AnalysisData).strengths!.map(
                         (strength: string, index: number) => (
                           <li
                             key={index}
@@ -263,7 +263,7 @@ export function CreatorDetailModal({
                   <div className="rounded-lg border bg-orange-50 p-4">
                     <h4 className="mb-2 font-medium text-orange-900">⚠️ 약점</h4>
                     <ul className="space-y-1">
-                      {(creator.analysis_data as AnalysisData).weaknesses.map(
+                      {(creator.analysis_data as AnalysisData).weaknesses!.map(
                         (weakness: string, index: number) => (
                           <li
                             key={index}
@@ -308,7 +308,7 @@ export function CreatorDetailModal({
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-3 font-medium text-gray-900">🍜 추천 제품</h4>
                     <div className="flex flex-wrap gap-2">
-                      {(creator.analysis_data as AnalysisData).recommended_products.map(
+                      {(creator.analysis_data as AnalysisData).recommended_products!.map(
                         (product: string, index: number) => (
                           <span
                             key={index}
@@ -355,7 +355,7 @@ export function CreatorDetailModal({
                           콘텐츠 제안
                         </p>
                         <ul className="space-y-1">
-                          {(creator.collaboration_history as CollaborationHistory).content_suggestions.map(
+                          {(creator.collaboration_history as CollaborationHistory).content_suggestions!.map(
                             (suggestion: string, index: number) => (
                               <li
                                 key={index}
@@ -420,7 +420,7 @@ export function CreatorDetailModal({
                         리스크 요인
                       </p>
                       <ul className="space-y-1">
-                        {(creator.risk_factors as RiskFactors).factors.map(
+                        {(creator.risk_factors as RiskFactors).factors!.map(
                           (factor: string, index: number) => (
                             <li
                               key={index}
@@ -439,7 +439,7 @@ export function CreatorDetailModal({
                     <div>
                       <p className="mb-2 text-sm font-medium text-gray-700">완화 방안</p>
                       <ul className="space-y-1">
-                        {(creator.risk_factors as RiskFactors).mitigation.map(
+                        {(creator.risk_factors as RiskFactors).mitigation!.map(
                           (mitigation: string, index: number) => (
                             <li
                               key={index}

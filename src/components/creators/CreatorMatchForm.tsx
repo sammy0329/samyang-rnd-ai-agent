@@ -27,17 +27,9 @@ const creatorMatchFormSchema = z.object({
 
 type CreatorMatchFormData = z.infer<typeof creatorMatchFormSchema>;
 
-// Result type from the creator match API
-interface MatchResult {
-  id: string;
-  username: string;
-  platform: string;
-  brand_fit_score?: number;
-  [key: string]: unknown;
-}
-
+// Use Record<string, unknown> for flexible API response
 interface CreatorMatchFormProps {
-  onSuccess?: (result: MatchResult) => void;
+  onSuccess?: (result: Record<string, unknown>) => void;
   onCancel?: () => void;
 }
 

@@ -253,7 +253,7 @@ export function TrendDetailModal({
                       ✨ 핵심 성공 요인
                     </h4>
                     <ul className="space-y-1">
-                      {(trend.analysis_data as TrendAnalysisData).key_success_factors.map(
+                      {(trend.analysis_data as TrendAnalysisData).key_success_factors!.map(
                         (factor: string, index: number) => (
                           <li
                             key={index}
@@ -276,7 +276,7 @@ export function TrendDetailModal({
                       ⚠️ 잠재적 리스크
                     </h4>
                     <ul className="space-y-1">
-                      {(trend.analysis_data as TrendAnalysisData).risks.map(
+                      {(trend.analysis_data as TrendAnalysisData).risks!.map(
                         (risk: string, index: number) => (
                           <li
                             key={index}
@@ -299,7 +299,7 @@ export function TrendDetailModal({
                       🍜 추천 제품
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {(trend.analysis_data as TrendAnalysisData).recommended_products.map(
+                      {(trend.analysis_data as TrendAnalysisData).recommended_products!.map(
                         (product: string, index: number) => (
                           <span
                             key={index}
@@ -322,13 +322,13 @@ export function TrendDetailModal({
               {/* 수집된 동영상 */}
               {(trend.analysis_data as TrendAnalysisData).collected_videos &&
                 Array.isArray((trend.analysis_data as TrendAnalysisData).collected_videos) &&
-                (trend.analysis_data as TrendAnalysisData).collected_videos.length > 0 && (
+                (trend.analysis_data as TrendAnalysisData).collected_videos!.length > 0 && (
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-3 font-medium text-gray-900">
-                      🎬 참고 영상 (상위 {(trend.analysis_data as TrendAnalysisData).collected_videos.length}개)
+                      🎬 참고 영상 (상위 {(trend.analysis_data as TrendAnalysisData).collected_videos!.length}개)
                     </h4>
                     <div className="space-y-2">
-                      {(trend.analysis_data as TrendAnalysisData).collected_videos.map(
+                      {(trend.analysis_data as TrendAnalysisData).collected_videos!.map(
                         (
                           video: { title: string; url: string; viewCount: number },
                           index: number

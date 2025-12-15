@@ -305,13 +305,13 @@ export function ReportDetailModal({
                         <div className="flex items-center gap-1.5">
                           <span className="text-xs text-gray-600">브랜드 적합도</span>
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${
-                            creator.brandFitScore >= 80
+                            (creator.brandFitScore ?? 0) >= 80
                               ? 'bg-green-100 text-green-700'
-                              : creator.brandFitScore >= 60
+                              : (creator.brandFitScore ?? 0) >= 60
                               ? 'bg-orange-100 text-orange-700'
                               : 'bg-gray-100 text-gray-700'
                           }`}>
-                            {creator.brandFitScore}
+                            {creator.brandFitScore ?? 0}
                           </span>
                         </div>
                         <div className="flex items-center gap-1.5">
