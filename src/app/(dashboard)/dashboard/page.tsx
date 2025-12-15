@@ -22,6 +22,11 @@ const RecommendedCreatorsWidget = dynamic(
   { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
 );
 
+const RecentReportsWidget = dynamic(
+  () => import('@/components/dashboard/RecentReportsWidget').then((mod) => ({ default: mod.RecentReportsWidget })),
+  { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
+);
+
 const ApiUsageWidget = dynamic(
   () => import('@/components/dashboard/ApiUsageWidget').then((mod) => ({ default: mod.ApiUsageWidget })),
   { ssr: false, loading: () => <Card className="h-64 animate-pulse bg-gray-100" /> }
@@ -143,8 +148,13 @@ export default function DashboardPage() {
         {/* 오른쪽 컬럼 */}
         <div className="space-y-6">
           <RecentIdeasWidget showAll={showAll} />
-          <ApiUsageWidget />
+          <RecentReportsWidget showAll={showAll} />
         </div>
+      </div>
+
+      {/* API 사용량 위젯 - 전체 너비 */}
+      <div className="mt-6">
+        <ApiUsageWidget />
       </div>
     </div>
   );
