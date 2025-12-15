@@ -2107,16 +2107,17 @@ g
 
 **담당**: Developer | **우선순위**: P1
 
-#### Task 10.2.1: GitHub Actions 워크플로우 설정 ⬜
+#### Task 10.2.1: GitHub Actions 워크플로우 설정 ✅
 
-- [ ] `.github/workflows/deploy.yml` 생성
-- [ ] Lint & Type check 단계
-- [ ] Build 단계
-- [ ] 자동 배포 설정 (Vercel)
-- [ ] PR 미리보기 배포
+- [x] `.github/workflows/ci.yml` 생성
+- [x] Lint & Type check 단계
+- [x] Build 단계
+- [x] 자동 배포 설정 (Vercel 연동)
+- [x] PR 미리보기 배포 (Vercel Preview)
 
 **예상 시간**: 2시간
 **완료 조건**: CI/CD 작동 확인
+**완료 일시**: 2025-12-15
 
 ---
 
