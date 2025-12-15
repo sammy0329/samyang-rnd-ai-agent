@@ -329,10 +329,7 @@ export function ContentIdeaDetailModal({
           )}
 
           {/* 액션 버튼 */}
-          <div className="flex justify-end gap-2 border-t pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              닫기
-            </Button>
+          <div className="flex justify-end border-t pt-4">
             <Button className="bg-blue-600 hover:bg-blue-700">
               촬영 가이드 다운로드
             </Button>
