@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,13 +9,14 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import type { Report } from '@/hooks/useReports';
-import { TrendingUp, Users, Lightbulb, BarChart3, Globe, Award } from 'lucide-react';
+import { exportReport } from '@/hooks/useReports';
+import { TrendingUp, Users, Lightbulb, BarChart3, Globe, Award, FileJson, FileText } from 'lucide-react';
 
 interface ReportDetailModalProps {
   report: Report | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onDownload: () => void;
+  onDownload?: () => void; // Deprecated, kept for backwards compatibility
 }
 
 const REPORT_TYPE_LABELS: Record<string, string> = {
@@ -54,12 +56,25 @@ export function ReportDetailModal({
   report,
   open,
   onOpenChange,
-  onDownload,
 }: ReportDetailModalProps) {
+  const [isExporting, setIsExporting] = useState<'json' | 'pdf' | null>(null);
+
   if (!report) return null;
 
   const content = report.content as any;
   const typeLabel = REPORT_TYPE_LABELS[report.type] || report.type;
+
+  const handleExport = async (format: 'json' | 'pdf') => {
+    if (!report) return;
+    setIsExporting(format);
+    try {
+      await exportReport(report.id, format);
+    } catch (error) {
+      console.error('Export failed:', error);
+    } finally {
+      setIsExporting(null);
+    }
+  };
 
   // Daily Trend Report View
   const renderDailyTrendReport = () => {
@@ -411,11 +426,21 @@ export function ReportDetailModal({
 
           {/* 액션 버튼 */}
           <div className="flex justify-end gap-2 border-t pt-4">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              닫기
+            <Button
+              variant="outline"
+              onClick={() => handleExport('json')}
+              disabled={isExporting !== null}
+            >
+              <FileJson className="mr-2 h-4 w-4" />
+              {isExporting === 'json' ? '다운로드 중...' : 'JSON'}
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={onDownload}>
-              JSON 다운로드
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => handleExport('pdf')}
+              disabled={isExporting !== null}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              {isExporting === 'pdf' ? '다운로드 중...' : 'PDF 다운로드'}
             </Button>
           </div>
         </div>

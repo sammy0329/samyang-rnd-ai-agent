@@ -128,3 +128,40 @@ export function useDeleteReport() {
     },
   });
 }
+
+/**
+ * Export a report as JSON or PDF
+ */
+export async function exportReport(
+  reportId: string,
+  format: 'json' | 'pdf' = 'json'
+): Promise<void> {
+  const response = await fetch('/api/reports/export', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ reportId, format }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to export report');
+  }
+
+  // Get the blob and download
+  const blob = await response.blob();
+  const contentDisposition = response.headers.get('Content-Disposition');
+  const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+  const filename = filenameMatch?.[1] || `report.${format}`;
+
+  // Create download link
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}

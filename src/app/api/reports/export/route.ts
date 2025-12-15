@@ -1,17 +1,18 @@
 /**
  * 리포트 내보내기 API
  *
- * POST /api/reports/export - 리포트를 JSON 파일로 다운로드
+ * POST /api/reports/export - 리포트를 JSON 또는 PDF 파일로 다운로드
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getReportById } from '@/lib/db/queries/reports';
+import { generateReportPdf, generatePdfFilename } from '@/lib/reports/pdf-generator';
 
 // 요청 스키마
 const ExportReportSchema = z.object({
   reportId: z.string().uuid(),
-  format: z.enum(['json']).default('json'), // 향후 'pdf' 추가 가능
+  format: z.enum(['json', 'pdf']).default('json'),
 });
 
 /**
@@ -75,6 +76,20 @@ export async function POST(request: NextRequest) {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
+          'Content-Disposition': `attachment; filename="${filename}"`,
+        },
+      });
+    }
+
+    // PDF 형식으로 내보내기
+    if (format === 'pdf') {
+      const pdfArrayBuffer = generateReportPdf(report);
+      const filename = generatePdfFilename(report);
+
+      return new NextResponse(pdfArrayBuffer, {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/pdf',
           'Content-Disposition': `attachment; filename="${filename}"`,
         },
       });

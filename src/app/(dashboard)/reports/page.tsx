@@ -42,44 +42,6 @@ export default function ReportsPage() {
     setIsModalOpen(true);
   };
 
-  const handleDownloadReport = async (report: Report) => {
-    try {
-      const response = await fetch('/api/reports/export', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          reportId: report.id,
-          format: 'json',
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Download failed');
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${report.type}_${report.id.slice(0, 8)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Download error:', error);
-      alert('다운로드에 실패했습니다.');
-    }
-  };
-
-  const handleDownloadFromModal = () => {
-    if (selectedReport) {
-      handleDownloadReport(selectedReport);
-    }
-  };
-
   const handleDeleteReport = async (reportId: string) => {
     if (!confirm('정말 이 리포트를 삭제하시겠습니까?')) {
       return;
@@ -223,7 +185,6 @@ export default function ReportsPage() {
                 key={report.id}
                 report={report}
                 onView={() => handleViewReport(report)}
-                onDownload={() => handleDownloadReport(report)}
                 onDelete={() => handleDeleteReport(report.id)}
                 currentUserId={currentUserId}
               />
@@ -237,7 +198,6 @@ export default function ReportsPage() {
         report={selectedReport}
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
-        onDownload={handleDownloadFromModal}
       />
     </div>
   );
