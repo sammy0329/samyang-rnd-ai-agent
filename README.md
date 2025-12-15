@@ -82,6 +82,8 @@
 
 ### 1. 대시보드 (Dashboard)
 
+[![Dashboard Demo](https://img.youtube.com/vi/hmM5SWIaeX4/0.jpg)](https://youtu.be/hmM5SWIaeX4)
+
 - 오늘의 트렌드 Top 5 위젯 (바이럴 점수 + 삼양 연관성 점수 기준)
 - 최근 분석한 크리에이터 목록
 - 최근 생성한 콘텐츠 아이디어 목록
@@ -89,6 +91,8 @@
 - 실시간 API 사용량 통계 표시
 
 ### 2. 트렌드 분석 (Trends)
+
+[![Trends Demo](https://img.youtube.com/vi/eEYzu4aJsT8/0.jpg)](https://youtu.be/eEYzu4aJsT8)
 
 - 키워드, 플랫폼, 국가 기반 트렌드 수집
 - YouTube/TikTok/Instagram 영상 데이터 자동 수집
@@ -100,6 +104,8 @@
 - 트렌드 상세 모달 (AI 분석 결과, 타겟 오디언스, 성공 요인, 리스크, 추천 제품)
 
 ### 3. 크리에이터 매칭 (Creators)
+
+[![Creators Demo](https://img.youtube.com/vi/sbFUxfrviAw/0.jpg)](https://youtu.be/sbFUxfrviAw)
 
 - 크리에이터 프로필 입력 (사용자명, 플랫폼, 팔로워 수, 참여율, 콘텐츠 카테고리)
 - GPT-4o-mini 기반 브랜드 적합도 분석
@@ -115,6 +121,8 @@
 
 ### 4. 콘텐츠 아이디어 (Content Ideas)
 
+[![Content Ideas Demo](https://img.youtube.com/vi/gk_PTG4ZHl0/0.jpg)](https://youtu.be/gk_PTG4ZHl0)
+
 - 브랜드 카테고리 선택 (불닭, 삼양라면, 젤리)
 - 톤앤매너 선택 (재미, 귀여움, 도발적, 쿨)
 - 타겟 국가 선택 (한국, 미국, 일본)
@@ -125,6 +133,8 @@
 - 예상 성과 (조회수, 참여율, 바이럴 잠재력)
 
 ### 5. 리포트 (Reports)
+
+[![Reports Demo](https://img.youtube.com/vi/FYS_MB7_5ck/0.jpg)](https://youtu.be/FYS_MB7_5ck)
 
 - 리포트 타입 선택 (데일리 트렌드, 크리에이터 매칭, 콘텐츠 아이디어)
 - 원클릭 리포트 생성
