@@ -1,21 +1,37 @@
 'use client';
 
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
-import { useContentIdeas } from '@/hooks/useContentIdeas';
+import { useContentIdeas, ContentIdea } from '@/hooks/useContentIdeas';
 import Link from 'next/link';
 import { Lightbulb } from 'lucide-react';
+
+// Dynamic import for modal
+const ContentIdeaDetailModal = dynamic(
+  () => import('@/components/content/ContentIdeaDetailModal').then((mod) => ({ default: mod.ContentIdeaDetailModal })),
+  { ssr: false }
+);
 
 interface RecentIdeasWidgetProps {
   showAll?: boolean;
 }
 
 export function RecentIdeasWidget({ showAll = true }: RecentIdeasWidgetProps) {
+  const [selectedIdea, setSelectedIdea] = useState<ContentIdea | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading } = useContentIdeas({
     limit: 3,
     showAll,
   });
 
   const ideas = data?.data?.ideas || [];
+
+  const handleIdeaClick = (idea: ContentIdea) => {
+    setSelectedIdea(idea);
+    setIsModalOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -33,48 +49,57 @@ export function RecentIdeasWidget({ showAll = true }: RecentIdeasWidgetProps) {
   }
 
   return (
-    <Card className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-yellow-600" />
-          <h3 className="text-lg font-semibold text-gray-900">최근 아이디어</h3>
+    <>
+      <Card className="p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Lightbulb className="h-5 w-5 text-yellow-600" />
+            <h3 className="text-lg font-semibold text-gray-900">최근 아이디어</h3>
+          </div>
+          <Link
+            href="/content"
+            className="text-sm text-blue-600 hover:text-blue-700"
+          >
+            전체 보기
+          </Link>
         </div>
-        <Link
-          href="/content"
-          className="text-sm text-blue-600 hover:text-blue-700"
-        >
-          전체 보기
-        </Link>
-      </div>
 
-      {ideas.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-500">
-          생성된 아이디어가 없습니다
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {ideas.map((idea) => (
-            <Link
-              key={idea.id}
-              href="/content"
-              className="group flex items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50"
-            >
-              <div className="flex-1">
-                <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
-                  {idea.title}
-                </h4>
-                <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                  <span className="rounded-full bg-purple-100 px-2 py-0.5 text-purple-700">
-                    {idea.brand_category}
-                  </span>
-                  <span>{idea.tone}</span>
-                  <span>{idea.target_country}</span>
+        {ideas.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-500">
+            생성된 아이디어가 없습니다
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {ideas.map((idea) => (
+              <div
+                key={idea.id}
+                onClick={() => handleIdeaClick(idea)}
+                className="group flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 hover:border-yellow-300"
+              >
+                <div className="flex-1">
+                  <h4 className="text-sm font-medium text-gray-900 line-clamp-2 group-hover:text-yellow-600">
+                    {idea.title}
+                  </h4>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-purple-700">
+                      {idea.brand_category}
+                    </span>
+                    <span>{idea.tone}</span>
+                    <span>{idea.target_country}</span>
+                  </div>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </Card>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {/* Content Idea Detail Modal */}
+      <ContentIdeaDetailModal
+        idea={selectedIdea}
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+      />
+    </>
   );
 }

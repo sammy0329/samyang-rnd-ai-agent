@@ -1,15 +1,27 @@
 'use client';
 
+import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
 import { useCreators } from '@/hooks/useCreators';
+import type { Creator } from '@/types/creators';
 import Link from 'next/link';
 import { Users } from 'lucide-react';
+
+// Dynamic import for modal
+const CreatorDetailModal = dynamic(
+  () => import('@/components/creators/CreatorDetailModal').then((mod) => ({ default: mod.CreatorDetailModal })),
+  { ssr: false }
+);
 
 interface RecommendedCreatorsWidgetProps {
   showAll?: boolean;
 }
 
 export function RecommendedCreatorsWidget({ showAll = true }: RecommendedCreatorsWidgetProps) {
+  const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading } = useCreators({
     limit: 3,
     sortBy: 'brand_fit_score',
@@ -18,6 +30,11 @@ export function RecommendedCreatorsWidget({ showAll = true }: RecommendedCreator
   });
 
   const creators = data?.creators || [];
+
+  const handleCreatorClick = (creator: Creator) => {
+    setSelectedCreator(creator);
+    setIsModalOpen(true);
+  };
 
   if (isLoading) {
     return (
@@ -35,49 +52,59 @@ export function RecommendedCreatorsWidget({ showAll = true }: RecommendedCreator
   }
 
   return (
-    <Card className="p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-green-600" />
-          <h3 className="text-lg font-semibold text-gray-900">추천 크리에이터</h3>
+    <>
+      <Card className="p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-900">추천 크리에이터</h3>
+          </div>
+          <Link
+            href="/creators"
+            className="text-sm text-blue-600 hover:text-blue-700"
+          >
+            전체 보기
+          </Link>
         </div>
-        <Link
-          href="/creators"
-          className="text-sm text-blue-600 hover:text-blue-700"
-        >
-          전체 보기
-        </Link>
-      </div>
 
-      {creators.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-500">
-          크리에이터 데이터가 없습니다
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {creators.map((creator) => (
-            <div
-              key={creator.id}
-              className="group flex items-center gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white">
-                {creator.username.charAt(0).toUpperCase()}
-              </div>
-              <div className="flex-1">
-                <h4 className="text-sm font-medium text-gray-900">
-                  {creator.username}
-                </h4>
-                <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                  <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700">
-                    {creator.platform}
-                  </span>
-                  <span>적합도: {creator.brand_fit_score || 0}점</span>
+        {creators.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-500">
+            크리에이터 데이터가 없습니다
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {creators.map((creator) => (
+              <div
+                key={creator.id}
+                onClick={() => handleCreatorClick(creator)}
+                className="group flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 hover:border-green-300"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-sm font-semibold text-white">
+                  {creator.username.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-sm font-medium text-gray-900 group-hover:text-green-600">
+                    {creator.username}
+                  </h4>
+                  <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-green-700">
+                      {creator.platform}
+                    </span>
+                    <span>적합도: {creator.brand_fit_score || 0}점</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </Card>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {/* Creator Detail Modal */}
+      <CreatorDetailModal
+        creator={selectedCreator}
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 }
