@@ -71,6 +71,116 @@
 └───────────────┘       └─────────────────┘       └─────────────────┘
 ```
 
+### 데이터 흐름도 (Data Flow Diagram)
+
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ Client Layer"]
+        UI[React UI Components]
+        RQ[React Query Cache]
+    end
+
+    subgraph API["⚡ API Layer (Next.js)"]
+        Routes[API Routes]
+        Middleware[Rate Limit / Validation]
+    end
+
+    subgraph AI["🤖 AI Layer"]
+        TA[Trend Analyzer]
+        CM[Creator Matcher]
+        CG[Content Generator]
+    end
+
+    subgraph DB["💾 Database Layer"]
+        Supabase[(Supabase PostgreSQL)]
+        Redis[(Upstash Redis)]
+    end
+
+    subgraph External["🌐 External APIs"]
+        YouTube[YouTube Data API v3]
+        SerpAPI[SerpAPI]
+    end
+
+    %% Client to API
+    UI -->|HTTP Request| Routes
+    RQ -->|Cache Management| UI
+
+    %% API Processing
+    Routes --> Middleware
+    Middleware -->|Validated Request| AI
+
+    %% AI to External
+    TA -->|Video Search| YouTube
+    TA -.->|Fallback| SerpAPI
+
+    %% AI Processing
+    TA -->|GPT-4o-mini| OpenAI((OpenAI))
+    CM -->|GPT-4o-mini| OpenAI
+    CG -->|GPT-4o-mini| OpenAI
+
+    %% Data Storage
+    AI -->|Store Results| Supabase
+    AI -->|Log Usage| Supabase
+    Routes -->|Cache Check| Redis
+    Redis -->|Cached Data| Routes
+
+    %% Response Flow
+    Supabase -->|Query Results| Routes
+    Routes -->|JSON Response| RQ
+```
+
+### 시퀀스 다이어그램 (User → System → LLM)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as 👤 User
+    participant UI as 🖥️ React UI
+    participant RQ as 📦 React Query
+    participant API as ⚡ API Route
+    participant RL as 🚦 Rate Limiter
+    participant YT as 📺 YouTube API
+    participant AI as 🤖 AI Agent
+    participant LLM as 🧠 GPT-4o-mini
+    participant DB as 💾 Supabase
+
+    Note over U,DB: 트렌드 분석 요청 흐름
+
+    U->>UI: 키워드 입력 & 분석 요청
+    UI->>RQ: useMutation() 호출
+    RQ->>API: POST /api/trends/analyze
+
+    API->>RL: IP 기반 Rate Limit 체크
+    alt Rate Limit 초과
+        RL-->>API: 429 Too Many Requests
+        API-->>RQ: Error Response
+        RQ-->>UI: Error State
+        UI-->>U: 에러 메시지 표시
+    else Rate Limit 통과
+        RL-->>API: OK
+    end
+
+    API->>YT: 영상 검색 (keyword, country)
+    YT-->>API: 영상 메타데이터 (10개)
+
+    API->>AI: 수집된 데이터 전달
+    AI->>LLM: Structured Output 요청
+    Note right of LLM: System Prompt +<br/>Video Data +<br/>Brand Context
+
+    LLM-->>AI: 분석 결과 (JSON)
+    Note right of AI: - 바이럴 포맷 분석<br/>- 브랜드 연관성 점수<br/>- 추천 제품/타겟
+
+    AI->>DB: 분석 결과 저장 (trends 테이블)
+    AI->>DB: API 사용량 기록 (api_usage 테이블)
+    DB-->>AI: Insert 완료
+
+    AI-->>API: 분석 결과 반환
+    API-->>RQ: Success Response
+    RQ->>RQ: Cache Invalidation
+    RQ-->>UI: Data Update
+    UI-->>U: 분석 결과 카드 표시
+```
+
 ---
 
 ## 기술 흐름 (Technical Flow)
@@ -293,13 +403,13 @@ src/
 
 ### 주요 모듈 설명
 
-| 모듈 | 경로 | 역할 |
-|------|------|------|
-| **AI Agents** | `src/lib/ai/agents/` | GPT-4o-mini를 사용한 분석/생성 로직 |
-| **DB Queries** | `src/lib/db/queries/` | Supabase CRUD 함수 (RLS 고려) |
-| **API Clients** | `src/lib/api/` | YouTube API, SerpAPI 클라이언트 |
-| **Hooks** | `src/hooks/` | React Query 기반 데이터 페칭 |
-| **Components** | `src/components/` | UI 컴포넌트 (shadcn/ui 기반) |
+| 모듈            | 경로                  | 역할                                |
+| --------------- | --------------------- | ----------------------------------- |
+| **AI Agents**   | `src/lib/ai/agents/`  | GPT-4o-mini를 사용한 분석/생성 로직 |
+| **DB Queries**  | `src/lib/db/queries/` | Supabase CRUD 함수 (RLS 고려)       |
+| **API Clients** | `src/lib/api/`        | YouTube API, SerpAPI 클라이언트     |
+| **Hooks**       | `src/hooks/`          | React Query 기반 데이터 페칭        |
+| **Components**  | `src/components/`     | UI 컴포넌트 (shadcn/ui 기반)        |
 
 ---
 
@@ -364,12 +474,12 @@ import { trendAnalysisSchema } from './schemas';
 export async function analyzeTrend(input: TrendAnalysisInput) {
   const result = await generateObject({
     model: openai('gpt-4o-mini'),
-    schema: trendAnalysisSchema,  // Zod 스키마
+    schema: trendAnalysisSchema, // Zod 스키마
     system: TREND_ANALYSIS_SYSTEM_PROMPT,
     prompt: buildUserPrompt(input),
   });
 
-  return result.object;  // 타입 안전한 구조화된 응답
+  return result.object; // 타입 안전한 구조화된 응답
 }
 ```
 
@@ -408,25 +518,20 @@ prompts/
 
 ### Supabase 클라이언트 선택 가이드
 
-| 상황 | 사용할 클라이언트 | 이유 |
-|------|------------------|------|
+| 상황                 | 사용할 클라이언트              | 이유                     |
+| -------------------- | ------------------------------ | ------------------------ |
 | 사용자별 데이터 조회 | `createServerSupabaseClient()` | RLS 적용으로 자동 필터링 |
-| 시스템 통계 조회 | `createAdminClient()` | RLS 우회 필요 |
-| 시스템 데이터 생성 | `createAdminClient()` | 사용자 세션 없이 생성 |
+| 시스템 통계 조회     | `createAdminClient()`          | RLS 우회 필요            |
+| 시스템 데이터 생성   | `createAdminClient()`          | 사용자 세션 없이 생성    |
 
 ```typescript
 // 사용자 데이터 조회 (RLS 적용)
 const supabase = await createServerSupabaseClient();
-const { data } = await supabase
-  .from('trends')
-  .select('*')
-  .eq('created_by', userId);  // RLS가 자동으로 필터링
+const { data } = await supabase.from('trends').select('*').eq('created_by', userId); // RLS가 자동으로 필터링
 
 // 시스템 통계 조회 (RLS 우회)
 const adminClient = createAdminClient();
-const { data } = await adminClient
-  .from('api_usage')
-  .select('*');  // 모든 데이터 접근 가능
+const { data } = await adminClient.from('api_usage').select('*'); // 모든 데이터 접근 가능
 ```
 
 ### showAll 파라미터 동작
@@ -458,7 +563,7 @@ if (showAll) {
 useQuery({
   queryKey: ['apiUsage', 'quota'],
   queryFn: fetchApiQuota,
-  staleTime: 2 * 60 * 1000,  // 2분
+  staleTime: 2 * 60 * 1000, // 2분
 });
 ```
 
@@ -496,16 +601,16 @@ headers: {
 
 ## 관련 문서
 
-| 문서 | 설명 |
-|------|------|
-| [PRD.md](PRD.md) | 프로젝트 요구사항 및 문제 정의 |
-| [TechStack.md](TechStack.md) | 기술 스택 상세 및 비용 분석 |
-| [API.md](API.md) | API 엔드포인트 상세 문서 |
-| [Task.md](Task.md) | 개발 작업 계획 및 진행 상황 |
-| [TroubleShooting.md](TroubleShooting.md) | 문제 해결 가이드 |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | 배포 가이드 |
-| [YOUTUBE_API_SETUP.md](YOUTUBE_API_SETUP.md) | YouTube API 설정 가이드 |
-| [SERPAPI_SETUP.md](SERPAPI_SETUP.md) | SerpAPI 설정 가이드 |
+| 문서                                         | 설명                           |
+| -------------------------------------------- | ------------------------------ |
+| [PRD.md](PRD.md)                             | 프로젝트 요구사항 및 문제 정의 |
+| [TechStack.md](TechStack.md)                 | 기술 스택 상세 및 비용 분석    |
+| [API.md](API.md)                             | API 엔드포인트 상세 문서       |
+| [Task.md](Task.md)                           | 개발 작업 계획 및 진행 상황    |
+| [TroubleShooting.md](TroubleShooting.md)     | 문제 해결 가이드               |
+| [DEPLOYMENT.md](DEPLOYMENT.md)               | 배포 가이드                    |
+| [YOUTUBE_API_SETUP.md](YOUTUBE_API_SETUP.md) | YouTube API 설정 가이드        |
+| [SERPAPI_SETUP.md](SERPAPI_SETUP.md)         | SerpAPI 설정 가이드            |
 
 ---
 
@@ -515,17 +620,18 @@ headers: {
 
 ```bash
 # 필수
+YOUTUBE_API_KEY=
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+DEFAULT_AI_PROVIDER=
 OPENAI_API_KEY=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
-
-# 선택
-YOUTUBE_API_KEY=
-SERPAPI_API_KEY=
-DEV_DEFAULT_USER_ID=  # 개발 환경용
+LOG_LEVEL=
+NEXT_PUBLIC_SENTRY_ENABLED=
+SENTRY_ENVIRONMENT=
 ```
 
 ### 자주 사용하는 명령어
