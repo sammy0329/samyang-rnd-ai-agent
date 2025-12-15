@@ -337,6 +337,66 @@ function getDefaultProvider(): ProviderType {
 
 ---
 
+### API 사용량 통계 조회 시 데이터 0개 반환 문제
+
+**증상:**
+- 대시보드의 API 사용량 위젯에서 YouTube API, GPT API 사용량이 항상 0으로 표시
+- DB에는 데이터가 존재하지만 쿼리 결과가 빈 배열로 반환됨
+
+**원인:**
+`getServiceUsageStats()` 함수가 `createServerSupabaseClient()`를 사용하여 RLS 정책의 영향을 받음. `api_usage` 테이블에는 사용자별 조회 권한이 없어 데이터 접근이 차단됨.
+
+**디버깅 과정:**
+```typescript
+// 1. 쿼리 결과 확인 - 모든 패턴에서 0개 반환
+[getServiceUsageStats] aiResult: 0 records null
+[getServiceUsageStats] contentResult: 0 records null
+[getServiceUsageStats] creatorsResult: 0 records null
+
+// 2. 필터 없이 전체 조회 시도 - 여전히 0개
+[getServiceUsageStats] RAW DATA (no filter): 0 records
+[getServiceUsageStats] RAW DATA samples: []
+
+// 3. RLS가 원인임을 확인
+```
+
+**해결 방법:**
+
+시스템 전체 사용량 통계 조회에는 Admin Client 사용:
+
+```typescript
+// ❌ 문제 코드 - RLS에 의해 데이터 접근 차단
+export async function getServiceUsageStats(service: 'youtube' | 'gpt', ...) {
+  const supabase = await createServerSupabaseClient(); // RLS 적용
+  // ... 쿼리 결과: 0개
+}
+
+// ✅ 해결 코드 - Admin Client로 RLS 우회
+export async function getServiceUsageStats(service: 'youtube' | 'gpt', ...) {
+  // Admin Client 사용 (RLS 우회 - 시스템 전체 사용량 통계용)
+  const supabase = createAdminClient();
+  // ... 쿼리 결과: 정상 반환
+}
+```
+
+**적용 파일:**
+- `src/lib/db/queries/api-usage.ts` - `getServiceUsageStats()` 함수
+
+**관련 이슈:**
+- `createAPIUsage()`는 이미 `createAdminClient()`를 사용 중 (INSERT용)
+- 조회 함수도 동일하게 Admin Client 필요 (시스템 통계용)
+
+**주의사항:**
+- Admin Client는 RLS를 우회하므로 시스템 통계와 같은 특수 목적에만 사용
+- 사용자별 데이터 조회에는 여전히 `createServerSupabaseClient()` 사용 권장
+- `SUPABASE_SERVICE_ROLE_KEY` 환경 변수 필요
+
+**완료 일시:** 2025-12-15
+**담당자:** AI Agent
+**상태:** ✅ 해결됨
+
+---
+
 ## React Query 캐시 관련 이슈
 
 ### 삭제 후 토글 전환 시 즉시 반영 안되는 문제
