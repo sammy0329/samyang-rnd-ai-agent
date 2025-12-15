@@ -65,3 +65,48 @@ export function useApiUsageCombined(): UseQueryResult<import('@/types/api-usage'
     retry: 1,
   });
 }
+
+// API Quota Response type
+interface ApiQuotaServiceStats {
+  service: 'youtube' | 'gpt';
+  currentUsage: number;
+  maxLimit: number;
+  usagePercentage: number;
+  unit: string;
+  calls: number;
+}
+
+interface ApiQuotaResponse {
+  success: boolean;
+  data: {
+    youtube: ApiQuotaServiceStats;
+    gpt: ApiQuotaServiceStats;
+    updatedAt: string;
+  };
+}
+
+/**
+ * Fetch API quota statistics (YouTube & GPT daily limits)
+ */
+async function fetchApiQuota(): Promise<ApiQuotaResponse> {
+  const response = await fetch('/api/usage?type=quota');
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to fetch API quota');
+  }
+
+  return response.json();
+}
+
+/**
+ * React Query hook for API quota (YouTube & GPT usage vs limits)
+ */
+export function useApiQuota(): UseQueryResult<ApiQuotaResponse, Error> {
+  return useQuery({
+    queryKey: ['apiUsage', 'quota'],
+    queryFn: fetchApiQuota,
+    staleTime: 2 * 60 * 1000, // 2 minutes (more frequent updates for quota)
+    retry: 1,
+  });
+}

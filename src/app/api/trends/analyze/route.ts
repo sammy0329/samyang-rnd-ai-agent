@@ -222,15 +222,18 @@ export async function POST(request: NextRequest) {
     const savedTrend = createResult.data;
     logger.dbQuery('INSERT', 'trends', undefined, { id: savedTrend.id });
 
-    // 5. API 사용량 기록
+    // 5. API 사용량 기록 (실제 YouTube quota 포함)
     const duration = Date.now() - startTime;
+    const youtubeQuotaUsed = collectionResult.quotaUsed?.youtube || 0;
     try {
       await createAPIUsage({
         endpoint: '/api/trends/analyze',
         method: 'POST',
         status_code: 200,
         response_time_ms: duration,
+        tokens_used: youtubeQuotaUsed, // YouTube quota units를 tokens_used에 저장
       });
+      logger.info('API usage recorded', { youtubeQuotaUsed });
     } catch (error) {
       // API 사용량 기록 실패는 무시 (메인 플로우에 영향 없음)
       logger.warn('Failed to track API usage', { error: error instanceof Error ? error.message : String(error) });

@@ -17,6 +17,7 @@ import type {
 import {
   searchShorts as searchYouTubeShorts,
   searchTrendingShorts as searchYouTubeTrendingShorts,
+  searchVideosWithQuota,
 } from './youtube';
 import {
   searchTikTokVideos,
@@ -197,6 +198,9 @@ export async function collectTrends(
     }
   };
 
+  // Quota 추적 변수
+  let youtubeQuotaUsed = 0;
+
   // YouTube 데이터 수집
   if (shouldCollectPlatform('YouTube')) {
     try {
@@ -204,26 +208,22 @@ export async function collectTrends(
         `[TrendCollector] Collecting YouTube data for: ${keyword}${country ? ` (country: ${country}, language: ${languageCode || 'auto'})` : ''}`
       );
 
-      let youtubeVideos: SimplifiedYouTubeVideo[];
+      // searchVideosWithQuota를 사용해서 정확한 quota 추적
+      const youtubeResult = await searchVideosWithQuota({
+        keyword,
+        maxResults: dateFilter?.publishedAfter ? maxResults : maxResults * 2, // shorts 필터링을 위해 2배
+        videoDuration: 'short',
+        publishedAfter: dateFilter?.publishedAfter,
+        publishedBefore: dateFilter?.publishedBefore,
+        regionCode: country,
+        relevanceLanguage: languageCode,
+      });
 
-      if (dateFilter?.publishedAfter) {
-        // 날짜 필터가 있으면 searchVideos 사용 (더 많은 옵션)
-        const { searchVideos } = await import('./youtube');
-        youtubeVideos = await searchVideos({
-          keyword,
-          maxResults,
-          videoDuration: 'short',
-          publishedAfter: dateFilter.publishedAfter,
-          publishedBefore: dateFilter.publishedBefore,
-          regionCode: country,
-          relevanceLanguage: languageCode,
-        });
-      } else {
-        // 날짜 필터 없으면 searchShorts 사용
-        youtubeVideos = await searchYouTubeShorts(keyword, maxResults, country, languageCode);
-      }
+      // Quota 추적
+      youtubeQuotaUsed = youtubeResult.quotaUsed;
+      console.log(`[TrendCollector] YouTube API quota used: ${youtubeQuotaUsed} units`);
 
-      const normalized = youtubeVideos.map(normalizeYouTubeVideo);
+      const normalized = youtubeResult.data.map(normalizeYouTubeVideo);
       allVideos.push(...normalized);
 
       console.log(`[TrendCollector] Collected ${normalized.length} YouTube videos`);
@@ -305,6 +305,9 @@ export async function collectTrends(
     videos: dedupedVideos,
     breakdown,
     collectedAt: new Date().toISOString(),
+    quotaUsed: {
+      youtube: youtubeQuotaUsed,
+    },
   };
 
   if (errors.length > 0) {

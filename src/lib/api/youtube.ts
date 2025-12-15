@@ -26,6 +26,19 @@ const DEFAULT_MAX_RESULTS = 10;
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
+// YouTube API Quota Costs (공식 문서 기준)
+// https://developers.google.com/youtube/v3/determine_quota_cost
+export const YOUTUBE_QUOTA_COSTS = {
+  SEARCH_LIST: 100, // search.list는 100 units
+  VIDEOS_LIST: 1,   // videos.list는 1 unit (per request, not per video)
+} as const;
+
+// 결과 + Quota 비용을 함께 반환하는 타입
+export interface YouTubeResultWithQuota<T> {
+  data: T;
+  quotaUsed: number;
+}
+
 // API 키 가져오기
 function getAPIKey(): string {
   const apiKey = process.env.YOUTUBE_API_KEY;
@@ -113,19 +126,20 @@ function formatDuration(duration: string): string {
 }
 
 /**
- * 숏폼 동영상 검색
+ * 숏폼 동영상 검색 (quota 비용 포함)
  * @param filters 검색 필터 옵션
- * @returns 검색 결과 비디오 목록
+ * @returns 검색 결과 비디오 목록 + 사용된 quota
  */
-export async function searchVideos(
+export async function searchVideosWithQuota(
   filters: YouTubeSearchFilters
-): Promise<SimplifiedYouTubeVideo[]> {
+): Promise<YouTubeResultWithQuota<SimplifiedYouTubeVideo[]>> {
   const apiKey = getAPIKey();
   let lastError: Error | null = null;
+  let totalQuotaUsed = 0;
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      // 1. 비디오 검색
+      // 1. 비디오 검색 (100 units)
       const searchParams = new URLSearchParams({
         part: 'snippet',
         q: filters.keyword,
@@ -154,18 +168,22 @@ export async function searchVideos(
         YouTubeAPIResponse<YouTubeSearchResultItem>
       >(`${YOUTUBE_API_BASE_URL}/search?${searchParams.toString()}`);
 
+      // search.list 호출 비용 추가
+      totalQuotaUsed += YOUTUBE_QUOTA_COSTS.SEARCH_LIST;
+
       const videoIds = searchResponse.data.items.map(
         (item) => item.id.videoId
       );
 
       if (videoIds.length === 0) {
-        return [];
+        return { data: [], quotaUsed: totalQuotaUsed };
       }
 
-      // 2. 비디오 상세 정보 조회 (통계 포함)
-      const videos = await getVideoDetails(videoIds);
+      // 2. 비디오 상세 정보 조회 (1 unit per request)
+      const videosResult = await getVideoDetailsWithQuota(videoIds);
+      totalQuotaUsed += videosResult.quotaUsed;
 
-      return videos;
+      return { data: videosResult.data, quotaUsed: totalQuotaUsed };
     } catch (error) {
       lastError =
         error instanceof Error ? error : new Error('Unknown search error');
@@ -196,15 +214,27 @@ export async function searchVideos(
 }
 
 /**
- * 비디오 상세 정보 조회
- * @param videoIds 비디오 ID 배열 (최대 50개)
- * @returns 비디오 상세 정보 목록
+ * 숏폼 동영상 검색 (기존 호환성 유지)
+ * @param filters 검색 필터 옵션
+ * @returns 검색 결과 비디오 목록
  */
-export async function getVideoDetails(
-  videoIds: string[]
+export async function searchVideos(
+  filters: YouTubeSearchFilters
 ): Promise<SimplifiedYouTubeVideo[]> {
+  const result = await searchVideosWithQuota(filters);
+  return result.data;
+}
+
+/**
+ * 비디오 상세 정보 조회 (quota 비용 포함)
+ * @param videoIds 비디오 ID 배열 (최대 50개)
+ * @returns 비디오 상세 정보 목록 + 사용된 quota
+ */
+export async function getVideoDetailsWithQuota(
+  videoIds: string[]
+): Promise<YouTubeResultWithQuota<SimplifiedYouTubeVideo[]>> {
   if (videoIds.length === 0) {
-    return [];
+    return { data: [], quotaUsed: 0 };
   }
 
   const apiKey = getAPIKey();
@@ -244,7 +274,8 @@ export async function getVideoDetails(
         })
       );
 
-      return videos;
+      // videos.list는 요청당 1 unit (영상 개수와 무관)
+      return { data: videos, quotaUsed: YOUTUBE_QUOTA_COSTS.VIDEOS_LIST };
     } catch (error) {
       lastError =
         error instanceof Error
@@ -274,6 +305,18 @@ export async function getVideoDetails(
 
   // 모든 재시도 실패
   throw lastError || new Error('Failed to get video details after retries');
+}
+
+/**
+ * 비디오 상세 정보 조회 (기존 호환성 유지)
+ * @param videoIds 비디오 ID 배열 (최대 50개)
+ * @returns 비디오 상세 정보 목록
+ */
+export async function getVideoDetails(
+  videoIds: string[]
+): Promise<SimplifiedYouTubeVideo[]> {
+  const result = await getVideoDetailsWithQuota(videoIds);
+  return result.data;
 }
 
 /**

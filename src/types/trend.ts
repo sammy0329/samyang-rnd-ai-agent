@@ -66,6 +66,10 @@ export interface TrendCollectionResult {
     source: string;
     error: string;
   }>;
+  quotaUsed?: {
+    youtube?: number; // YouTube API quota units
+    serpapi?: number; // SerpAPI credits
+  };
 }
 
 // 중복 제거 옵션

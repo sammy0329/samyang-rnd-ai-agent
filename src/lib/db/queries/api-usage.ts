@@ -256,6 +256,67 @@ export async function getSystemUsageStats(
 }
 
 /**
+ * 서비스별 사용량 통계 (YouTube, GPT)
+ * YouTube: /api/trends/analyze 엔드포인트에 저장된 실제 quota 값 사용
+ * GPT: ai/* 엔드포인트의 토큰 사용량
+ */
+export async function getServiceUsageStats(
+  service: 'youtube' | 'gpt',
+  startDate?: string,
+  endDate?: string
+): Promise<{ data: { usage: number; calls: number } | null; error: Error | null }> {
+  try {
+    const supabase = await createServerSupabaseClient();
+    let query = supabase
+      .from('api_usage')
+      .select('endpoint, tokens_used, status_code');
+
+    // 서비스별 엔드포인트 필터링
+    if (service === 'youtube') {
+      // YouTube API는 trends/analyze 엔드포인트에서 사용
+      query = query.like('endpoint', '%trends/analyze%');
+    } else if (service === 'gpt') {
+      // GPT API는 ai/* 또는 content/generate 엔드포인트에서 사용
+      query = query.or('endpoint.like.ai/%,endpoint.like.%content/generate%');
+    }
+
+    if (startDate) {
+      query = query.gte('created_at', startDate);
+    }
+
+    if (endDate) {
+      query = query.lte('created_at', endDate);
+    }
+
+    // 성공한 요청만 카운트 (status_code 200-299)
+    query = query.gte('status_code', 200).lt('status_code', 300);
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error(`Error fetching ${service} usage stats:`, error);
+      return { data: null, error };
+    }
+
+    if (!data || data.length === 0) {
+      return { data: { usage: 0, calls: 0 }, error: null };
+    }
+
+    const calls = data.length;
+    // 실제 저장된 tokens_used 값 합계 (YouTube quota units 또는 GPT tokens)
+    const usage = data.reduce((sum, row) => sum + (row.tokens_used || 0), 0);
+
+    return { data: { usage, calls }, error: null };
+  } catch (error) {
+    console.error(`Unexpected error in getServiceUsageStats (${service}):`, error);
+    return {
+      data: null,
+      error: error instanceof Error ? error : new Error('Unknown error'),
+    };
+  }
+}
+
+/**
  * 엔드포인트별 사용량 통계
  */
 export async function getEndpointUsageStats(

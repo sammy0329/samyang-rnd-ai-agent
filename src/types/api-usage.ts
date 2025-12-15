@@ -79,3 +79,38 @@ export interface ApiUsageCombinedResponse {
     endDate: string;
   };
 }
+
+// API Service Types
+export type ApiServiceType = 'youtube' | 'gpt';
+
+// Service-specific usage stats
+export interface ServiceUsageStats {
+  service: ApiServiceType;
+  currentUsage: number;
+  maxLimit: number;
+  usagePercentage: number;
+  unit: string; // 'units' for YouTube, 'tokens' for GPT
+}
+
+export interface ApiQuotaStats {
+  youtube: ServiceUsageStats;
+  gpt: ServiceUsageStats;
+  updatedAt: string;
+}
+
+export interface ApiQuotaResponse {
+  success: boolean;
+  data: ApiQuotaStats;
+}
+
+// API Quota Limits (configurable)
+export const API_QUOTA_LIMITS = {
+  youtube: {
+    dailyQuota: 10000, // YouTube Data API v3 default daily quota (units)
+    unit: 'units',
+  },
+  gpt: {
+    dailyTokenLimit: 1000000, // 1M tokens per day (configurable)
+    unit: 'tokens',
+  },
+} as const;

@@ -9,7 +9,9 @@ import {
   getUserUsageStats,
   getSystemUsageStats,
   getAPIUsage,
+  getServiceUsageStats,
 } from '@/lib/db/queries/api-usage';
+import { API_QUOTA_LIMITS } from '@/types/api-usage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -55,6 +57,62 @@ export async function GET(request: NextRequest) {
         period: {
           startDate: startDate || 'all',
           endDate: endDate || 'now',
+        },
+      });
+    }
+
+    if (type === 'quota') {
+      // 오늘 날짜 기준으로 YouTube, GPT 사용량 조회
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayStart = today.toISOString();
+
+      const [youtubeResult, gptResult] = await Promise.all([
+        getServiceUsageStats('youtube', todayStart),
+        getServiceUsageStats('gpt', todayStart),
+      ]);
+
+      if (youtubeResult.error || gptResult.error) {
+        return NextResponse.json(
+          {
+            error:
+              youtubeResult.error?.message ||
+              gptResult.error?.message ||
+              'Failed to fetch quota stats',
+          },
+          { status: 500 }
+        );
+      }
+
+      const youtubeUsage = youtubeResult.data?.usage || 0;
+      const gptUsage = gptResult.data?.usage || 0;
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          youtube: {
+            service: 'youtube',
+            currentUsage: youtubeUsage,
+            maxLimit: API_QUOTA_LIMITS.youtube.dailyQuota,
+            usagePercentage: Math.min(
+              (youtubeUsage / API_QUOTA_LIMITS.youtube.dailyQuota) * 100,
+              100
+            ),
+            unit: API_QUOTA_LIMITS.youtube.unit,
+            calls: youtubeResult.data?.calls || 0,
+          },
+          gpt: {
+            service: 'gpt',
+            currentUsage: gptUsage,
+            maxLimit: API_QUOTA_LIMITS.gpt.dailyTokenLimit,
+            usagePercentage: Math.min(
+              (gptUsage / API_QUOTA_LIMITS.gpt.dailyTokenLimit) * 100,
+              100
+            ),
+            unit: API_QUOTA_LIMITS.gpt.unit,
+            calls: gptResult.data?.calls || 0,
+          },
+          updatedAt: new Date().toISOString(),
         },
       });
     }
