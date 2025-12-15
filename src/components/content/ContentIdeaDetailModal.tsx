@@ -161,7 +161,7 @@ export function ContentIdeaDetailModal({
               <div>
                 <span className="text-sm font-medium text-gray-700">훅 텍스트:</span>
                 <p className="mt-1 text-lg font-medium text-gray-900 italic">
-                  "{idea.hook_text}"
+                  &ldquo;{idea.hook_text}&rdquo;
                 </p>
               </div>
               {idea.hook_visual && (

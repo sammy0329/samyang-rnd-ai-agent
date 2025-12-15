@@ -38,7 +38,7 @@ export default function TrendsPage() {
   const router = useRouter();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [analysisResult, setAnalysisResult] = useState<Trend | null>(null);
   const [selectedTrend, setSelectedTrend] = useState<Trend | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
@@ -89,7 +89,7 @@ export default function TrendsPage() {
   const trends = data?.trends || [];
   const totalCount = data?.total || 0;
 
-  const handleAnalysisSuccess = (data: any) => {
+  const handleAnalysisSuccess = (data: Trend) => {
     console.log('Analysis success:', data);
     setAnalysisResult(data);
     setIsDialogOpen(false);
@@ -97,7 +97,7 @@ export default function TrendsPage() {
     refetch();
   };
 
-  const handleAnalysisError = (error: any) => {
+  const handleAnalysisError = (error: Error) => {
     console.error('Analysis error:', error);
   };
 
@@ -405,7 +405,7 @@ export default function TrendsPage() {
                 트렌드 분석을 시작하세요
               </h3>
               <p className="mt-2 text-sm text-gray-500">
-                상단의 "새 분석 시작" 버튼을 클릭하거나 필터를 사용하여 기존
+                상단의 &ldquo;새 분석 시작&rdquo; 버튼을 클릭하거나 필터를 사용하여 기존
                 분석 결과를 검색하세요.
               </p>
               <div className="mt-6">

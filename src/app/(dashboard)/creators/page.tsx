@@ -35,7 +35,7 @@ export default function CreatorsPage() {
   const queryClient = useQueryClient();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [matchResult, setMatchResult] = useState<any>(null);
+  const [matchResult, setMatchResult] = useState<Creator | null>(null);
   const [selectedCreator, setSelectedCreator] = useState<Creator | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
@@ -77,7 +77,7 @@ export default function CreatorsPage() {
     }));
   };
 
-  const handleMatchSuccess = (result: any) => {
+  const handleMatchSuccess = (result: Creator) => {
     setMatchResult(result);
     setIsDialogOpen(false);
     refetch();
@@ -310,7 +310,7 @@ export default function CreatorsPage() {
                 onChange={(e) =>
                   setFilters((prev) => ({
                     ...prev,
-                    sortBy: e.target.value as any,
+                    sortBy: e.target.value as 'brand_fit_score' | 'follower_count' | 'engagement_rate' | 'created_at',
                   }))
                 }
               >
@@ -383,7 +383,7 @@ export default function CreatorsPage() {
                 크리에이터 매칭을 시작하세요
               </h3>
               <p className="mt-2 text-sm text-gray-500">
-                상단의 "새 크리에이터 매칭" 버튼을 클릭하거나 필터를 사용하여 기존
+                상단의 &ldquo;새 크리에이터 매칭&rdquo; 버튼을 클릭하거나 필터를 사용하여 기존
                 매칭 결과를 검색하세요.
               </p>
               <div className="mt-6">

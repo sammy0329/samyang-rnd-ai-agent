@@ -13,6 +13,15 @@ import type { Report } from '@/hooks/useReports';
 import { exportReport } from '@/hooks/useReports';
 import { FileJson, FileText } from 'lucide-react';
 
+// Report content type for preview
+interface ReportContent {
+  date?: string;
+  totalTrends?: number;
+  totalCreators?: number;
+  totalIdeas?: number;
+  summary?: Record<string, unknown>;
+}
+
 interface ReportCardProps {
   report: Report;
   onView: () => void;
@@ -35,7 +44,7 @@ export function ReportCard({ report, onView, onDelete }: ReportCardProps) {
   const createdDate = new Date(report.created_at).toLocaleDateString('ko-KR');
 
   // 미리보기 데이터 추출
-  const content = report.content as any;
+  const content = report.content as ReportContent;
   const preview = {
     date: content.date || '날짜 없음',
     total: content.totalTrends || content.totalCreators || content.totalIdeas || 0,

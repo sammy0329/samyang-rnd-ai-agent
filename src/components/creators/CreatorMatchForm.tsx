@@ -27,8 +27,17 @@ const creatorMatchFormSchema = z.object({
 
 type CreatorMatchFormData = z.infer<typeof creatorMatchFormSchema>;
 
+// Result type from the creator match API
+interface MatchResult {
+  id: string;
+  username: string;
+  platform: string;
+  brand_fit_score?: number;
+  [key: string]: unknown;
+}
+
 interface CreatorMatchFormProps {
-  onSuccess?: (result: any) => void;
+  onSuccess?: (result: MatchResult) => void;
   onCancel?: () => void;
 }
 
@@ -95,11 +104,15 @@ export function CreatorMatchForm({ onSuccess, onCancel }: CreatorMatchFormProps)
       } else {
         setError('크리에이터 매칭에 실패했습니다.');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Creator match error:', err);
-      setError(
-        err.response?.data?.error || '크리에이터 매칭 중 오류가 발생했습니다.'
-      );
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.error || '크리에이터 매칭 중 오류가 발생했습니다.'
+        );
+      } else {
+        setError('크리에이터 매칭 중 오류가 발생했습니다.');
+      }
     } finally {
       setIsSubmitting(false);
     }

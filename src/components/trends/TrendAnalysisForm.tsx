@@ -23,9 +23,21 @@ const trendAnalysisSchema = z.object({
 
 type TrendAnalysisFormData = z.infer<typeof trendAnalysisSchema>;
 
+// Result type from the trend analysis API
+interface TrendAnalysisResult {
+  trend: {
+    id: string;
+    keyword: string;
+    platform: string;
+    [key: string]: unknown;
+  };
+  analysis: Record<string, unknown>;
+  collection: Record<string, unknown>;
+}
+
 interface TrendAnalysisFormProps {
-  onSuccess?: (data: any) => void;
-  onError?: (error: any) => void;
+  onSuccess?: (data: TrendAnalysisResult) => void;
+  onError?: (error: Error) => void;
 }
 
 export function TrendAnalysisForm({ onSuccess, onError }: TrendAnalysisFormProps) {

@@ -10,7 +10,61 @@ import {
 import { Button } from '@/components/ui/button';
 import type { Report } from '@/hooks/useReports';
 import { exportReport } from '@/hooks/useReports';
-import { TrendingUp, Users, Lightbulb, BarChart3, Globe, Award, FileJson, FileText } from 'lucide-react';
+import { TrendingUp, Users, Lightbulb, BarChart3, Globe, Award, FileJson, FileText, LucideIcon } from 'lucide-react';
+
+// Report content types
+interface TrendItem {
+  keyword: string;
+  platform?: string;
+  country?: string;
+  formatType?: string;
+  viralScore?: number;
+  samyangRelevance?: number;
+}
+
+interface CreatorItem {
+  username: string;
+  platform?: string;
+  contentCategory?: string;
+  brandFitScore?: number;
+  followerCount?: number;
+  engagementRate?: number;
+}
+
+interface IdeaItem {
+  title: string;
+  brandCategory?: string;
+  tone?: string;
+  targetCountry?: string;
+  formatType?: string;
+  hookText?: string;
+}
+
+interface ReportSummary {
+  averageViralScore?: number;
+  averageSamyangRelevance?: number;
+  topPlatform?: string;
+  topCountry?: string;
+  averageBrandFitScore?: number;
+  highFitCount?: number;
+  mediumFitCount?: number;
+  buldakCount?: number;
+  samyangRamenCount?: number;
+  jellyCount?: number;
+  topTone?: string;
+}
+
+interface ReportContent {
+  date?: string;
+  summary?: ReportSummary;
+  topTrends?: TrendItem[];
+  topCreators?: CreatorItem[];
+  topIdeas?: IdeaItem[];
+  totalTrends?: number;
+  totalCreators?: number;
+  totalIdeas?: number;
+  recommendations?: string[];
+}
 
 interface ReportDetailModalProps {
   report: Report | null;
@@ -27,7 +81,7 @@ const REPORT_TYPE_LABELS: Record<string, string> = {
 
 // Stat Card Component
 function StatCard({ icon: Icon, label, value, color = 'blue' }: {
-  icon: any;
+  icon: LucideIcon;
   label: string;
   value: string | number;
   color?: 'blue' | 'green' | 'purple' | 'orange';
@@ -61,7 +115,7 @@ export function ReportDetailModal({
 
   if (!report) return null;
 
-  const content = report.content as any;
+  const content = report.content as ReportContent;
   const typeLabel = REPORT_TYPE_LABELS[report.type] || report.type;
 
   const handleExport = async (format: 'json' | 'pdf') => {
@@ -120,7 +174,7 @@ export function ReportDetailModal({
               Top {content.topTrends.length} 트렌드
             </h3>
             <div className="space-y-3">
-              {content.topTrends.map((trend: any, index: number) => (
+              {content.topTrends.map((trend: TrendItem, index: number) => (
                 <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start gap-3">
                     {/* Ranking Badge */}
@@ -220,7 +274,7 @@ export function ReportDetailModal({
               Top {content.topCreators.length} 크리에이터
             </h3>
             <div className="space-y-3">
-              {content.topCreators.map((creator: any, index: number) => (
+              {content.topCreators.map((creator: CreatorItem, index: number) => (
                 <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start gap-3">
                     {/* Ranking Badge */}
@@ -334,7 +388,7 @@ export function ReportDetailModal({
               Top {content.topIdeas.length} 아이디어
             </h3>
             <div className="space-y-3">
-              {content.topIdeas.map((idea: any, index: number) => (
+              {content.topIdeas.map((idea: IdeaItem, index: number) => (
                 <div key={index} className="rounded-lg border bg-white p-4 hover:bg-gray-50 transition-colors">
                   <div className="flex items-start gap-3">
                     {/* Ranking Badge */}

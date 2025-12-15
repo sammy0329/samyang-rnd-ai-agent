@@ -63,17 +63,17 @@ export async function POST(request: NextRequest) {
     switch (type) {
       case 'daily_trend':
         reportData = (await generateDailyTrendReport()) as unknown as Record<string, unknown>;
-        title = `데일리 트렌드 리포트 - ${(reportData as any).date}`;
+        title = `데일리 트렌드 리포트 - ${String(reportData.date || '')}`;
         break;
 
       case 'creator_match':
         reportData = (await generateCreatorMatchReport()) as unknown as Record<string, unknown>;
-        title = `크리에이터 매칭 리포트 - ${(reportData as any).date}`;
+        title = `크리에이터 매칭 리포트 - ${String(reportData.date || '')}`;
         break;
 
       case 'content_idea':
         reportData = (await generateContentIdeaReport()) as unknown as Record<string, unknown>;
-        title = `콘텐츠 아이디어 리포트 - ${(reportData as any).date}`;
+        title = `콘텐츠 아이디어 리포트 - ${String(reportData.date || '')}`;
         break;
 
       default:

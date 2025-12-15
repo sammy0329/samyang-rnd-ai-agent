@@ -8,11 +8,17 @@ import crypto from 'crypto';
 // 기본 TTL (24시간)
 const DEFAULT_TTL = 60 * 60 * 24;
 
+// Message interface for AI
+interface CacheMessage {
+  role: string;
+  content: string;
+}
+
 /**
  * 캐시 키 생성 (메시지 + 설정으로 해시 생성)
  */
 export function generateCacheKey(
-  messages: any[],
+  messages: CacheMessage[],
   config?: {
     provider?: string;
     model?: string;
@@ -40,7 +46,7 @@ export function generateCacheKey(
 /**
  * 캐시에서 AI 응답 조회
  */
-export async function getCachedResponse<T = any>(
+export async function getCachedResponse<T = unknown>(
   cacheKey: string
 ): Promise<T | null> {
   const redis = getRedisClient();
@@ -67,9 +73,9 @@ export async function getCachedResponse<T = any>(
 /**
  * AI 응답을 캐시에 저장
  */
-export async function setCachedResponse(
+export async function setCachedResponse<T = unknown>(
   cacheKey: string,
-  response: any,
+  response: T,
   ttl: number = DEFAULT_TTL
 ): Promise<boolean> {
   const redis = getRedisClient();

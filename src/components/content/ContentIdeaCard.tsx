@@ -168,7 +168,7 @@ export function ContentIdeaCard({ idea, onClick, onDelete, currentUserId }: Cont
       {/* 후킹 텍스트 */}
       <div className="mb-4">
         <h4 className="mb-1 text-sm font-medium text-gray-700">5초 훅</h4>
-        <p className="text-sm text-gray-900 italic">"{idea.hook_text}"</p>
+        <p className="text-sm text-gray-900 italic">&ldquo;{idea.hook_text}&rdquo;</p>
       </div>
 
       {/* 장면 구성 */}

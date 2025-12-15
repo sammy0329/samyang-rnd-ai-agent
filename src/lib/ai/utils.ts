@@ -7,7 +7,15 @@
  */
 
 import { generateText, generateObject, streamText } from 'ai';
+import { z } from 'zod';
 import { getModel, type ProviderConfig } from './providers';
+
+// AI SDK usage type
+interface AIUsageResult {
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+}
 import {
   generateCacheKey,
   getCachedResponse,
@@ -153,7 +161,7 @@ export async function generateAIText(
 
       const cached = await getCachedResponse<{
         text: string;
-        usage: any;
+        usage: AIUsageResult | null;
         finishReason: string;
       }>(cacheKey);
 
@@ -184,7 +192,7 @@ export async function generateAIText(
 
       // 성공 로그
       const duration = Date.now() - startTime;
-      const usageData = result.usage as any;
+      const usageData = result.usage as AIUsageResult | undefined;
       await logTokenUsage({
         provider: config?.provider || 'default',
         model: 'text-generation',
@@ -210,7 +218,7 @@ export async function generateAIText(
 
           const responseToCache = {
             text: result.text,
-            usage: result.usage,
+            usage: result.usage as AIUsageResult | undefined,
             finishReason: result.finishReason,
           };
 
@@ -223,7 +231,7 @@ export async function generateAIText(
 
       return {
         text: result.text,
-        usage: result.usage,
+        usage: result.usage as AIUsageResult | undefined,
         finishReason: result.finishReason,
         error: null,
       };
@@ -301,7 +309,7 @@ export async function streamAIText(
  */
 export async function generateAIObject<T>(
   messages: AIMessage[],
-  schema: any,
+  schema: z.ZodSchema<T>,
   config?: ProviderConfig & {
     temperature?: number;
     maxRetries?: number;
@@ -326,7 +334,7 @@ export async function generateAIObject<T>(
 
       const cached = await getCachedResponse<{
         object: T;
-        usage: any;
+        usage: AIUsageResult | null;
         finishReason: string;
       }>(cacheKey);
 
@@ -358,7 +366,7 @@ export async function generateAIObject<T>(
 
       // 성공 로그
       const duration = Date.now() - startTime;
-      const usageData = result.usage as any;
+      const usageData = result.usage as AIUsageResult | undefined;
       await logTokenUsage({
         provider: config?.provider || 'default',
         model: 'object-generation',
@@ -384,7 +392,7 @@ export async function generateAIObject<T>(
 
           const responseToCache = {
             object: result.object,
-            usage: result.usage,
+            usage: result.usage as AIUsageResult | undefined,
             finishReason: result.finishReason,
           };
 

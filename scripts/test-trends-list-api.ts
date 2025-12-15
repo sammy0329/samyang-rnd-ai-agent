@@ -53,7 +53,7 @@ async function testAPI(
 
     if (response.data.data?.trends?.length > 0) {
       console.log('\n상위 3개 트렌드:');
-      response.data.data.trends.slice(0, 3).forEach((trend: any, idx: number) => {
+      response.data.data.trends.slice(0, 3).forEach((trend: { platform: string; keyword: string; viral_score?: number; samyang_relevance?: number }, idx: number) => {
         console.log(
           `  ${idx + 1}. [${trend.platform}] ${trend.keyword} (바이럴: ${trend.viral_score || 'N/A'}, 삼양: ${trend.samyang_relevance || 'N/A'})`
         );
@@ -72,7 +72,7 @@ async function testAPI(
 
       if (error.response?.data?.details) {
         console.log('상세 정보:');
-        error.response.data.details.forEach((detail: any) => {
+        error.response.data.details.forEach((detail: { field: string; message: string }) => {
           console.log(`  - ${detail.field}: ${detail.message}`);
         });
       }

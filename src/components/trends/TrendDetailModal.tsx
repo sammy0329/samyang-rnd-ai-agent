@@ -7,6 +7,21 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
+// Analysis data interface
+interface TrendAnalysisData {
+  brand_fit_reason?: string;
+  target_audience?: string;
+  estimated_reach?: string;
+  key_success_factors?: string[];
+  risks?: string[];
+  recommended_products?: string[];
+  collected_videos?: Array<{
+    title: string;
+    url: string;
+    viewCount: number;
+  }>;
+}
+
 interface TrendDetailModalProps {
   trend: Trend | null;
   open: boolean;
@@ -195,50 +210,50 @@ export function TrendDetailModal({
               <h3 className="text-lg font-semibold">추가 분석 정보</h3>
 
               {/* 브랜드 적합성 이유 */}
-              {(trend.analysis_data as any).brand_fit_reason && (
+              {(trend.analysis_data as TrendAnalysisData).brand_fit_reason && (
                 <div className="rounded-lg border bg-blue-50 p-4">
                   <h4 className="mb-2 font-medium text-blue-900">
                     💡 브랜드 적합성
                   </h4>
                   <p className="text-sm text-gray-700">
-                    {(trend.analysis_data as any).brand_fit_reason}
+                    {(trend.analysis_data as TrendAnalysisData).brand_fit_reason}
                   </p>
                 </div>
               )}
 
               {/* 타겟 오디언스 */}
-              {(trend.analysis_data as any).target_audience && (
+              {(trend.analysis_data as TrendAnalysisData).target_audience && (
                 <div className="rounded-lg border bg-purple-50 p-4">
                   <h4 className="mb-2 font-medium text-purple-900">
                     🎯 타겟 오디언스
                   </h4>
                   <p className="text-sm text-gray-700">
-                    {(trend.analysis_data as any).target_audience}
+                    {(trend.analysis_data as TrendAnalysisData).target_audience}
                   </p>
                 </div>
               )}
 
               {/* 예상 도달률 */}
-              {(trend.analysis_data as any).estimated_reach && (
+              {(trend.analysis_data as TrendAnalysisData).estimated_reach && (
                 <div className="rounded-lg border bg-green-50 p-4">
                   <h4 className="mb-2 font-medium text-green-900">
                     📈 예상 도달률
                   </h4>
                   <p className="text-sm text-gray-700">
-                    {(trend.analysis_data as any).estimated_reach}
+                    {(trend.analysis_data as TrendAnalysisData).estimated_reach}
                   </p>
                 </div>
               )}
 
               {/* 핵심 성공 요인 */}
-              {(trend.analysis_data as any).key_success_factors &&
-                Array.isArray((trend.analysis_data as any).key_success_factors) && (
+              {(trend.analysis_data as TrendAnalysisData).key_success_factors &&
+                Array.isArray((trend.analysis_data as TrendAnalysisData).key_success_factors) && (
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-2 font-medium text-gray-900">
                       ✨ 핵심 성공 요인
                     </h4>
                     <ul className="space-y-1">
-                      {(trend.analysis_data as any).key_success_factors.map(
+                      {(trend.analysis_data as TrendAnalysisData).key_success_factors.map(
                         (factor: string, index: number) => (
                           <li
                             key={index}
@@ -254,14 +269,14 @@ export function TrendDetailModal({
                 )}
 
               {/* 리스크 */}
-              {(trend.analysis_data as any).risks &&
-                Array.isArray((trend.analysis_data as any).risks) && (
+              {(trend.analysis_data as TrendAnalysisData).risks &&
+                Array.isArray((trend.analysis_data as TrendAnalysisData).risks) && (
                   <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
                     <h4 className="mb-2 font-medium text-orange-900">
                       ⚠️ 잠재적 리스크
                     </h4>
                     <ul className="space-y-1">
-                      {(trend.analysis_data as any).risks.map(
+                      {(trend.analysis_data as TrendAnalysisData).risks.map(
                         (risk: string, index: number) => (
                           <li
                             key={index}
@@ -277,14 +292,14 @@ export function TrendDetailModal({
                 )}
 
               {/* 추천 제품 */}
-              {(trend.analysis_data as any).recommended_products &&
-                Array.isArray((trend.analysis_data as any).recommended_products) && (
+              {(trend.analysis_data as TrendAnalysisData).recommended_products &&
+                Array.isArray((trend.analysis_data as TrendAnalysisData).recommended_products) && (
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-3 font-medium text-gray-900">
                       🍜 추천 제품
                     </h4>
                     <div className="flex flex-wrap gap-2">
-                      {(trend.analysis_data as any).recommended_products.map(
+                      {(trend.analysis_data as TrendAnalysisData).recommended_products.map(
                         (product: string, index: number) => (
                           <span
                             key={index}
@@ -305,15 +320,15 @@ export function TrendDetailModal({
                 )}
 
               {/* 수집된 동영상 */}
-              {(trend.analysis_data as any).collected_videos &&
-                Array.isArray((trend.analysis_data as any).collected_videos) &&
-                (trend.analysis_data as any).collected_videos.length > 0 && (
+              {(trend.analysis_data as TrendAnalysisData).collected_videos &&
+                Array.isArray((trend.analysis_data as TrendAnalysisData).collected_videos) &&
+                (trend.analysis_data as TrendAnalysisData).collected_videos.length > 0 && (
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-3 font-medium text-gray-900">
-                      🎬 참고 영상 (상위 {(trend.analysis_data as any).collected_videos.length}개)
+                      🎬 참고 영상 (상위 {(trend.analysis_data as TrendAnalysisData).collected_videos.length}개)
                     </h4>
                     <div className="space-y-2">
-                      {(trend.analysis_data as any).collected_videos.map(
+                      {(trend.analysis_data as TrendAnalysisData).collected_videos.map(
                         (
                           video: { title: string; url: string; viewCount: number },
                           index: number

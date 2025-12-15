@@ -62,7 +62,7 @@ async function testTrendAnalyzeAPI() {
 
     if (data1.data.collection.topVideos && data1.data.collection.topVideos.length > 0) {
       console.log('\nTop 3 비디오:');
-      data1.data.collection.topVideos.forEach((video: any, index: number) => {
+      data1.data.collection.topVideos.forEach((video: { title: string; viewCount?: number; creatorName?: string }, index: number) => {
         console.log(`  ${index + 1}. ${video.title}`);
         console.log(`     조회수: ${video.viewCount?.toLocaleString() || 'N/A'}`);
         console.log(`     크리에이터: ${video.creatorName || 'N/A'}`);
@@ -82,8 +82,8 @@ async function testTrendAnalyzeAPI() {
       console.log('요청 데이터:', JSON.stringify(request2, null, 2));
       await axios.post(ANALYZE_ENDPOINT, request2);
       console.log('❌ 예상치 못한 성공');
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         console.log('✅ 예상대로 400 에러 발생');
         console.log('에러 메시지:', error.response.data.error);
       } else {
@@ -104,8 +104,8 @@ async function testTrendAnalyzeAPI() {
       console.log('요청 데이터:', JSON.stringify(request3, null, 2));
       await axios.post(ANALYZE_ENDPOINT, request3);
       console.log('❌ 예상치 못한 성공');
-    } catch (error: any) {
-      if (error.response && error.response.status === 400) {
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         console.log('✅ 예상대로 400 에러 발생');
         console.log('에러 메시지:', error.response.data.error);
       } else {
@@ -145,15 +145,16 @@ async function testTrendAnalyzeAPI() {
     console.log('  1. 프론트엔드에서 POST /api/trends/analyze 호출');
     console.log('  2. 결과 데이터를 UI에 표시');
     console.log('  3. Rate Limit 헤더를 확인하여 사용자에게 안내\n');
-  } catch (error: any) {
-    console.error('\n❌ 테스트 실패:', error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('\n❌ 테스트 실패:', errorMessage);
 
-    if (error.response) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error('\n응답 상태:', error.response.status);
       console.error('응답 데이터:', JSON.stringify(error.response.data, null, 2));
     }
 
-    if (error.message.includes('ECONNREFUSED')) {
+    if (errorMessage.includes('ECONNREFUSED')) {
       console.log('\n💡 해결 방법:');
       console.log('  1. 개발 서버가 실행 중인지 확인하세요: npm run dev');
       console.log('  2. API URL이 올바른지 확인하세요:', API_BASE_URL);

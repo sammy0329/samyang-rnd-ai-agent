@@ -63,7 +63,7 @@ function handleSerpAPIError(error: unknown): never {
       const { status, data } = axiosError.response;
 
       // Quota/Credit 초과 에러
-      if (status === 429 || (data as any)?.error?.includes('credit')) {
+      if (status === 429 || (data as SerpAPIError)?.error?.includes('credit')) {
         throw new SerpAPIQuotaExceededError(
           data.error || 'SerpAPI quota or credits exceeded'
         );
@@ -190,7 +190,7 @@ export async function searchShortVideos(
               platform = 'Facebook';
             } else if (video.source) {
               // source 필드가 있으면 사용
-              platform = video.source as any;
+              platform = video.source as 'TikTok' | 'Instagram' | 'YouTube' | 'Facebook' | 'Other';
             }
 
             return {

@@ -50,11 +50,11 @@ export async function generateContentIdeaReport(): Promise<ContentIdeaReportData
     // scene_structure 파싱
     let formatType: string | undefined;
     try {
-      const sceneData = idea.scene_structure as any;
+      const sceneData = idea.scene_structure as { format_type?: string; formatType?: string } | null;
       if (sceneData && typeof sceneData === 'object') {
         formatType = sceneData.format_type || sceneData.formatType;
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
 

@@ -48,7 +48,7 @@ async function testDailyTrendsAPI() {
 
     if (data.topTrends.length > 0) {
       console.log(`\n🏆 Top ${data.topTrends.length} 트렌드:\n`);
-      data.topTrends.forEach((trend: any, idx: number) => {
+      data.topTrends.forEach((trend: { platform: string; keyword: string; viral_score?: number; samyang_relevance?: number; format_type?: string }, idx: number) => {
         const totalScore = (trend.viral_score || 0) + (trend.samyang_relevance || 0);
         console.log(`  ${idx + 1}. [${trend.platform.toUpperCase()}] ${trend.keyword}`);
         console.log(`     바이럴: ${trend.viral_score || 'N/A'} | 삼양: ${trend.samyang_relevance || 'N/A'} | 합계: ${totalScore}`);

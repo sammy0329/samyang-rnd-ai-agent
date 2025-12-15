@@ -149,7 +149,7 @@ export function ContentGenerationForm({
                 트렌드 기반 아이디어 생성
               </p>
               <p className="mt-1 text-sm text-blue-700">
-                "{trendContext.keyword}" 트렌드 분석 결과를 반영하여 콘텐츠 아이디어를 생성해드립니다.
+                &ldquo;{trendContext.keyword}&rdquo; 트렌드 분석 결과를 반영하여 콘텐츠 아이디어를 생성해드립니다.
                 <br />
                 브랜드와 톤앤매너를 선택하고 생성 버튼을 눌러주세요.
               </p>
