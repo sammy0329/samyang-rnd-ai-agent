@@ -266,45 +266,65 @@ export async function getServiceUsageStats(
   endDate?: string
 ): Promise<{ data: { usage: number; calls: number } | null; error: Error | null }> {
   try {
-    const supabase = await createServerSupabaseClient();
-    let query = supabase
-      .from('api_usage')
-      .select('endpoint, tokens_used, status_code');
+    // Admin Client 사용 (RLS 우회 - 시스템 전체 사용량 통계용)
+    const supabase = createAdminClient();
 
-    // 서비스별 엔드포인트 필터링
+    // 공통 필터 빌더
+    const buildQuery = (pattern: string) => {
+      let query = supabase
+        .from('api_usage')
+        .select('endpoint, tokens_used, status_code')
+        .like('endpoint', pattern)
+        .gte('status_code', 200)
+        .lt('status_code', 300);
+
+      if (startDate) {
+        query = query.gte('created_at', startDate);
+      }
+      if (endDate) {
+        query = query.lte('created_at', endDate);
+      }
+      return query;
+    };
+
+    let allData: { endpoint: string; tokens_used: number | null; status_code: number | null }[] = [];
+
     if (service === 'youtube') {
       // YouTube API는 trends/analyze 엔드포인트에서 사용
-      query = query.like('endpoint', '%trends/analyze%');
+      const { data, error } = await buildQuery('%trends/analyze%');
+      if (error) {
+        console.error('Error fetching YouTube usage stats:', error);
+        return { data: null, error };
+      }
+      allData = data || [];
     } else if (service === 'gpt') {
-      // GPT API는 ai/* 또는 content/generate 엔드포인트에서 사용
-      query = query.or('endpoint.like.ai/%,endpoint.like.%content/generate%');
+      // GPT API는 여러 엔드포인트에서 사용 - 별도 쿼리로 조회 후 합산
+      const [aiResult, contentResult, creatorsResult] = await Promise.all([
+        buildQuery('ai/%'),
+        buildQuery('%content/generate%'),
+        buildQuery('%creators/match%'),
+      ]);
+
+      if (aiResult.error || contentResult.error || creatorsResult.error) {
+        const error = aiResult.error || contentResult.error || creatorsResult.error;
+        console.error('Error fetching GPT usage stats:', error);
+        return { data: null, error };
+      }
+
+      allData = [
+        ...(aiResult.data || []),
+        ...(contentResult.data || []),
+        ...(creatorsResult.data || []),
+      ];
     }
 
-    if (startDate) {
-      query = query.gte('created_at', startDate);
-    }
-
-    if (endDate) {
-      query = query.lte('created_at', endDate);
-    }
-
-    // 성공한 요청만 카운트 (status_code 200-299)
-    query = query.gte('status_code', 200).lt('status_code', 300);
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error(`Error fetching ${service} usage stats:`, error);
-      return { data: null, error };
-    }
-
-    if (!data || data.length === 0) {
+    if (allData.length === 0) {
       return { data: { usage: 0, calls: 0 }, error: null };
     }
 
-    const calls = data.length;
+    const calls = allData.length;
     // 실제 저장된 tokens_used 값 합계 (YouTube quota units 또는 GPT tokens)
-    const usage = data.reduce((sum, row) => sum + (row.tokens_used || 0), 0);
+    const usage = allData.reduce((sum, row) => sum + (row.tokens_used || 0), 0);
 
     return { data: { usage, calls }, error: null };
   } catch (error) {
