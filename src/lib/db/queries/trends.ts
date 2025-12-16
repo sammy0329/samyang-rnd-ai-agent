@@ -22,7 +22,9 @@ import {
  */
 export async function getTrends(filters: TrendFilters = {}): Promise<TrendsListResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // 데모 모드에서는 Admin Client 사용 (RLS 우회)
+    const isDemoMode = process.env.DEMO_MODE === 'true';
+    const supabase = isDemoMode ? createAdminClient() : await createServerSupabaseClient();
 
     let query = supabase.from('trends').select('*', { count: 'exact' });
 

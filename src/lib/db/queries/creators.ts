@@ -2,7 +2,7 @@
  * Creators 테이블 쿼리 함수
  */
 
-import { createServerSupabaseClient } from '@/lib/db/server';
+import { createServerSupabaseClient, createAdminClient } from '@/lib/db/server';
 import type {
   Creator,
   CreateCreatorInput,
@@ -17,7 +17,9 @@ import type {
  */
 export async function getCreators(filters: CreatorFilters = {}): Promise<CreatorsListResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // 데모 모드에서는 Admin Client 사용 (RLS 우회)
+    const isDemoMode = process.env.DEMO_MODE === 'true';
+    const supabase = isDemoMode ? createAdminClient() : await createServerSupabaseClient();
     let query = supabase.from('creators').select('*', { count: 'exact' });
 
     // 필터 적용

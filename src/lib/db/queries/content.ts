@@ -24,7 +24,9 @@ export async function getContentIdeas(
   filters: ContentIdeaFilters = {}
 ): Promise<ContentIdeasListResponse> {
   try {
-    const supabase = await createServerSupabaseClient();
+    // 데모 모드에서는 Admin Client 사용 (RLS 우회)
+    const isDemoMode = process.env.DEMO_MODE === 'true';
+    const supabase = isDemoMode ? createAdminClient() : await createServerSupabaseClient();
 
     let query = supabase.from('content_ideas').select('*', { count: 'exact' });
 
