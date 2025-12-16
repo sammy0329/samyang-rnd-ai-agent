@@ -34,6 +34,35 @@ export interface AuthResponse<T = AuthUser> {
  */
 export async function getServerSession(): Promise<AuthResponse> {
   try {
+    // 데모 모드: 데모 사용자 반환
+    const isDemoMode = process.env.DEMO_MODE === 'true';
+    const demoUserId = process.env.DEMO_USER_ID;
+
+    if (isDemoMode && demoUserId) {
+      const adminClient = createAdminClient();
+
+      const { data: userData, error: dbError } = await adminClient
+        .from('users')
+        .select('*')
+        .eq('id', demoUserId)
+        .single();
+
+      if (!dbError && userData) {
+        const user: AuthUser = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name || 'Demo User',
+          role: userData.role,
+          created_at: userData.created_at,
+        };
+        return { data: user, error: null };
+      }
+
+      // DEMO_USER_ID가 잘못된 경우 에러 로그
+      console.error('[DEMO] Demo user not found in DB:', demoUserId);
+      return { data: null, error: new Error('Demo user not found') };
+    }
+
     const supabase = await createServerSupabaseClient();
 
     // getUser()를 사용하여 안전하게 사용자 정보 가져오기

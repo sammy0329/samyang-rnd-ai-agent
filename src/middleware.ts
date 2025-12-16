@@ -45,15 +45,20 @@ export async function middleware(request: NextRequest) {
   // 인증 페이지 (로그인된 사용자 접근 불가)
   const authRoutes = ['/login', '/signup'];
 
+  // 데모 모드: 인증 체크 스킵
+  const isDemoMode = process.env.DEMO_MODE === 'true';
+
   // 보호된 라우트에 비인증 사용자 접근 시 로그인 페이지로 리다이렉트
-  if (protectedRoutes.some((route) => pathname.startsWith(route)) && !session) {
+  // (데모 모드에서는 스킵)
+  if (protectedRoutes.some((route) => pathname.startsWith(route)) && !session && !isDemoMode) {
     const redirectUrl = new URL('/login', request.url);
     redirectUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
   // 인증 페이지에 로그인된 사용자 접근 시 대시보드로 리다이렉트
-  if (authRoutes.some((route) => pathname.startsWith(route)) && session) {
+  // (데모 모드에서는 로그인 페이지 접근 시에도 대시보드로 이동)
+  if (authRoutes.some((route) => pathname.startsWith(route)) && (session || isDemoMode)) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
